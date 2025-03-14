@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="hostel_management_system-web" />
+        <module name="hostel_management_system_web" />
       </profile>
     </annotationProcessing>
   </component>

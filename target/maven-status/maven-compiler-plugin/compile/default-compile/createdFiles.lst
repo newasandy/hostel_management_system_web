@@ -1,3 +1,6 @@
-UsersDAO.class
-model/Users.class
+daoInterface/UsersDAO.class
+daoImp/UserDAOImpl.class
 views/HelloBean.class
+daoImp/BaseDAOImp.class
+daoInterface/BaseDAO.class
+model/Users.class

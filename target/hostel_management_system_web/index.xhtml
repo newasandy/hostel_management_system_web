@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primeicons@4.1.0/primeicons.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primereact@7.2.0/resources/themes/saga/theme.css"/>
+</h:head>
+<h:body>
+    <!-- Navigation Bar -->
+    <div class="card">
+        <h:form>
+            <p:megaMenu orientation="horizontal" autoDisplay="false">
+                <p:menuitem value="Home" url="#"/>
+                <p:menuitem value="About" url="#"/>
+                <p:menuitem value="Contact" url="#"/>
+
+                <p:submenu label="Service">
+                    <p:column>
+                        <p:submenu label="Service">
+                            <p:menuitem value="Room Allocation" url="#"/>
+                            <p:menuitem value="Leave Request" url="#"/>
+                            <p:menuitem value="View Visitor" url="#"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:menuitem>
+                    <p:commandButton value="Login" icon="pi pi-sign-in" action="#{helloBean.loginUser}"/>
+                </p:menuitem>
+            </p:megaMenu>
+        </h:form>
+    </div>
+
+</h:body>
+</html>

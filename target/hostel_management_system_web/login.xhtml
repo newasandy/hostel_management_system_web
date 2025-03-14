@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Login</title>
+    <h:outputStylesheet name="css/style.css"/>
+</h:head>
+<h:body>
+    <div class="login-form">
+        <h2>Login</h2><br/>
+        <h:form>
+            <p:outputLabel for="username" value="Username:" /><br/>
+            <p:inputText id="username" value="#{helloBean.username}" required="true" /><br/>
+
+            <p:outputLabel for="password" value="Password:" /><br/>
+            <p:password id="password" value="#{helloBean.password}" required="true" /><br/>
+
+            <p:commandButton value="Login" action="#{helloBean.login}" />
+        </h:form>
+    </div>
+
+</h:body>
+
+</html>
