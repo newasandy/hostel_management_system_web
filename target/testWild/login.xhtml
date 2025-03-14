@@ -5,18 +5,21 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Login</title>
+    <h:outputStylesheet name="css/style.css"/>
 </h:head>
 <h:body>
-    <h:form>
-        <p:outputLabel for="username" value="Enter Username: " />
-        <p:inputText id="username" value="#{helloBean.username}" />
-        <p:outputLabel for="password" value="Enter Password: " />
-        <p:inputText id="password" value="#{helloBean.password}" />
-        <p:commandButton value="Login" action="#{helloBean.sayHello}" update="output" />
+    <div class="login-form">
+        <h2>Login</h2><br/>
+        <h:form>
+            <p:outputLabel for="username" value="Username:" /><br/>
+            <p:inputText id="username" value="#{helloBean.username}" required="true" /><br/>
 
-    </h:form>
-    <p:outputLabel id="output" value="#{helloBean.message}" style="display:block;margin-top:10px;" />
-    <p:outputLabel value="#{helloBean.message}" style="display:block;margin-top:10px;" />
+            <p:outputLabel for="password" value="Password:" /><br/>
+            <p:password id="password" value="#{helloBean.password}" required="true" /><br/>
+
+            <p:commandButton value="Login" action="#{helloBean.login}" />
+        </h:form>
+    </div>
 
 </h:body>
 
