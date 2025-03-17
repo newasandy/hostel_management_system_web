@@ -11,14 +11,26 @@
     <div class="login-form">
         <h2>Login</h2><br/>
         <h:form>
-            <p:outputLabel for="username" value="Username:" /><br/>
-            <p:inputText styleClass="input-field" id="username" value="#{helloBean.username}" required="true" /><br/>
+            <p:outputLabel value="Full Name:" /><br/>
+            <p:inputText styleClass="input-field" id="name" value="#{registrationBean.name}" required="true" requiredMessage="Full Name is required." /><br/>
+            <p:message for="name" display="text" style="color:red;"/>
+            <br/>
+            <p:outputLabel for="email" value="Email:" /><br/>
+            <p:inputText styleClass="input-field" id="email" value="#{registrationBean.email}" required="true" requiredMessage="Email is requires." /><br/>
+            <p:message for="email" display="text" style="color:red;"/>
+            <br/>
 
             <p:outputLabel for="password" value="Password:" /><br/>
-            <p:password styleClass="input-field" id="password" value="#{helloBean.password}" required="true" /><br/>
+            <p:password styleClass="input-field" id="password" value="#{registrationBean.password}" required="true" requiredMessage="Password is required" /><br/>
+            <p:message for="password" display="text" style="color:red;"/>
+            <br/>
 
-            <p:commandButton value="Login" action="#{helloBean.login}" />
-            <a href="login.xhtml">Already have an Account?</a>
+            <p:outputLabel for="role" value="Role:" /><br/>
+            <p:password styleClass="input-field" id="role" value="#{registrationBean.role}" required="true" requiredMessage="Role is required" /><br/>
+            <p:message for="role" display="text" style="color:red;"/>
+            <br/>
+
+            <p:commandButton value="Register" action="#{registrationBean.registrationUser}" validateClient="true" />
         </h:form>
     </div>
 
