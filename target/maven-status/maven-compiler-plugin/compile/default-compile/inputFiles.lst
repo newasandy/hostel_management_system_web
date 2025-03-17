@@ -1,7 +1,12 @@
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/AuthenticationService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/BaseDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UsersDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/BaseDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/RegistrationBean.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/StatusMessageModel.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/Users.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/EntityManageUtils.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/UserService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/controller/UserController.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/PasswordUtils.java

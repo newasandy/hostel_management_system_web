@@ -2,16 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<head>
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
     <title>Home</title>
-</head>
+</h:head>
 <h:body>
-<h1>Welcome, #{helloBean.username}</h1>
-    <p>You are Login Success</p>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
     <div class="card">
         <h:form>
-            <p:commandButton value="Logout" action="#{helloBean.logOut}" />
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+            <p:commandButton value="Logout" action="#{registrationBean.logout}" />
         </h:form>
     </div>
 </h:body>

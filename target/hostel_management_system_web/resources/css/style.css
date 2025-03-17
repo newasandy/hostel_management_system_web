@@ -45,4 +45,9 @@ margin: 0 auto;
     cursor: pointer;
 }
 
+.login-form .required-message{
+color:red;
+font-size: 10px;
+}
+
 

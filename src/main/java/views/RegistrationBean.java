@@ -1,13 +1,21 @@
 package views;
 
 import controller.UserController;
+import model.StatusMessageModel;
+import model.Users;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import java.io.Serializable;
 
-@ManagedBean
-@RequestScoped
-public class RegistrationBean {
+@Named
+@ViewScoped
+public class RegistrationBean implements Serializable {
+    private final UserController userController = new UserController();
+    private StatusMessageModel statusMessageModel = new StatusMessageModel();
+
     private String name;
     private String email;
     private String password;
@@ -46,12 +54,32 @@ public class RegistrationBean {
     }
 
     public String registrationUser(){
-        UserController userController = new UserController();
-        boolean status = userController.registerUser(name,email,password,role);
-        if (status){
-            return "login.xhtml";
+        statusMessageModel = userController.registerUser(name,email,password,role);
+        if (statusMessageModel.isStatus()){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            return "login.xhtml?faces-redirect=true";
         }else {
-            return "registration.xhtml";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            return "registration.xhtml?faces-redirect=true";
         }
+    }
+
+    public String login(){
+        Users status = userController.loginUser(email,password);
+        if (status != null){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+status.getFullName()));
+            return "/Users/home.xhtml?faces-redirect=true";
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
+            return "login.xhtml?faces-redirect=true";
+        }
+    }
+
+    public String logout(){
+        return "/login.xhtml?faces-redirect=true";
     }
 }

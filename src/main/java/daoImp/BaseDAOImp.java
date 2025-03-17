@@ -1,6 +1,7 @@
 package daoImp;
 
 import daoInterface.BaseDAO;
+import utils.EntityManageUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,8 +16,8 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T> {
         this.entityClass=entity;
     }
 
-    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hostelmanagement");
-    private EntityManager entityManager = entityManagerFactory.createEntityManager();
+//    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hostelmanagement");
+    private EntityManager entityManager = EntityManageUtils.getEntityManager();
 
 
     @Override
