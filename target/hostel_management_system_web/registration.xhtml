@@ -13,21 +13,21 @@
         <h:form id="registerForm">
             <p:messages globalOnly="true" closable="true"/>
             <p:outputLabel value="Full Name:" /><br/>
-            <p:inputText styleClass="input-field" id="name" value="#{registrationBean.name}" required="true" requiredMessage="Full Name is required." />
+            <p:inputText styleClass="input-field" id="name" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." />
             <h:message for="name" display="text" style="color:red;"/>
             <br/>
             <p:outputLabel for="email" value="Email:" /><br/>
-            <p:inputText styleClass="input-field" id="email" value="#{registrationBean.email}" required="true" requiredMessage="Email is requires." />
+            <p:inputText styleClass="input-field" id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." />
             <h:message for="email" display="text"  style="color:red;"/>
             <br/>
 
             <p:outputLabel for="password" value="Password:" /><br/>
-            <p:password styleClass="input-field" id="password" value="#{registrationBean.password}" required="true" requiredMessage="Password is required" />
+            <p:password styleClass="input-field" id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" />
             <h:message  for="password" display="text" style="color:red;"/>
             <br/>
 
             <p:outputLabel for="role" value="Role:" /><br/>
-            <p:selectOneMenu id="role" value="#{registrationBean.role}" required="true" requiredMessage="Role is required.">
+            <p:selectOneMenu id="role" value="#{userBean.role}" required="true" requiredMessage="Role is required.">
                 <f:selectItem itemLabel="Select Role" itemValue="" noSelectionOption="true"/>
                 <f:selectItem itemLabel="USER" itemValue="USER"/>
                 <f:selectItem itemLabel="ADMIN" itemValue="ADMIN"/>
@@ -35,7 +35,7 @@
             <h:message for="role" display="text" style="color:red;"/>
             <br/>
 
-            <p:commandButton value="Register" action="#{registrationBean.registrationUser}" validateClient="true" update="@form" />
+            <p:commandButton value="Register" action="#{userBean.registrationUser}" validateClient="true" update="@form" />
         </h:form>
     </div>
 

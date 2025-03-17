@@ -8,6 +8,7 @@
     <title>Demo</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primeicons@4.1.0/primeicons.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primereact@7.2.0/resources/themes/saga/theme.css"/>
+    <h:outputStylesheet name="css/style.css"/>
 </h:head>
 <h:body>
     <!-- Navigation Bar -->
@@ -27,8 +28,8 @@
                         </p:submenu>
                     </p:column>
                 </p:submenu>
-                <p:menuitem>
-                    <p:commandButton value="Login" icon="pi pi-sign-in" action="#{helloBean.loginUser}"/>
+                <p:menuitem position="right">
+                    <p:commandButton value="Logout" icon="pi pi-sign-in" action="#{userBean.logout}"/>
                 </p:menuitem>
             </p:megaMenu>
         </h:form>

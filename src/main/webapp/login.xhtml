@@ -13,15 +13,15 @@
         <h:form>
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
             <p:outputLabel for="email" value="Email:" /><br/>
-            <p:inputText styleClass="input-field" id="email" value="#{registrationBean.email}" required="true" requiredMessage="Email is requires." />
+            <p:inputText styleClass="input-field" id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." />
             <h:message for="email" display="text"  style="color:red;"/>
             <br/>
 
             <p:outputLabel for="password" value="Password:" /><br/>
-            <p:password styleClass="input-field" id="password" value="#{registrationBean.password}" required="true" requiredMessage="Password is requires."/>
+            <p:password styleClass="input-field" id="password" value="#{userBean.password}" required="true" requiredMessage="Password is requires."/>
             <h:message for="password" display="text"  style="color:red;"/>
             <br/>
-            <p:commandButton value="Login" action="#{registrationBean.login}" validateClient="true" update="@form" />
+            <p:commandButton value="Login" action="#{userBean.login}" validateClient="true" update="@form" />
         </h:form>
     </div>
 
