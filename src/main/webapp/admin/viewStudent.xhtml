@@ -7,28 +7,97 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Dynamic DataTable</title>
+    <title>View Student</title>
+    <h:outputStylesheet>
+
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        padding:10px;
+        justify-content: space-between;
+        }
+    </h:outputStylesheet>
 </h:head>
 <h:body>
     <header>
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
+
     <h:form>
-        <p:inputText id="globalFilter" value="#{dynamicTableBean.searchTerm}" placeholder="Search all columns">
-            <p:ajax event="keyup" listener="#{dynamicTableBean.searchItem}" update="carTable" />
-        </p:inputText>
-        <p:dataTable id="carTable" value="#{dynamicTableBean.filteredCars}" var="car" paginator="true" paginatorPosition="bottom" rows="10">
+        <div style="width:100%; display:flex; justify-content: center;">
+            <h3>Student's List</h3>
+        </div>
+        <div class="top-bar">
+            <p:inputText style="width:250px;">
+
+            </p:inputText>
+
+            <p:commandButton value="Add" icon="pi pi-plus" style="right: 0px; margin-left: 15px" onClick="PF('regDialog').show();"/>
+        </div>
+        <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" var="student" paginator="true" paginatorPosition="bottom" rows="10">
             <!-- Sortable columns -->
-            <p:column headerText="Make" sortBy="#{car.make}">
-                <h:outputText value="#{car.make}" />
+            <p:column headerText="Full Name" sortBy="#{student.fullName}">
+                <h:outputText value="#{student.fullName}" />
             </p:column>
-            <p:column headerText="Model" sortBy="#{car.model}">
-                <h:outputText value="#{car.model}" />
+            <p:column headerText="Email" sortBy="#{student.email}">
+                <h:outputText value="#{student.email}" />
             </p:column>
-            <p:column headerText="Year" sortBy="#{car.year}">
-                <h:outputText value="#{car.year}" />
+            <p:column headerText="Roles" sortBy="#{student.roles}">
+                <h:outputText value="#{student.roles}" />
+            </p:column>
+            <p:column headerText="Status" sortBy="#{student.status}">
+                <h:outputText value="#{student.status}" />
+            </p:column>
+            <p:column headerText="Country" sortBy="#{student.status}">
+                <h:outputText value="#{student.address.country}" />
             </p:column>
         </p:dataTable>
     </h:form>
+
+    <p:dialog header="Registration Form" widgetVar="regDialog" modal="true" resizable="false" width="400">
+
+        <h:form id="registrationForm">
+            <p:messages globalOnly="true" closable="true"/>
+            <p:panel styleClass="registration-panel">
+                <h2 style="text-align: center;">Register</h2>
+                <p:panelGrid columns="2" styleClass="ui-grid-responsive" style="width:100%">
+                    <h:outputLabel for="fullName" value="Full Name:"/>
+                    <p:inputText id="fullName" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." style="width:100%"/>
+
+                    <h:outputLabel for="email" value="Email:"/>
+                    <p:inputText id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+
+                    <h:outputLabel for="password" value="Password:"/>
+                    <p:password id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" style="width:100%"/>
+
+                    <h:outputLabel for="role" value="Role:"/>
+                    <p:selectOneMenu id="role" value="#{userBean.role}" required="true" requiredMessage="Role is required.">
+                        <f:selectItem itemLabel="Select Role" itemValue=""/>
+                        <f:selectItem itemLabel="User" itemValue="USER"/>
+                        <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="country" value="Country:"/>
+                    <p:inputText id="country" value="#{userBean.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+
+                    <h:outputLabel for="district" value="District:"/>
+                    <p:inputText id="district" value="#{userBean.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+
+                    <h:outputLabel for="rmcMc" value="RMC/MC:"/>
+                    <p:inputText id="rmcMc" value="#{userBean.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+
+                    <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                    <p:inputText id="wardNumber" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+
+                </p:panelGrid>
+                <div style="text-align: center; padding: 20px; ">
+                    <p:commandButton value="Register" action="#{userBean.registrationUser}" validateClient="true" update="@form" style="margin-top:10px; width:100px;"/>
+                    <p:commandButton value="Cancel" onClick="PF('regDialog').hide();" style="margin-top:10px; width:100px;"/>
+                </div>
+            </p:panel>
+        </h:form>
+
+    </p:dialog>
 </h:body>
 </html>

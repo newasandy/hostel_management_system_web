@@ -11,6 +11,7 @@ model/Address.class
 views/DynamicTableBean$Car.class
 utils/EntityManageUtils.class
 model/LeaveRequest.class
+views/ViewStudentBean.class
 model/Visitors.class
 views/Card.class
 daoInterface/VisitorsDAO.class
