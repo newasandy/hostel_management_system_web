@@ -1,11 +1,12 @@
 package views;
 
-import controller.UserController;
+import daoImp.AddressDAOImp;
 import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
 import model.StatusMessageModel;
 import model.Users;
 import service.AuthenticationService;
+import service.UserService;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,8 +21,9 @@ import java.io.Serializable;
 @SessionScoped
 public class UserBean implements Serializable{
     private final UsersDAO usersDAO = new UserDAOImpl();
+    private final AddressDAOImp addressDAOImp = new AddressDAOImp();
+    private final UserService userService = new UserService(usersDAO,addressDAOImp);
     private final AuthenticationService authenticationService = new AuthenticationService(usersDAO);
-    private final UserController userController = new UserController();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
 
@@ -118,7 +120,7 @@ public class UserBean implements Serializable{
     }
 
     public String registrationUser(){
-        statusMessageModel = userController.registerUser(name,email,password,role);
+        statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
         if (statusMessageModel.isStatus()){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
