@@ -15,14 +15,17 @@
     <div class="card">
         <h:form>
             <p:megaMenu orientation="horizontal" autoDisplay="false">
-                <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest() or userBean.isUser() or userBean.isAdmin()}" url="#"/>
+                <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest() or userBean.isUser()}" url="#"/>
                 <p:menuitem value="About" outcome="about" rendered="#{userBean.isGuest()}" url="#"/>
                 <p:menuitem value="Contact" outcome="contact" rendered="#{userBean.isGuest()}" url="#"/>
 
                 <p:menuitem value="Service" rendered="#{userBean.isUser()}"/>
 
-                <p:menuitem value="User Dashboard"  rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="Admin Service" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Dashboard"  rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Student" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Rooms" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Room Allocation" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Visitor" rendered="#{userBean.isAdmin()}"/>
 
                 <p:menuitem value="Login" url="login.xhtml"/>
 

@@ -1,8 +1,11 @@
 package views;
 
 import controller.UserController;
+import daoImp.UserDAOImpl;
+import daoInterface.UsersDAO;
 import model.StatusMessageModel;
 import model.Users;
+import service.AuthenticationService;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,6 +19,8 @@ import java.io.Serializable;
 @ManagedBean
 @SessionScoped
 public class UserBean implements Serializable{
+    private final UsersDAO usersDAO = new UserDAOImpl();
+    private final AuthenticationService authenticationService = new AuthenticationService(usersDAO);
     private final UserController userController = new UserController();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
@@ -126,7 +131,7 @@ public class UserBean implements Serializable{
     }
 
     public String login(){
-        Users user = userController.loginUser(email,password);
+        Users user = authenticationService.loginService(email,password);
         if (user != null){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
@@ -134,11 +139,16 @@ public class UserBean implements Serializable{
             HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
             Cookie userCookie = new Cookie("email", user.getEmail());
-            userCookie.setMaxAge(3600);
+            userCookie.setMaxAge(60*60*60);
             userCookie.setPath("/");
             response.addCookie(userCookie);
             userRole= user.getRoles();
-            return "/Users/userDashboard.xhtml?faces-redirect=true";
+            if ("USER".equals(user.getRoles())) {
+                return "/Users/userDashboard.xhtml?faces-redirect=true";
+            } else if ("ADMIN".equals(user.getRoles())) {
+                return "/admin/adminDashboard.xhtml?faces-redirect=true";
+            }
+            return "login.xhtml?faces-redirect=true";
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));

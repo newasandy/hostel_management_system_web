@@ -4,9 +4,7 @@ import daoInterface.BaseDAO;
 import utils.EntityManageUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.util.List;
 
 public abstract class BaseDAOImp <T> implements BaseDAO<T> {
@@ -16,7 +14,6 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T> {
         this.entityClass=entity;
     }
 
-//    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hostelmanagement");
     private EntityManager entityManager = EntityManageUtils.getEntityManager();
 
 
