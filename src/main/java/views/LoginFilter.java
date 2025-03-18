@@ -23,12 +23,26 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String uri = httpRequest.getRequestURI();
+        String email = getCookieValue(httpRequest, "email");
+        String userRole = getCookieValue(httpRequest, "userRole");
 
         // Check if the requested page is a protected page and user is not logged in
-        if (uri.contains("/Users/userDashboard.xhtml") && getCookieValue(httpRequest, "email") == null) {
-            // Redirect to login page if not logged in
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
-            return;
+        if (uri.contains("/users/")) {
+            if (email == null || userRole == null){
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
+                return;
+            } else if (!"USER".equals(userRole)) {
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/adminDashboard.xhtml");
+                return;
+            }
+        }else if (uri.contains("/admin/")) {
+            if (email == null || userRole == null){
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
+                return;
+            } else if (!"ADMIN".equals(userRole)) {
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/users/userDashboard.xhtml");
+                return;
+            }
         }
 
         // Continue with the filter chain

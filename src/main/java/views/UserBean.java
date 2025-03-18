@@ -144,9 +144,17 @@ public class UserBean implements Serializable{
             userCookie.setMaxAge(60*60*60);
             userCookie.setPath("/");
             response.addCookie(userCookie);
+
+            // Create cookie for user role
+            Cookie userRoleCookie = new Cookie("userRole", user.getRoles());
+            userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
+            userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
+            response.addCookie(userRoleCookie);
+
+
             userRole= user.getRoles();
             if ("USER".equals(user.getRoles())) {
-                return "/Users/userDashboard.xhtml?faces-redirect=true";
+                return "/users/userDashboard.xhtml?faces-redirect=true";
             } else if ("ADMIN".equals(user.getRoles())) {
                 return "/admin/adminDashboard.xhtml?faces-redirect=true";
             }
@@ -166,7 +174,7 @@ public class UserBean implements Serializable{
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("email".equals(cookie.getName())) {
+                if ("email".equals(cookie.getName()) || "userRole".equals(cookie.getName())) {
                     cookie.setValue(null);
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
