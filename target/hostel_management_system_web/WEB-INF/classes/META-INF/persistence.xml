@@ -3,6 +3,12 @@
     <persistence-unit name="hostelmanagement" transaction-type="RESOURCE_LOCAL">
         <jta-data-source>java:/jdbc/HostelManagementSystemWeb</jta-data-source>
         <class>model.Users</class>
+        <class>model.Address</class>
+        <class>model.LeaveRequest</class>
+        <class>model.MonthlyFee</class>
+        <class>model.RoomAllocation</class>
+        <class>model.Rooms</class>
+        <class>model.Visitors</class>
         <properties>
             <!-- Database Connection -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -13,7 +19,7 @@
             <!-- Hibernate Properties -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
             <property name="hibernate.show_sql" value="false"/>
-            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>
