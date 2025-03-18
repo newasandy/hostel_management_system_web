@@ -124,7 +124,7 @@ public class UserBean implements Serializable{
         if (statusMessageModel.isStatus()){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            return "login.xhtml?faces-redirect=true";
+            return "adminDashboard.xhtml?faces-redirect=true";
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));

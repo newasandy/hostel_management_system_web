@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Dynamic DataTable</title>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+    <h:form>
+        <p:inputText id="globalFilter" value="#{dynamicTableBean.searchTerm}" placeholder="Search all columns">
+            <p:ajax event="keyup" listener="#{dynamicTableBean.searchItem}" update="carTable" />
+        </p:inputText>
+        <p:dataTable id="carTable" value="#{dynamicTableBean.filteredCars}" var="car" paginator="true" paginatorPosition="bottom" rows="10">
+            <!-- Sortable columns -->
+            <p:column headerText="Make" sortBy="#{car.make}">
+                <h:outputText value="#{car.make}" />
+            </p:column>
+            <p:column headerText="Model" sortBy="#{car.model}">
+                <h:outputText value="#{car.model}" />
+            </p:column>
+            <p:column headerText="Year" sortBy="#{car.year}">
+                <h:outputText value="#{car.year}" />
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+</html>
