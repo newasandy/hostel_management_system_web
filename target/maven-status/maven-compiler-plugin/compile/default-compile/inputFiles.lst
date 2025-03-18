@@ -10,5 +10,6 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserDashboardBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/AuthenticationService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/EntityManageUtils.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/AdminDashboardBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/LoginFilter.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/PasswordUtils.java

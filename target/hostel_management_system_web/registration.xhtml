@@ -4,40 +4,82 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-    <title>Login</title>
-    <h:outputStylesheet name="css/style.css"/>
+    <title>Register</title>
+    <h:outputStylesheet>
+
+        .container{
+        margin-top:5%;
+        }
+        .registration-panel {
+        width: 50%;
+        margin: auto;
+        }
+
+        @media only screen and (max-width: 1000px) {
+        .registration-panel {
+        width: 70%;
+        }
+        }
+
+        @media only screen and (max-width: 480px) {
+        .registration-panel {
+        width: 80%;
+        }
+        }
+    </h:outputStylesheet>
 </h:head>
 <h:body>
-    <div class="login-form">
-        <h2>Register</h2><br/>
-        <h:form id="registerForm">
+    <div class="container">
+        <h:form id="registrationForm">
             <p:messages globalOnly="true" closable="true"/>
-            <p:outputLabel value="Full Name:" /><br/>
-            <p:inputText styleClass="input-field" id="name" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." />
-            <h:message for="name" display="text" style="color:red;"/>
-            <br/>
-            <p:outputLabel for="email" value="Email:" /><br/>
-            <p:inputText styleClass="input-field" id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." />
-            <h:message for="email" display="text"  style="color:red;"/>
-            <br/>
+            <p:panel styleClass="registration-panel">
+                <h2 style="text-align: center;">Register</h2>
+                <p:panelGrid columns="2" styleClass="ui-grid-responsive" style="width:100%">
+                    <h:outputLabel for="fullName" value="Full Name:"/>
+                    <p:inputText id="fullName" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." style="width:100%"/>
 
-            <p:outputLabel for="password" value="Password:" /><br/>
-            <p:password styleClass="input-field" id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" />
-            <h:message  for="password" display="text" style="color:red;"/>
-            <br/>
 
-            <p:outputLabel for="role" value="Role:" /><br/>
-            <p:selectOneMenu id="role" value="#{userBean.role}" required="true" requiredMessage="Role is required.">
-                <f:selectItem itemLabel="Select Role" itemValue="" noSelectionOption="true"/>
-                <f:selectItem itemLabel="USER" itemValue="USER"/>
-                <f:selectItem itemLabel="ADMIN" itemValue="ADMIN"/>
-            </p:selectOneMenu>
-            <h:message for="role" display="text" style="color:red;"/>
-            <br/>
+                    <h:outputLabel for="email" value="Email:"/>
+                    <p:inputText id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
 
-            <p:commandButton value="Register" action="#{userBean.registrationUser}" validateClient="true" update="@form" />
+                    <h:outputLabel for="password" value="Password:"/>
+                    <p:password id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" style="width:100%"/>
+
+
+
+                    <h:outputLabel for="role" value="Role:"/>
+                    <p:selectOneMenu id="role" value="#{userBean.role}" required="true" requiredMessage="Role is required.">
+                        <f:selectItem itemLabel="Select Role" itemValue=""/>
+                        <f:selectItem itemLabel="User" itemValue="USER"/>
+                        <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
+                    </p:selectOneMenu>
+
+
+                    <h:outputLabel for="country" value="Country:"/>
+                    <p:inputText id="country" value="#{userBean.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+
+
+                    <h:outputLabel for="district" value="District:"/>
+                    <p:inputText id="district" value="#{userBean.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+
+
+                    <h:outputLabel for="rmcMc" value="RMC/MC:"/>
+                    <p:inputText id="rmcMc" value="#{userBean.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+
+
+
+                    <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                    <p:inputText id="wardNumber" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+
+
+                </p:panelGrid>
+                <div style="text-align: center; padding: 20px; ">
+                    <p:commandButton value="Register" action="#{userBean.registerUser}" validateClient="true" update="@form" style="margin-top:10px; width:100px;"/>
+                </div>
+            </p:panel>
         </h:form>
     </div>
+
 
 </h:body>
 

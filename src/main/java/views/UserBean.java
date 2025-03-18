@@ -24,6 +24,11 @@ public class UserBean implements Serializable{
     private String email;
     private String password;
     private String role;
+    private String country;
+    private String district;
+    private String rmcMc;
+    private int wardNumber;
+
 
 
     public String getUserRole() {
@@ -73,6 +78,38 @@ public class UserBean implements Serializable{
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getRmcMc() {
+        return rmcMc;
+    }
+
+    public void setRmcMc(String rmcMc) {
+        this.rmcMc = rmcMc;
+    }
+
+    public int getWardNumber() {
+        return wardNumber;
+    }
+
+    public void setWardNumber(int wardNumber) {
+        this.wardNumber = wardNumber;
     }
 
     public String registrationUser(){

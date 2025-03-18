@@ -2,6 +2,7 @@ daoInterface/UsersDAO.class
 daoImp/UserDAOImpl.class
 service/AuthenticationService.class
 views/UserBean.class
+views/AdminDashboardBean.class
 daoInterface/BaseDAO.class
 views/UserDashboardBean.class
 controller/UserController.class
