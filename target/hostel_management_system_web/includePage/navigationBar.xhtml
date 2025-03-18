@@ -15,22 +15,17 @@
     <div class="card">
         <h:form>
             <p:megaMenu orientation="horizontal" autoDisplay="false">
-                <p:menuitem value="Home" url="#"/>
-                <p:menuitem value="About" url="#"/>
-                <p:menuitem value="Contact" url="#"/>
+                <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest() or userBean.isUser() or userBean.isAdmin()}" url="#"/>
+                <p:menuitem value="About" outcome="about" rendered="#{userBean.isGuest()}" url="#"/>
+                <p:menuitem value="Contact" outcome="contact" rendered="#{userBean.isGuest()}" url="#"/>
 
-                <p:submenu label="Service">
-                    <p:column>
-                        <p:submenu label="Service">
-                            <p:menuitem value="Room Allocation" url="#"/>
-                            <p:menuitem value="Leave Request" url="#"/>
-                            <p:menuitem value="View Visitor" url="#"/>
-                        </p:submenu>
-                    </p:column>
-                </p:submenu>
-                <p:menuitem position="right">
-                    <p:commandButton value="Logout" icon="pi pi-sign-in" action="#{userBean.logout}"/>
-                </p:menuitem>
+                <p:menuitem value="Service" rendered="#{userBean.isUser()}"/>
+
+                <p:menuitem value="User Dashboard"  rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Admin Service" rendered="#{userBean.isAdmin()}"/>
+
+                <p:menuitem value="Login" url="login.xhtml"/>
+
             </p:megaMenu>
         </h:form>
     </div>

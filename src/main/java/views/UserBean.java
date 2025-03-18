@@ -5,24 +5,43 @@ import model.StatusMessageModel;
 import model.Users;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
-@Named
-@ViewScoped
-public class UserBean implements Serializable {
+@ManagedBean
+@SessionScoped
+public class UserBean implements Serializable{
     private final UserController userController = new UserController();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
+    private String userRole = "GUEST";
 
     private String name;
     private String email;
     private String password;
     private String role;
+
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public boolean isGuest() {
+        return "GUEST".equals(userRole);
+    }
+
+    public boolean isUser() {
+        return "USER".equals(userRole);
+    }
+
+    public boolean isAdmin() {
+        return "ADMIN".equals(userRole);
+    }
+
 
     public String getName() {
         return name;
@@ -81,6 +100,7 @@ public class UserBean implements Serializable {
             userCookie.setMaxAge(3600);
             userCookie.setPath("/");
             response.addCookie(userCookie);
+            userRole= user.getRoles();
             return "/Users/userDashboard.xhtml?faces-redirect=true";
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -94,7 +114,6 @@ public class UserBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-        // Remove the cookie
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -106,8 +125,8 @@ public class UserBean implements Serializable {
                 }
             }
         }
-
         facesContext.getExternalContext().invalidateSession();
-        return "/login.xhtml?faces-redirect=true";
+        userRole = "GUEST";
+        return "/index.xhtml?faces-redirect=true";
     }
 }

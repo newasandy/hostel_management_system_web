@@ -1,10 +1,8 @@
 <jboss-deployment-structure>
     <deployment>
-        <dependencies>
-            <module name="org.dom4j" export="true"/>
-        </dependencies>
-        <exclude-subsystems>
-            <subsystem name="org.dom4j"/>
-        </exclude-subsystems>
+        <exclusions>
+            <module name="org.dom4j"/>
+            <module name="org.hibernate"/>
+        </exclusions>
     </deployment>
 </jboss-deployment-structure>
