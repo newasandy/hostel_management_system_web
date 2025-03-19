@@ -9,7 +9,6 @@
 <h:head>
     <title>View Student</title>
     <h:outputStylesheet>
-
         .top-bar{
         width:100%;
         display:flex;
@@ -26,7 +25,8 @@
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
 
-    <h:form>
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
         <div style="width:100%; display:flex; justify-content: center;">
             <h2>Student's List</h2>
         </div>
@@ -34,10 +34,12 @@
             <p:inputText placeholder="Search By Name or Email" style="width:250px;">
 
             </p:inputText>
-            <p:commandButton value="Add" icon="pi pi-user-plus" style="right: 0px; margin-left: 15px" type="button" onclick="PF('regDialog').show()" />
-
+            <p:commandButton value=" Add" icon="pi pi-user-plus"
+                             style="right: 0px; margin-left: 15px"
+                             partialSubmit="true"
+                             update=":main-form:message :main-form:userTable"
+                             oncomplete="PF('regDialog').show()" />
         </div>
-
 
         <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" var="student" paginator="true" paginatorPosition="bottom" rows="10">
             <!-- Sortable columns -->
@@ -78,19 +80,17 @@
                 <p:commandButton icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
                                  rendered="#{student.status}"
                                  action="#{userBean.deactivateStudent(student)}"
-                                 update="userTable" />
+                                 update=":main-form:message :main-form:userTable" />
 
                 <p:commandButton icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
                                  rendered="#{not student.status}"
                                  action="#{userBean.activateStudent(student)}"
-                                 update="userTable" />
-
+                                 update=":main-form:message :main-form:userTable" />
             </p:column>
-
         </p:dataTable>
     </h:form>
 
-    <p:dialog header="Registration Form" widgetVar="regDialog" modal="true" onShow="showModal();" onHide="hideModal();" resizable="false">
+    <p:dialog header="Registration Form" widgetVar="regDialog" modal="true" resizable="false">
 
         <h:form id="registrationForm">
             <h:panelGrid columns="2" cellpadding="5">
@@ -124,7 +124,12 @@
                 <h:outputLabel for="wardNumber" value="Ward Number:"/>
                 <p:inputText id="wardNumber" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
 
-                <p:commandButton value="Register" action="#{userBean.registrationUser}" validateClient="true" update="@form" style="margin-top:10px; width:100px;"/>
+                <p:commandButton value="Register"
+                                 action="#{userBean.registrationUser}"
+                                 validateClient="true"
+                                 update=":main-form:message :main-form:userTable"
+                                 oncomplete="if (!args.validationFailed) PF('regDialog').hide()"
+                                 style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel" onclick="PF('regDialog').hide();" style="margin-top:10px; width:100px;" />
             </h:panelGrid>
         </h:form>
@@ -156,16 +161,12 @@
 
                 <p:commandButton value="Save" action="#{userBean.updateUser}"
                                  validateClient="true"
-                                 update="updateForm"
+                                 update=":main-form:message :updateForm :main-form:userTable"
                                  oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
                                  style="margin-top:10px; margin-left:10px; width:100px;"/>
                 <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
             </h:panelGrid>
         </h:form>
-
     </p:dialog>
-
-
-
 </h:body>
 </html>

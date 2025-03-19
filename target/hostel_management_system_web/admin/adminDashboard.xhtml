@@ -48,7 +48,9 @@
     </header>
     <div class="container">
         <h:form>
-            <h2 style="text-align: center;">Admin Dashboard</h2>
+            <div style="width:100%; display:flex; justify-content: center;">
+                <h2>Admin Dashboard</h2>
+            </div>
             <div class="dashboard-container">
                 <ui:repeat value="#{adminDashboardBean.cards}" var="card">
                     <ui:include src="/includePage/card.xhtml">

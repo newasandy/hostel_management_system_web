@@ -21,13 +21,14 @@
 
                 <p:menuitem value="Service" rendered="#{userBean.isUser()}"/>
 
-                <p:menuitem value="Dashboard"  rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
                 <p:menuitem value="View Rooms" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Room Allocation" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Visitor" rendered="#{userBean.isAdmin()}"/>
 
-                <p:menuitem value="Login" url="login.xhtml"/>
+                <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}"/>
+                <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}"/>
 
             </p:megaMenu>
         </h:form>

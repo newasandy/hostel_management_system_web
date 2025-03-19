@@ -9,10 +9,14 @@ import model.Users;
 import service.AuthenticationService;
 import service.UserService;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,13 +25,17 @@ import java.io.Serializable;
 @ManagedBean
 @SessionScoped
 public class UserBean implements Serializable{
+
+    @Inject
+    private ViewStudentBean viewStudentBean;
+
+
     private final UsersDAO usersDAO = new UserDAOImpl();
     private final AddressDAOImp addressDAOImp = new AddressDAOImp();
     private final UserService userService = new UserService(usersDAO,addressDAOImp);
     private final AuthenticationService authenticationService = new AuthenticationService(usersDAO);
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
-
     private String name;
     private String email;
     private String password;
@@ -40,6 +48,10 @@ public class UserBean implements Serializable{
     private Address selectUserAddress;
 
 
+    @PostConstruct
+    public void init() {
+        setUserRoleFromCookieOrSession();
+    }
 
     public String getUserRole() {
         return userRole;
@@ -138,17 +150,35 @@ public class UserBean implements Serializable{
         this.selectUserAddress = selectUserAddress;
     }
 
-    public String registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
-        if (statusMessageModel.isStatus()){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            return "viewStudent.xhtml?faces-redirect=true";
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            return "viewStudent.xhtml?faces-redirect=true";
+    private void setUserRoleFromCookieOrSession() {
+        // Try to get the userRole from the cookie
+        Cookie cookie = (Cookie) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestCookieMap()
+                .get("userRole");
+        if (cookie != null) {
+            userRole = cookie.getValue();
+        } else {
+            userRole = "GUEST";
         }
+    }
+
+    public void registrationUser(){
+        statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
+        try {
+            if (statusMessageModel.isStatus()){
+                viewStudentBean.refreshStudentList();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to register user."));
+        }
+
     }
 
     public String login(){
@@ -191,14 +221,14 @@ public class UserBean implements Serializable{
         try {
             if (usersDAO.update(student)){
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User deactivated successfully!"));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!"));
             }else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not deactivated"));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Deactivated"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to deactivated user."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user."));
         }
     }
     public void activateStudent(Users student) {
@@ -206,39 +236,34 @@ public class UserBean implements Serializable{
         try {
             if (usersDAO.update(student)){
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User deactivated successfully!"));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!"));
             }else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not deactivated"));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Activated"));
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to deactivated user."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Activated user."));
         }
     }
 
     public void prepareUpdateStudent(Users student) {
         this.selectUser = student;
     }
-    public String updateUser(){
+    public void updateUser(){
         System.out.println("Update function called");
         try {
             if (usersDAO.update(selectUser)){
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
-                return "viewStudent.xhtml?faces-redirect=true";
             }else {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update"));
-                return "viewStudent.xhtml?faces-redirect=true";
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user."));
-            return "viewStudent.xhtml?faces-redirect=true";
         }
-
-
     }
 
     public String logout(){

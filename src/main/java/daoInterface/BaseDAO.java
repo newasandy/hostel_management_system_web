@@ -8,4 +8,5 @@ public interface BaseDAO<T> {
     boolean delete(Long id);
     T getById(Long id);
     List<T> getAll();
+    Long getCount();
 }

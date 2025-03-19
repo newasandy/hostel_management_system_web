@@ -79,4 +79,10 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T> {
         return entityManager.createQuery("SELECT e FROM "+ entityClass.getName() + " e",entityClass)
                 .getResultList();
     }
+
+    @Override
+    public Long getCount(){
+        return entityManager.createQuery("SELECT COUNT(*) FROM "+ entityClass.getName() +" e",Long.class)
+                .getSingleResult();
+    }
 }

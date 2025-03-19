@@ -67,4 +67,9 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
         }
     }
 
+    @Override
+    public Long getCountOnlyAllocated() {
+        return entityManager.createQuery("SELECT COUNT(*) FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL",Long.class)
+                .getSingleResult();
+    }
 }

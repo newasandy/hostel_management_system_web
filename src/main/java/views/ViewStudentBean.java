@@ -4,6 +4,7 @@ import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
 import model.Users;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -15,11 +16,20 @@ import java.util.List;
 @ViewScoped
 public class ViewStudentBean implements Serializable {
     private UsersDAO usersDAO = new UserDAOImpl();
-    private List<Users> onlyStudent = usersDAO.getOnlyStudent();
+    private List<Users> onlyStudent;
+
+    @PostConstruct
+    public void init(){
+        onlyStudent = usersDAO.getOnlyStudent();
+    }
+
+
+
+    public void refreshStudentList() {
+        onlyStudent = usersDAO.getOnlyStudent();
+    }
 
     public List<Users> getOnlyStudent() {
         return onlyStudent;
     }
-
-
 }
