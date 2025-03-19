@@ -10,8 +10,8 @@
 <h:body>
     <div class="login-form">
         <h2>Login</h2><br/>
-        <h:form>
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+        <h:form id="loginForm">
+            <p:growl id="message" showDetail="true" life="3000" sticky="false" />
             <p:outputLabel for="email" value="Email:" /><br/>
             <p:inputText styleClass="input-field" id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." />
             <h:message for="email" display="text"  style="color:red;"/>
@@ -21,7 +21,7 @@
             <p:password styleClass="input-field" id="password" value="#{userBean.password}" required="true" requiredMessage="Password is requires."/>
             <h:message for="password" display="text"  style="color:red;"/>
             <br/>
-            <p:commandButton value="Login" action="#{userBean.login}" validateClient="true" update="@form" />
+            <p:commandButton value="Login" action="#{userBean.login}" validateClient="true" update=":loginForm :loginForm:message" />
         </h:form>
     </div>
 

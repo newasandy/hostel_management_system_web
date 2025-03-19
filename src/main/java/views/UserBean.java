@@ -184,34 +184,39 @@ public class UserBean implements Serializable{
     public String login(){
         Users user = authenticationService.loginService(email,password);
         if (user != null){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+            if(user.isStatus()){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-            Cookie userCookie = new Cookie("email", user.getEmail());
-            userCookie.setMaxAge(60*60*60);
-            userCookie.setPath("/");
-            response.addCookie(userCookie);
+                Cookie userCookie = new Cookie("email", user.getEmail());
+                userCookie.setMaxAge(60*60*60);
+                userCookie.setPath("/");
+                response.addCookie(userCookie);
 
-            // Create cookie for user role
-            Cookie userRoleCookie = new Cookie("userRole", user.getRoles());
-            userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
-            userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
-            response.addCookie(userRoleCookie);
+                // Create cookie for user role
+                Cookie userRoleCookie = new Cookie("userRole", user.getRoles());
+                userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
+                userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
+                response.addCookie(userRoleCookie);
 
 
-            userRole= user.getRoles();
-            if ("USER".equals(user.getRoles())) {
-                return "/users/userDashboard.xhtml?faces-redirect=true";
-            } else if ("ADMIN".equals(user.getRoles())) {
-                return "/admin/adminDashboard.xhtml?faces-redirect=true";
+                userRole= user.getRoles();
+                if ("USER".equals(user.getRoles())) {
+                    return "/users/userDashboard.xhtml?faces-redirect=true";
+                } else if ("ADMIN".equals(user.getRoles())) {
+                    return "/admin/adminDashboard.xhtml?faces-redirect=true";
+                }
             }
-            return "login.xhtml?faces-redirect=true";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User is Deactivated"));
+
+            return null;
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
-            return "login.xhtml?faces-redirect=true";
+            return null;
         }
     }
 
