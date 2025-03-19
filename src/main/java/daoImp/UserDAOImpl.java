@@ -40,7 +40,7 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
     @Override
     public List<Users> getOnlyStudent(){
         try{
-            return entityManager.createQuery("SELECT u FROM Users u WHERE u.roles = :roles",Users.class)
+            return entityManager.createQuery("SELECT u FROM Users u LEFT JOIN FETCH u.address WHERE u.roles = :roles",Users.class)
                     .setParameter("roles", "USER")
                     .getResultList();
         }catch (Exception e){

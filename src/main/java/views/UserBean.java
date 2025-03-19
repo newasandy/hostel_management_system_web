@@ -3,6 +3,7 @@ package views;
 import daoImp.AddressDAOImp;
 import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
+import model.Address;
 import model.StatusMessageModel;
 import model.Users;
 import service.AuthenticationService;
@@ -35,6 +36,8 @@ public class UserBean implements Serializable{
     private String district;
     private String rmcMc;
     private int wardNumber;
+    private Users selectUser;
+    private Address selectUserAddress;
 
 
 
@@ -119,16 +122,32 @@ public class UserBean implements Serializable{
         this.wardNumber = wardNumber;
     }
 
+    public Users getSelectUser() {
+        return selectUser;
+    }
+
+    public void setSelectUser(Users selectUser) {
+        this.selectUser = selectUser;
+    }
+
+    public Address getSelectUserAddress() {
+        return selectUserAddress;
+    }
+
+    public void setSelectUserAddress(Address selectUserAddress) {
+        this.selectUserAddress = selectUserAddress;
+    }
+
     public String registrationUser(){
         statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
         if (statusMessageModel.isStatus()){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            return "adminDashboard.xhtml?faces-redirect=true";
+            return "viewStudent.xhtml?faces-redirect=true";
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            return "registration.xhtml?faces-redirect=true";
+            return "viewStudent.xhtml?faces-redirect=true";
         }
     }
 
@@ -164,6 +183,62 @@ public class UserBean implements Serializable{
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
             return "login.xhtml?faces-redirect=true";
         }
+    }
+
+    public void deactivateStudent(Users student) {
+        student.setStatus(false);
+
+        try {
+            if (usersDAO.update(student)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User deactivated successfully!"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not deactivated"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to deactivated user."));
+        }
+    }
+    public void activateStudent(Users student) {
+        student.setStatus(true);
+        try {
+            if (usersDAO.update(student)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User deactivated successfully!"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not deactivated"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to deactivated user."));
+        }
+    }
+
+    public void prepareUpdateStudent(Users student) {
+        this.selectUser = student;
+    }
+    public String updateUser(){
+        System.out.println("Update function called");
+        try {
+            if (usersDAO.update(selectUser)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
+                return "viewStudent.xhtml?faces-redirect=true";
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update"));
+                return "viewStudent.xhtml?faces-redirect=true";
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user."));
+            return "viewStudent.xhtml?faces-redirect=true";
+        }
+
+
     }
 
     public String logout(){

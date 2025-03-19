@@ -24,6 +24,8 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T> {
         try{
             transaction.begin();
             entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.clear();
             transaction.commit();
             status = true;
         }catch (Exception e){
