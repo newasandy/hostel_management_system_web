@@ -36,6 +36,7 @@ public class UserBean implements Serializable{
     private final AuthenticationService authenticationService = new AuthenticationService(usersDAO);
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
+
     private String name;
     private String email;
     private String password;
@@ -44,6 +45,7 @@ public class UserBean implements Serializable{
     private String district;
     private String rmcMc;
     private int wardNumber;
+
     private Users selectUser;
     private Address selectUserAddress;
 
@@ -167,6 +169,7 @@ public class UserBean implements Serializable{
         statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
         try {
             if (statusMessageModel.isStatus()){
+
                 viewStudentBean.refreshStudentList();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
@@ -185,6 +188,7 @@ public class UserBean implements Serializable{
         Users user = authenticationService.loginService(email,password);
         if (user != null){
             if(user.isStatus()){
+                resetFields();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
                 FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -256,7 +260,6 @@ public class UserBean implements Serializable{
         this.selectUser = student;
     }
     public void updateUser(){
-        System.out.println("Update function called");
         try {
             if (usersDAO.update(selectUser)){
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -290,5 +293,16 @@ public class UserBean implements Serializable{
         facesContext.getExternalContext().invalidateSession();
         userRole = "GUEST";
         return "/index.xhtml?faces-redirect=true";
+    }
+
+    private void resetFields() {
+        this.name = null;
+        this.email = null;
+        this.password = null;
+        this.role = null;
+        this.country = null;
+        this.district = null;
+        this.rmcMc = null;
+        this.wardNumber = 0; // Assuming 0 is the default value for wardNumber
     }
 }

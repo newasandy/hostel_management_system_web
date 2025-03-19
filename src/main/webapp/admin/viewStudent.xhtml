@@ -127,13 +127,12 @@
                 <p:commandButton value="Register"
                                  action="#{userBean.registrationUser}"
                                  validateClient="true"
-                                 update=":main-form:message :main-form:userTable"
+                                 update=":main-form:message :registrationForm :main-form:userTable"
                                  oncomplete="if (!args.validationFailed) PF('regDialog').hide()"
                                  style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel" onclick="PF('regDialog').hide();" style="margin-top:10px; width:100px;" />
             </h:panelGrid>
         </h:form>
-
     </p:dialog>
 
     <p:dialog header="Update Form" widgetVar="updateDialog" modal="true" resizable="false">
