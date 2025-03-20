@@ -167,6 +167,7 @@ public class UserBean implements Serializable{
 
     public void registrationUser(){
         statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
+        resetFields();
         try {
             if (statusMessageModel.isStatus()){
 
@@ -295,14 +296,14 @@ public class UserBean implements Serializable{
         return "/index.xhtml?faces-redirect=true";
     }
 
-    private void resetFields() {
-        this.name = null;
-        this.email = null;
-        this.password = null;
-        this.role = null;
-        this.country = null;
-        this.district = null;
-        this.rmcMc = null;
+    public void resetFields() {
+        this.name = "";
+        this.email = "";
+        this.password = "";
+        this.role = "";
+        this.country = "";
+        this.district = "";
+        this.rmcMc = "";
         this.wardNumber = 0; // Assuming 0 is the default value for wardNumber
     }
 }
