@@ -25,7 +25,7 @@
                 <p:menuitem value="View Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
                 <p:menuitem value="View Rooms" url="viewRooms.xhtml" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Room Allocation" rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="View Visitor" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
 
                 <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}"/>
                 <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}"/>

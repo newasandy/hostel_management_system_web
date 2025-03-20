@@ -40,38 +40,32 @@
                              partialSubmit="true"
                              action="#{userBean.resetFields}"
                              update=":main-form:message :main-form:userTable"
-                             oncomplete="PF('regDialog').show()" />
+                             oncomplete="PF('addVisitor').show()" />
         </div>
 
-        <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" rowIndexVar="rowIndex" var="student" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="userTable" value="#{viewVisitorBean.visitorList}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="10">
 
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>
-            <p:column headerText="Full Name" sortBy="#{student.fullName}">
-                <h:outputText value="#{student.fullName}" />
+            <p:column headerText="Full Name" sortBy="#{visitor.fullName}">
+                <h:outputText value="#{visitor.fullName}" />
             </p:column>
-            <p:column headerText="Email" sortBy="#{student.email}">
-                <h:outputText value="#{student.email}" />
+            <p:column headerText="Student Name" sortBy="#{visitor.studentId.fullName}">
+                <h:outputText value="#{visitor.studentId.fullName}" />
             </p:column>
-            <p:column headerText="Country" sortBy="#{student.address.country}">
-                <h:outputText value="#{student.address.country}" />
+            <p:column headerText="Relation" sortBy="#{visitor.relation}">
+                <h:outputText value="#{visitor.relation}" />
             </p:column>
-            <p:column headerText="District" sortBy="#{student.address.district}">
-                <h:outputText value="#{student.address.district}" />
+            <p:column headerText="Reason" sortBy="#{visitor.reason}">
+                <h:outputText value="#{visitor.reason}" />
             </p:column>
-            <p:column headerText="Municipality" sortBy="#{student.address.rmcMc}">
-                <h:outputText value="#{student.address.rmcMc}" />
+            <p:column headerText="Entry Date Time" sortBy="#{visitor.entryDatetime}">
+                <h:outputText value="#{visitor.entryDatetime}" />
             </p:column>
-            <p:column headerText="Ward Number">
-                <h:outputText value="#{student.address.wardNo}" />
+            <p:column headerText="Exit Date Time" sortBy="#{visitor.exitDatetime}">
+                <h:outputText value="#{student.exitDatetime}" />
             </p:column>
-
-            <p:column headerText="Status">
-                <h:outputText value="#{student.status ? 'Active' : 'Inactive'}"
-                              style="color: #{student.status ? 'green' : 'red'}; font-weight: bold;"/>
-            </p:column>
-
             <!-- Action Column -->
             <p:column headerText="Actions">
                 <!-- Update Button -->
@@ -86,25 +80,19 @@
 
                 <!-- Deactivate Button -->
 
-                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
-                                 rendered="#{student.status}"
+                <p:commandButton id="exit-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
+                                 rendered="#{visitor.exitDatetime == null}"
                                  action="#{userBean.deactivateStudent(student)}"
                                  update=":main-form:message :main-form:userTable" />
-                <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
-
-                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
-                                 rendered="#{not student.status}"
-                                 action="#{userBean.activateStudent(student)}"
-                                 update=":main-form:message :main-form:userTable" />
-                <p:tooltip for="activate-btn" value="Activate" position="top"/>
+                <p:tooltip for="exit-btn" value="Exit" position="top"/>
 
             </p:column>
         </p:dataTable>
     </h:form>
 
-    <p:dialog header="Registration Form" widgetVar="regDialog" modal="true" resizable="false">
+    <p:dialog header="Add Visitor" widgetVar="addVisitor" modal="true" resizable="false">
 
-        <h:form id="registrationForm">
+        <h:form id="visitor-form">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="fullName" value="First Name:" />
                 <p:inputText id="fullName" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." style="width:100%" />
@@ -139,7 +127,7 @@
                 <p:commandButton value="Register"
                                  action="#{userBean.registrationUser}"
                                  validateClient="true"
-                                 update=":main-form:message :registrationForm :main-form:userTable"
+                                 update=":main-form:message :visitor-form :main-form:userTable"
                                  oncomplete="if (!args.validationFailed) { PF('regDialog').hide(); #{userBean.resetFields()}; }"
                                  style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel"

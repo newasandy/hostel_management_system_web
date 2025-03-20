@@ -2,6 +2,7 @@ daoInterface/MonthlyFeeDAO.class
 daoInterface/UsersDAO.class
 daoImp/AddressDAOImp.class
 daoImp/RoomDAOImp.class
+views/ViewVisitorBean.class
 views/ViewRoomsBean.class
 daoInterface/RoomAllocationDAO.class
 daoImp/RoomAllocationDAOImp.class

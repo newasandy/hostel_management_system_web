@@ -62,13 +62,13 @@
                                  rendered="#{room.status}"
                                  action="#{viewRoomsBean.disableRoom(room)}"
                                  update=":main-form:message :main-form:roomTable" />
-                <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
+                <p:tooltip for="deactivate-btn" value="Not Allow" position="top"/>
 
                 <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
                                  rendered="#{not room.status}"
                                  action="#{viewRoomsBean.enableRoom(room)}"
                                  update=":main-form:message :main-form:roomTable" />
-                <p:tooltip for="activate-btn" value="Activate" position="top"/>
+                <p:tooltip for="activate-btn" value="Allow" position="top"/>
 
             </p:column>
         </p:dataTable>
