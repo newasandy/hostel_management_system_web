@@ -30,7 +30,7 @@ public class ViewRoomsBean implements Serializable {
     private List<Rooms> viewRoomsList;
 
     private Rooms selectRoom;
-    private boolean isEditMode = false;
+    private boolean isEditMode;
 
     @PostConstruct
     public void init(){
@@ -42,22 +42,20 @@ public class ViewRoomsBean implements Serializable {
         viewRoomsList = new ArrayList<>(orginalRoomsList);
     }
 
-    public void prepareEditRoom(Rooms room) {
-        this.selectRoom = room;
-        this.isEditMode = true;
+    public Rooms getSelectRoom() {
+        return selectRoom;
     }
 
-    public void prepareAddRoom() {
-        resetFields();
-        this.isEditMode = false;
+    public void setSelectRoom(Rooms selectRoom) {
+        this.selectRoom = selectRoom;
     }
 
-    public boolean isEditMode() {
+    public boolean getIsEditMode() {
         return isEditMode;
     }
 
-    public void setEditMode(boolean isEditMode) {
-        this.isEditMode = isEditMode;
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
     }
 
     public List<Rooms> getViewRoomsList() {
@@ -80,13 +78,22 @@ public class ViewRoomsBean implements Serializable {
         this.capacity = capacity;
     }
 
+    public void prepareEditRoom(Rooms room) {
+        this.selectRoom = room;
+    }
+
+    public void prepareAddRoom() {
+        resetFields();
+        this.isEditMode = false;
+    }
+
     public void saveOrUpdateRoom() {
         if (isEditMode) {
-            updateRoom(); // Call the update logic
+            updateRoom();
         } else {
-            addNewRoom(); // Call the add logic
+            addNewRoom();
         }
-        resetFields(); // Reset the form after the operation
+        resetFields();
     }
 
     public void addNewRoom(){
@@ -121,9 +128,41 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    public void disableRoom(Rooms room){
+        room.setStatus(false);
+        try{
+            if (roomDAO.update(room)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            }
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+        }
+    }
+
+    public void enableRoom(Rooms room){
+        room.setStatus(true);
+        try{
+            if (roomDAO.update(room)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            }
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+        }
+    }
+
 
     public void resetFields(){
-        this.roomNumber = 0;
-        this.capacity = 0;
+        this.roomNumber = 1;
+        this.capacity = 1;
     }
 }

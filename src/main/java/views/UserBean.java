@@ -10,13 +10,11 @@ import service.AuthenticationService;
 import service.UserService;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -303,6 +301,6 @@ public class UserBean implements Serializable{
         this.country = "";
         this.district = "";
         this.rmcMc = "";
-        this.wardNumber = 0; // Assuming 0 is the default value for wardNumber
+        this.wardNumber = 1;
     }
 }

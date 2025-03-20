@@ -43,8 +43,11 @@
                              oncomplete="PF('regDialog').show()" />
         </div>
 
-        <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" var="student" paginator="true" paginatorPosition="bottom" rows="10">
-            <!-- Sortable columns -->
+        <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" rowIndexVar="rowIndex" var="student" paginator="true" paginatorPosition="bottom" rows="10">
+
+            <p:column headerText="SN" style="width: 30px;">
+                <h:outputText value="#{rowIndex + 1}" />
+            </p:column>
             <p:column headerText="Full Name" sortBy="#{student.fullName}">
                 <h:outputText value="#{student.fullName}" />
             </p:column>
@@ -131,7 +134,7 @@
 
 
                 <h:outputLabel for="wardNumber" value="Ward Number:"/>
-                <p:inputText id="wardNumber" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
 
                 <p:commandButton value="Register"
                                  action="#{userBean.registrationUser}"
@@ -168,7 +171,7 @@
 
 
                 <h:outputLabel for="wardNumber" value="Ward Number:"/>
-                <p:inputText id="wardNumber" value="#{userBean.selectUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.selectUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
 
                 <p:commandButton value="Save" action="#{userBean.updateUser}"
                                  validateClient="true"
