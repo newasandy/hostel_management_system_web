@@ -2,12 +2,14 @@ daoInterface/MonthlyFeeDAO.class
 daoInterface/UsersDAO.class
 daoImp/AddressDAOImp.class
 daoImp/RoomDAOImp.class
+views/ViewRoomsBean.class
 daoInterface/RoomAllocationDAO.class
 daoImp/RoomAllocationDAOImp.class
 views/UserBean.class
 model/MonthlyFee.class
 views/UserDashboardBean.class
 model/Address.class
+service/RoomsService.class
 views/DynamicTableBean$Car.class
 utils/EntityManageUtils.class
 model/LeaveRequest.class

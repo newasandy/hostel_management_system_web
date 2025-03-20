@@ -170,7 +170,6 @@ public class UserBean implements Serializable{
         resetFields();
         try {
             if (statusMessageModel.isStatus()){
-
                 viewStudentBean.refreshStudentList();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));

@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,11 +17,13 @@ import java.util.stream.Collectors;
 public class ViewStudentBean implements Serializable {
     private UsersDAO usersDAO = new UserDAOImpl();
     private List<Users> onlyStudent;
+    private List<Users> originalStudentList;
     private String searchItem;
 
     @PostConstruct
     public void init(){
-        onlyStudent = usersDAO.getOnlyStudent();
+        originalStudentList = usersDAO.getOnlyStudent();
+        onlyStudent = new ArrayList<>(originalStudentList);
     }
 
     public void searchList(){
@@ -28,12 +31,13 @@ public class ViewStudentBean implements Serializable {
             refreshStudentList();
         }else {
             String lowerSearch = searchItem.toLowerCase();
-            onlyStudent = onlyStudent.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList());
+            onlyStudent = originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList());
         }
     }
 
     public void refreshStudentList() {
-        onlyStudent = usersDAO.getOnlyStudent();
+        originalStudentList = usersDAO.getOnlyStudent();
+        onlyStudent = new ArrayList<>(originalStudentList);
     }
 
     public List<Users> getOnlyStudent() {

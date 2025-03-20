@@ -23,7 +23,7 @@
 
                 <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
-                <p:menuitem value="View Rooms" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="View Rooms" url="viewRooms.xhtml" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Room Allocation" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="View Visitor" rendered="#{userBean.isAdmin()}"/>
 

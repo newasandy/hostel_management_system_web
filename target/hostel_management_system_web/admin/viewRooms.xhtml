@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>View Student</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        padding:5px;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        }
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div style="width:100%; display:flex; justify-content: center;">
+            <h2>Student's List</h2>
+        </div>
+        <div class="top-bar">
+            <p:inputText id="searchItem" value="#{viewStudentBean.searchItem}" placeholder="Search By Name or Email" style="width:250px;">
+                <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="roomTable" />
+            </p:inputText>
+
+            <p:commandButton value=" Add" icon="pi pi-plus"
+                             style="right: 0px; margin-left: 15px"
+                             action="#{viewRoomsBean.prepareAddRoom()}"
+                             partialSubmit="true"
+                             update=":main-form:message :main-form:roomTable"
+                             oncomplete="PF('addRoom').show()" />
+        </div>
+
+        <p:dataTable id="roomTable" value="#{viewRoomsBean.viewRoomsList}" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+            <!-- Sortable columns -->
+            <p:column headerText="Room Number" sortBy="#{room.roomNumber}">
+                <h:outputText value="#{room.roomNumber}" />
+            </p:column>
+            <p:column headerText="Capacity" sortBy="#{room.capacity}">
+                <h:outputText value="#{room.capacity}" />
+            </p:column>
+            <p:column headerText="Status">
+                <h:outputText value="#{room.status ? 'Allowed' : 'Not Allowed'}"
+                              style="color: #{room.status ? 'green' : 'red'}; font-weight: bold;"/>
+            </p:column>
+
+            <!-- Action Column -->
+            <p:column headerText="Actions">
+                <!-- Update Button -->
+                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                                 rendered="#{room.status}"
+                                 action="#{viewRoomsBean.prepareEditRoom(room)}"
+                                 partialSubmit="true"
+                                 update=":roomForm"
+                                 oncomplete="PF('addRoom').show()"
+                />
+                <p:tooltip for="update-btn" value="Update" position="top"/>
+
+                <!-- Deactivate Button -->
+
+                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
+                                 rendered="#{room.status}"
+                                 action="#{userBean.deactivateStudent(student)}"
+                                 update=":main-form:message :main-form:roomTable" />
+                <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
+
+                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
+                                 rendered="#{not room.status}"
+                                 action="#{userBean.activateStudent(student)}"
+                                 update=":main-form:message :main-form:roomTable" />
+                <p:tooltip for="activate-btn" value="Activate" position="top"/>
+
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <p:dialog header="#{viewRoomsBean.isEditMode ? 'Update Room' : 'Add New Room'}" widgetVar="addRoom" modal="true" resizable="false">
+
+        <h:form id="roomForm">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="roomNumber" value="Room Number:" />
+                <p:inputText id="roomNumber" value="#{viewRoomsBean.isEditMode ? viewRoomsBean.selectRoom.roomNumber : viewRoomsBean.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
+
+                <h:outputLabel for="capacity" value="Capacity:"/>
+                <p:inputText id="capacity" value="#{viewRoomsBean.isEditMode ? viewRoomsBean.selectRoom.capacity : viewRoomsBean.capacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
+
+                <p:commandButton value="#{viewRoomsBean.isEditMode ? 'Update' : 'Add'}"
+                                 action="#{viewRoomsBean.isEditMode ? viewRoomsBean.updateRoom() : viewRoomsBean.addNewRoom()}"
+                                 validateClient="true"
+                                 update=":main-form:message :roomForm :main-form:roomTable"
+                                 oncomplete="if (!args.validationFailed) { PF('addRoom').hide(); #{viewRoomsBean.resetFields()}; }"
+                                 style="margin-top:10px; width:100px;"/>
+                <p:commandButton value="Cancel"
+                                 actionListener="#{viewRoomsBean.resetFields()}"
+                                 onclick="PF('addRoom').hide();"
+                                 style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog header="Update Form" widgetVar="updateDialog" modal="true" resizable="false">
+
+        <h:form id="updateForm">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="fullName" value="First Name:" />
+                <p:inputText id="fullName" value="#{userBean.selectUser.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+
+                <h:outputLabel for="email" value="Email:"/>
+                <p:inputText id="email" value="#{userBean.selectUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+
+                <h:outputLabel for="country" value="Country:"/>
+                <p:inputText id="country" value="#{userBean.selectUser.address.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+
+                <h:outputLabel for="district" value="District:"/>
+                <p:inputText id="district" value="#{userBean.selectUser.address.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+
+                <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
+                <p:inputText id="rmcMc" value="#{userBean.selectUser.address.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+
+
+                <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                <p:inputText id="wardNumber" value="#{userBean.selectUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+
+                <p:commandButton value="Save" action="#{userBean.updateUser}"
+                                 validateClient="true"
+                                 update=":main-form:message :updateForm :main-form:roomTable"
+                                 oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
+                                 style="margin-top:10px; margin-left:10px; width:100px;"/>
+                <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</h:body>
+</html>
