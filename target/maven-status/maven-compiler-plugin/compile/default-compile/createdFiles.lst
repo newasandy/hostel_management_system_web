@@ -9,6 +9,7 @@ daoImp/RoomAllocationDAOImp.class
 views/UserBean.class
 model/MonthlyFee.class
 views/UserDashboardBean.class
+model/UserType.class
 model/Address.class
 service/RoomsService.class
 views/DynamicTableBean$Car.class

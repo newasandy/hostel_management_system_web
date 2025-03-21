@@ -4,6 +4,7 @@ import daoImp.AddressDAOImp;
 import daoInterface.UsersDAO;
 import model.Address;
 import model.StatusMessageModel;
+import model.UserType;
 import model.Users;
 import utils.PasswordUtils;
 
@@ -18,7 +19,7 @@ public class UserService {
         this.addressDAOImp = addressDAOImp;
     }
 
-    public StatusMessageModel registerNewStudent(String name, String email , String password, String role, String country, String district, String rmcMc, int wardNo){
+    public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo){
         Users checkUser = usersDAO.getByEmail(email);
         if (checkUser == null){
             Users regUser = new Users();

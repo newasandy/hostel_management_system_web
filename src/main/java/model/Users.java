@@ -15,8 +15,9 @@ public class Users extends BaseEntity{
     @Column(name = "passwords", nullable = false, length = 100)
     private String passwords;
 
-    @Column(name = "roles", nullable = false, length = 20)
-    private String roles;
+    @ManyToOne
+    @JoinColumn(name = "roles", nullable = false)
+    private UserType roles;
 
     @Column(name = "status", nullable = false)
     private boolean status;
@@ -39,7 +40,7 @@ public class Users extends BaseEntity{
     public Users() {
     }
 
-    public Users(String fullName, String email, String passwords, String roles, boolean status, Address address, List<LeaveRequest> leaveRequests, List<RoomAllocation> roomAllocations, List<Visitors> visitors, List<MonthlyFee> monthlyFees) {
+    public Users(String fullName, String email, String passwords, UserType roles, boolean status, Address address, List<LeaveRequest> leaveRequests, List<RoomAllocation> roomAllocations, List<Visitors> visitors, List<MonthlyFee> monthlyFees) {
         this.fullName = fullName;
         this.email = email;
         this.passwords = passwords;
@@ -76,11 +77,11 @@ public class Users extends BaseEntity{
         this.passwords = passwords;
     }
 
-    public String getRoles() {
+    public UserType getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(UserType roles) {
         this.roles = roles;
     }
 

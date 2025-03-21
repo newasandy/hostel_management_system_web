@@ -10,13 +10,13 @@ import java.util.Date;
 public class Visitors extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "student_id")
     private Users studentId;
 
     @Column(name = "full_name", nullable = false, length = 50)
     private String fullName;
 
-    @Column(name = "relation", nullable = false, length = 50)
+    @Column(name = "relation", length = 50)
     private String relation;
 
     @Column(name = "reason", nullable = false)

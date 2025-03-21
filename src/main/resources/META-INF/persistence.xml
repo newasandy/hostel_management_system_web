@@ -3,6 +3,7 @@
     <persistence-unit name="hostelmanagement" transaction-type="RESOURCE_LOCAL">
         <jta-data-source>java:/jdbc/HostelManagementSystemWeb</jta-data-source>
         <class>model.Users</class>
+        <class>model.UserType</class>
         <class>model.Address</class>
         <class>model.LeaveRequest</class>
         <class>model.MonthlyFee</class>

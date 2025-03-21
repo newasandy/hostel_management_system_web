@@ -5,6 +5,7 @@ import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
 import model.Address;
 import model.StatusMessageModel;
+import model.UserType;
 import model.Users;
 import service.AuthenticationService;
 import service.UserService;
@@ -39,6 +40,7 @@ public class UserBean implements Serializable{
     private String email;
     private String password;
     private String role;
+    private UserType roles;
     private String country;
     private String district;
     private String rmcMc;
@@ -164,7 +166,7 @@ public class UserBean implements Serializable{
     }
 
     public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,role,country,district,rmcMc,wardNumber);
+        statusMessageModel = userService.registerNewStudent(name,email,password,roles,country,district,rmcMc,wardNumber);
         resetFields();
         try {
             if (statusMessageModel.isStatus()){
@@ -198,13 +200,13 @@ public class UserBean implements Serializable{
                 response.addCookie(userCookie);
 
                 // Create cookie for user role
-                Cookie userRoleCookie = new Cookie("userRole", user.getRoles());
+                Cookie userRoleCookie = new Cookie("userRole", user.getRoles().getUserTypes());
                 userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
                 userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
                 response.addCookie(userRoleCookie);
 
 
-                userRole= user.getRoles();
+                userRole= user.getRoles().getUserTypes();
                 if ("USER".equals(user.getRoles())) {
                     return "/users/userDashboard.xhtml?faces-redirect=true";
                 } else if ("ADMIN".equals(user.getRoles())) {
