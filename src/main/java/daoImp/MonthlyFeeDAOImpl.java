@@ -2,6 +2,8 @@ package daoImp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
 import daoInterface.MonthlyFeeDAO;
 import model.MonthlyFee;
 import utils.EntityManageUtils;
@@ -9,7 +11,6 @@ import utils.EntityManageUtils;
 import java.util.List;
 
 public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements MonthlyFeeDAO {
-
 
     private EntityManager entityManager = EntityManageUtils.getEntityManager();
 

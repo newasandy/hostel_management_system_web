@@ -2,6 +2,7 @@ package views;
 
 import daoImp.AddressDAOImp;
 import daoImp.UserDAOImpl;
+import daoImp.UserTypeDAOImp;
 import daoInterface.UsersDAO;
 import model.Address;
 import model.StatusMessageModel;
@@ -11,28 +12,34 @@ import service.AuthenticationService;
 import service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.util.List;
 
-@ManagedBean
+@Named("userBean")
 @SessionScoped
 public class UserBean implements Serializable{
 
     @Inject
     private ViewStudentBean viewStudentBean;
 
+    private UsersDAO usersDAO = new UserDAOImpl();
 
-    private final UsersDAO usersDAO = new UserDAOImpl();
-    private final AddressDAOImp addressDAOImp = new AddressDAOImp();
-    private final UserService userService = new UserService(usersDAO,addressDAOImp);
-    private final AuthenticationService authenticationService = new AuthenticationService(usersDAO);
+    private AddressDAOImp addressDAOImp = new AddressDAOImp();
+
+    private UserTypeDAOImp userTypeDAOImp = new UserTypeDAOImp();
+
+    private UserService userService = new UserService(usersDAO,addressDAOImp);
+
+    private AuthenticationService authenticationService = new AuthenticationService(usersDAO);
+
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
 
@@ -40,19 +47,26 @@ public class UserBean implements Serializable{
     private String email;
     private String password;
     private String role;
-    private UserType roles;
     private String country;
     private String district;
     private String rmcMc;
     private int wardNumber;
+    private UserType selectUserType;
 
+    private List<UserType> userTypes;
     private Users selectUser;
     private Address selectUserAddress;
 
 
     @PostConstruct
     public void init() {
-        setUserRoleFromCookieOrSession();
+        try {
+            setUserRoleFromCookieOrSession();
+            userTypes = userTypeDAOImp.getAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize UserBean", e);
+        }
     }
 
     public String getUserRole() {
@@ -63,6 +77,10 @@ public class UserBean implements Serializable{
         return "GUEST".equals(userRole);
     }
 
+    public List<UserType> getUserTypes() {
+        return userTypes;
+    }
+
     public boolean isUser() {
         return "USER".equals(userRole);
     }
@@ -71,6 +89,13 @@ public class UserBean implements Serializable{
         return "ADMIN".equals(userRole);
     }
 
+    public UserType getSelectUserType() {
+        return selectUserType;
+    }
+
+    public void setSelectUserType(UserType selectUserType) {
+        this.selectUserType = selectUserType;
+    }
 
     public String getName() {
         return name;
@@ -166,7 +191,7 @@ public class UserBean implements Serializable{
     }
 
     public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,roles,country,district,rmcMc,wardNumber);
+        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber);
         resetFields();
         try {
             if (statusMessageModel.isStatus()){
@@ -207,9 +232,9 @@ public class UserBean implements Serializable{
 
 
                 userRole= user.getRoles().getUserTypes();
-                if ("USER".equals(user.getRoles())) {
+                if ("USER".equals(user.getRoles().getUserTypes())) {
                     return "/users/userDashboard.xhtml?faces-redirect=true";
-                } else if ("ADMIN".equals(user.getRoles())) {
+                } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
                     return "/admin/adminDashboard.xhtml?faces-redirect=true";
                 }
             }

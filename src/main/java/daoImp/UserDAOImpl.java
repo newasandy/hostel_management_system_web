@@ -4,11 +4,20 @@ import daoInterface.UsersDAO;
 import model.Users;
 import utils.EntityManageUtils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
+@Named
+@ApplicationScoped
+public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO, Serializable {
+    private static final long serialVersionUID = 1L;
+
     public UserDAOImpl(){
         super(Users.class);
     }
@@ -40,11 +49,11 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
     @Override
     public List<Users> getOnlyStudent(){
         try{
-            return entityManager.createQuery("SELECT u FROM Users u LEFT JOIN FETCH u.address WHERE u.roles = :roles",Users.class)
+            return entityManager.createQuery("SELECT u FROM Users u LEFT JOIN FETCH u.address WHERE u.roles.userTypes = :roles",Users.class)
                     .setParameter("roles", "USER")
                     .getResultList();
         }catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 }

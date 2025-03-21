@@ -2,6 +2,8 @@ package daoImp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
 import daoInterface.RoomDAO;
 import model.Rooms;
 import utils.EntityManageUtils;
@@ -10,6 +12,8 @@ import java.util.List;
 
 
 public class RoomDAOImp extends BaseDAOImp<Rooms> implements RoomDAO {
+
+
     private EntityManager entityManager = EntityManageUtils.getEntityManager();
 
     public RoomDAOImp (){

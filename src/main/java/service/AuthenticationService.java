@@ -1,28 +1,33 @@
 package service;
 
-
 import daoInterface.UsersDAO;
 import model.Users;
 import utils.PasswordUtils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+@ApplicationScoped
 public class AuthenticationService {
+
     private UsersDAO usersDAO;
 
-    public AuthenticationService(UsersDAO userDAO) {
-        this.usersDAO = userDAO;
+    public AuthenticationService(UsersDAO usersDAO) {
+        this.usersDAO = usersDAO;
     }
 
-    public Users loginService(String email, String password){
+    public Users loginService(String email, String password) {
         Users user = usersDAO.getByEmail(email);
-        if (user != null){
-            if (PasswordUtils.verifyPassword(password,user.getPasswords())){
+        if (user != null) {
+            if (PasswordUtils.verifyPassword(password, user.getPasswords())) {
                 return user;
 
-            }else {
+            } else {
+                System.out.println("+++++++++++++++=======Login Service....=======+++++++++++++++++++++++++");
                 return null;
             }
-        }else
+        } else {
             return null;
         }
-
     }
+}

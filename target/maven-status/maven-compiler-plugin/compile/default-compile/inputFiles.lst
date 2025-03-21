@@ -3,6 +3,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/MonthlyFeeDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/BaseDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UserTypeDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UsersDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/BaseDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/RoomAllocation.java
@@ -11,6 +12,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/VisitorsDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/Visitors.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/RoomsService.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserTypeDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserDashboardBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/MonthlyFee.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/AddressDAOImp.java
@@ -32,6 +34,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/ViewRoomsBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/AuthenticationService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/RoomDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserTypeConverter.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/Rooms.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/EntityManageUtils.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/ViewStudentBean.java

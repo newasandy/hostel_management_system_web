@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Named
+@Named("viewStudentBean")
 @ViewScoped
 public class ViewStudentBean implements Serializable {
+
     private UsersDAO usersDAO = new UserDAOImpl();
+
     private List<Users> onlyStudent;
     private List<Users> originalStudentList;
     private String searchItem;

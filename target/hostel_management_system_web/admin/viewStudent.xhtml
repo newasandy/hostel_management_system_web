@@ -117,10 +117,12 @@
 
 
                 <h:outputLabel for="role" value="Role:"/>
-                <p:selectOneMenu id="role" value="#{userBean.role}" required="true" requiredMessage="Role is required.">
-                    <f:selectItem itemLabel="Select Role" itemValue=""/>
-                    <f:selectItem itemLabel="User" itemValue="USER"/>
-                    <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
+                <p:selectOneMenu id="role" value="#{userBean.selectUserType}" required="true" requiredMessage="Role is required." converter="userTypeConverter">
+                    <f:selectItem itemLabel="Select Role" itemValue="#{null}"/>
+                    <f:selectItems value="#{userBean.userTypes}"
+                                   var="userType"
+                                   itemLabel="#{userType.userTypes}"
+                                   itemValue="#{userType}"/>
                 </p:selectOneMenu>
 
                 <h:outputLabel for="country" value="Country:"/>

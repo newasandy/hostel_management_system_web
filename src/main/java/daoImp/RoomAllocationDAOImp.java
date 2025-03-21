@@ -3,6 +3,8 @@ package daoImp;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
 import daoInterface.RoomAllocationDAO;
 import model.RoomAllocation;
 import model.Rooms;
@@ -14,6 +16,7 @@ import java.util.List;
 public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO {
 
     private EntityManager entityManager = EntityManageUtils.getEntityManager();
+
     private EntityTransaction entityTransaction = entityManager.getTransaction();
     public RoomAllocationDAOImp(){
         super(RoomAllocation.class);

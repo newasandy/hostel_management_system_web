@@ -2,6 +2,8 @@ package daoImp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
 import daoInterface.VisitorsDAO;
 import model.Visitors;
 import utils.EntityManageUtils;
@@ -9,7 +11,10 @@ import utils.EntityManageUtils;
 import java.util.List;
 
 public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO {
+
     private EntityManager entityManager = EntityManageUtils.getEntityManager();
+
+
     public VisitorsDAOImp(){
         super(Visitors.class);
     }

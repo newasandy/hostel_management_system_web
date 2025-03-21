@@ -7,7 +7,7 @@ import java.util.List;
 @Table(name = "user_type", schema = "hostelmanagement")
 public class UserType extends BaseEntity{
 
-    @Column(name = "types" , nullable = false , length = 20)
+    @Column(name = "role" , nullable = false , length = 20)
     private String userTypes;
 
     @OneToMany(mappedBy = "roles")
