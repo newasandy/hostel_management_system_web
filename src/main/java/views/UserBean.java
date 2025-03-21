@@ -325,6 +325,7 @@ public class UserBean implements Serializable{
         this.email = "";
         this.password = "";
         this.role = "";
+        this.selectUserType = null;
         this.country = "";
         this.district = "";
         this.rmcMc = "";

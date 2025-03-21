@@ -7,6 +7,7 @@ views/ViewVisitorBean.class
 views/ViewRoomsBean.class
 daoInterface/RoomAllocationDAO.class
 daoImp/RoomAllocationDAOImp.class
+service/VisitorService.class
 views/UserBean.class
 model/MonthlyFee.class
 views/UserDashboardBean.class
