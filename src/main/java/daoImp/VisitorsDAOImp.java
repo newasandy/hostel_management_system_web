@@ -39,5 +39,4 @@ public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO 
             return null;
         }
     }
-
 }

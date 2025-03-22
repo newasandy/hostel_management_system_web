@@ -23,6 +23,8 @@ public class VisitorService {
         Visitors newVisitor = new Visitors();
         newVisitor.setFullName(fullName);
         newVisitor.setReason(reason);
+        newVisitor.setStudentId(student);
+        newVisitor.setRelation(relation);
 
         Date date = new Date();
         Timestamp entryTime = new Timestamp(date.getTime());

@@ -10,6 +10,7 @@ import model.Visitors;
 import service.VisitorService;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Named("viewVisitorBean")
-@ViewScoped
+@SessionScoped
 public class ViewVisitorBean implements Serializable {
     private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
@@ -31,6 +32,7 @@ public class ViewVisitorBean implements Serializable {
     private List<Visitors> orginalVisitorList;
     private List<Visitors> visitorList;
     private String searchItem;
+    private List<Visitors> viewVisitorByEachStudent;
 
     private String fullName;
     private String reason;
@@ -72,6 +74,30 @@ public class ViewVisitorBean implements Serializable {
         visitorList = new ArrayList<>(orginalVisitorList);
     }
 
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
+    }
+
+    public Users getSelectStudent() {
+        return selectStudent;
+    }
+
+    public void setSelectStudent(Users selectStudent) {
+        this.selectStudent = selectStudent;
+    }
+
+    public List<Visitors> getViewVisitorByEachStudent() {
+        return viewVisitorByEachStudent;
+    }
+
+    public void setViewVisitorByEachStudent(List<Visitors> viewVisitorByEachStudent) {
+        this.viewVisitorByEachStudent = viewVisitorByEachStudent;
+    }
+
     public List<Visitors> getVisitorList() {
         return visitorList;
     }
@@ -104,6 +130,7 @@ public class ViewVisitorBean implements Serializable {
         statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
         if (statusMessageModel.isStatus()){
             refreshVisitorList();
+            refreshVisitorByEachStudent();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
         }else {
@@ -123,6 +150,28 @@ public class ViewVisitorBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor."));
         }
+    }
+
+    public String viewStudentVisitor(Users student){
+        selectStudent = student;
+        viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(student.getId());
+        Collections.sort(viewVisitorByEachStudent, new Comparator<Visitors>() {
+            @Override
+            public int compare(Visitors v1, Visitors v2) {
+                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
+            }
+        });
+        return "/admin/studentVisitor.xhtml?faces-redirect=true";
+    }
+
+    public void refreshVisitorByEachStudent(){
+        viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(selectStudent.getId());
+        Collections.sort(viewVisitorByEachStudent, new Comparator<Visitors>() {
+            @Override
+            public int compare(Visitors v1, Visitors v2) {
+                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
+            }
+        });
     }
 
     public void resetFields(){

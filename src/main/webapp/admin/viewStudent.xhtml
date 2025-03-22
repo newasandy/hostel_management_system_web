@@ -32,10 +32,10 @@
                 <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
             </p:inputText>
 
-            <h3 style="margin-right: 50px;">Students</h3>
+            <h3 style="margin-right: 150px;">Students</h3>
 
             <p:commandButton value=" Add" icon="pi pi-user-plus"
-                             style="right: 0px; margin-left: 15px"
+                             style="right: 0px; margin-left: 15px color:#FFFFFF; background-color:#3498DB;"
                              partialSubmit="true"
                              action="#{userBean.resetFields}"
                              update=":main-form:message :main-form:userTable"
@@ -74,9 +74,10 @@
             <!-- Action Column -->
             <p:column headerText="Actions">
                 <!-- Update Button -->
-                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                <p:commandButton id="update-btn" icon="pi pi-pencil"
                                  rendered="#{student.status}"
                                  action="#{userBean.prepareUpdateStudent(student)}"
+                                 style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                                  partialSubmit="true"
                                  update=":updateForm"
                                  oncomplete="PF('updateDialog').show()"
@@ -85,15 +86,20 @@
 
                 <!-- Deactivate Button -->
 
-                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
+                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
                                  rendered="#{student.status}"
                                  action="#{userBean.deactivateStudent(student)}"
                                  update=":main-form:message :main-form:userTable" />
                 <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
 
-                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
+                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#2ECC71;"
                                  rendered="#{not student.status}"
                                  action="#{userBean.activateStudent(student)}"
+                                 update=":main-form:message :main-form:userTable" />
+                <p:tooltip for="activate-btn" value="Activate" position="top"/>
+
+                <p:commandButton id="view-btn" icon="pi pi-eye" style="margin-right: 5px; color:#000000; background-color:#00FFFF;"
+                                 action="#{viewVisitorBean.viewStudentVisitor(student)}"
                                  update=":main-form:message :main-form:userTable" />
                 <p:tooltip for="activate-btn" value="Activate" position="top"/>
 
