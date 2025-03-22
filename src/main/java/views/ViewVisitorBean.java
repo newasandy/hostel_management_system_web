@@ -1,5 +1,7 @@
 package views;
 
+import java.util.Collections;
+import java.util.Comparator;
 import daoImp.VisitorsDAOImp;
 import daoInterface.VisitorsDAO;
 import model.StatusMessageModel;
@@ -39,6 +41,14 @@ public class ViewVisitorBean implements Serializable {
     @PostConstruct
     public void init(){
         orginalVisitorList = visitorsDAO.getAll();
+
+        Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
+            @Override
+            public int compare(Visitors v1, Visitors v2) {
+                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
+            }
+        });
+
         visitorList = new ArrayList<>(orginalVisitorList);
     }
 
@@ -53,6 +63,12 @@ public class ViewVisitorBean implements Serializable {
 
     public void refreshVisitorList(){
         orginalVisitorList = visitorsDAO.getAll();
+        Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
+            @Override
+            public int compare(Visitors v1, Visitors v2) {
+                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
+            }
+        });
         visitorList = new ArrayList<>(orginalVisitorList);
     }
 

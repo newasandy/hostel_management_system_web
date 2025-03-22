@@ -13,10 +13,10 @@
         width:100%;
         display:flex;
         align-items:center;
-        padding:5px;
         justify-content: space-between;
         border: 1px solid #D9D9D9;
         border-radius: 5px;
+        height: 45px;
         }
     </h:outputStylesheet>
 </h:head>
@@ -27,13 +27,13 @@
 
     <h:form id="main-form">
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
-        <div style="width:100%; display:flex; justify-content: center;">
-            <h2>Visitors</h2>
-        </div>
+
         <div class="top-bar">
             <p:inputText id="searchItem" value="#{viewVisitorBean.searchItem}" placeholder="Search By Name or Email" style="width:250px;">
                 <p:ajax event="keyup" listener="#{viewVisitorBean.searchList}" update="visitorTable" />
             </p:inputText>
+
+            <h3>Visitors</h3>
 
             <p:commandButton value=" Add" icon="pi pi-user-plus"
                              style="right: 0px; margin-left: 15px"

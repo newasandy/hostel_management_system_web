@@ -3,6 +3,7 @@ daoInterface/UserTypeDAO.class
 daoInterface/UsersDAO.class
 daoImp/AddressDAOImp.class
 daoImp/RoomDAOImp.class
+views/ViewVisitorBean$1.class
 views/ViewVisitorBean.class
 views/ViewRoomsBean.class
 daoInterface/RoomAllocationDAO.class
@@ -26,6 +27,7 @@ model/BaseEntity.class
 daoImp/BaseDAOImp.class
 views/AdminDashboardBean$Card.class
 model/Rooms.class
+views/ViewVisitorBean$2.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
 service/AuthenticationService.class

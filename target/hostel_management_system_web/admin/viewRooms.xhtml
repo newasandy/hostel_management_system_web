@@ -8,6 +8,17 @@
 
 <h:head>
     <title>View Rooms</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+    </h:outputStylesheet>
 </h:head>
 <h:body>
     <header>
@@ -16,10 +27,8 @@
 
     <h:form id="main-form">
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
-        <div style="width:100%; display:flex; justify-content: center;">
-            <h2>Room List</h2>
-        </div>
-        <div style="position: absolute; right: 0px; top: 100px;">
+        <div class="top-bar">
+            <h3 style="margin-right: 50px;">Room List</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
                              style="right: 5px; margin-left: 15px"
                              action="#{viewRoomsBean.prepareAddRoom}"
@@ -28,7 +37,7 @@
                              oncomplete="PF('addRoom').show()" />
         </div>
 
-        <p:dataTable style="margin-top: 35px;" id="roomTable" value="#{viewRoomsBean.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="roomTable" value="#{viewRoomsBean.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
             <!-- Sortable columns -->
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
