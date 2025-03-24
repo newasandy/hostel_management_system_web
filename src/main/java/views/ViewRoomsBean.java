@@ -1,9 +1,14 @@
 package views;
 
+import daoImp.RoomAllocationDAOImp;
 import daoImp.RoomDAOImp;
+import daoImp.UserDAOImpl;
+import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
+import daoInterface.UsersDAO;
 import model.Rooms;
 import model.StatusMessageModel;
+import model.Users;
 import service.RoomsService;
 
 import javax.annotation.PostConstruct;
@@ -20,8 +25,10 @@ import java.util.List;
 public class ViewRoomsBean implements Serializable {
 
     private RoomDAO roomDAO = new RoomDAOImp();
+    private UsersDAO usersDAO = new UserDAOImpl();
+    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
-    private final RoomsService roomsService = new RoomsService(roomDAO);
+    private final RoomsService roomsService = new RoomsService(roomDAO, roomAllocationDAO);
 
     private int roomNumber;
     private int capacity;
@@ -29,17 +36,41 @@ public class ViewRoomsBean implements Serializable {
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
 
+    private List<Users> unallocatedUser;
+    private List<Rooms> availableRoom;
+
     private Rooms selectRoom;
+    private Users selectStudent;
     private boolean isEditMode;
 
     @PostConstruct
     public void init(){
         orginalRoomsList = roomDAO.getAll();
         viewRoomsList = new ArrayList<>(orginalRoomsList);
+        unallocatedUser = usersDAO.getUnallocatedUsers();
+        availableRoom = roomDAO.getAvailableRoom();
     }
     public void refreshRoomList(){
         orginalRoomsList = roomDAO.getAll();
         viewRoomsList = new ArrayList<>(orginalRoomsList);
+        unallocatedUser = usersDAO.getUnallocatedUsers();
+        availableRoom = roomDAO.getAvailableRoom();
+    }
+
+    public List<Rooms> getAvailableRoom() {
+        return availableRoom;
+    }
+
+    public List<Users> getUnallocatedUser() {
+        return unallocatedUser;
+    }
+
+    public Users getSelectStudent() {
+        return selectStudent;
+    }
+
+    public void setSelectStudent(Users selectStudent) {
+        this.selectStudent = selectStudent;
     }
 
     public Rooms getSelectRoom() {
@@ -94,6 +125,15 @@ public class ViewRoomsBean implements Serializable {
             addNewRoom();
         }
         resetFields();
+    }
+
+    public void handleButtonAction(Users user) {
+        if (selectStudent != null && selectStudent.equals(user)) {
+            onCancel();
+        } else {
+            // Select the new student
+            setSelectStudent(user);
+        }
     }
 
     public void addNewRoom(){
@@ -158,6 +198,14 @@ public class ViewRoomsBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
         }
+    }
+
+    public void allocateStudentInARoom(){
+
+    }
+
+    public void onCancel(){
+        this.selectStudent = null;
     }
 
 

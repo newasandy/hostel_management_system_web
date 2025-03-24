@@ -6,9 +6,11 @@
 
 <h:head>
     <title>Demo</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primeicons@4.1.0/primeicons.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/primereact@7.2.0/resources/themes/saga/theme.css"/>
+    <h:outputStylesheet library="primefaces" name="primefaces.css" />
+    <h:outputStylesheet library="primefaces-saga" name="theme.css" />
+    <h:outputScript library="primefaces" name="primefaces.js" />
     <h:outputStylesheet name="css/style.css"/>
+    <h:outputStylesheet library="primefaces-saga" name="theme.css" />
 </h:head>
 <h:body>
     <!-- Navigation Bar -->
@@ -23,8 +25,16 @@
 
                 <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
-                <p:menuitem value="Rooms" url="viewRooms.xhtml" rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="Room Allocation" rendered="#{userBean.isAdmin()}"/>
+
+                <p:submenu label="Room" rendered="#{userBean.isAdmin()}" icon="ui-icon-check">
+                    <p:column>
+                        <p:submenu label="Service">
+                            <p:menuitem value="Rooms" url="viewRooms.xhtml" />
+                            <p:menuitem value="Room Allocation"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
 
                 <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}"/>

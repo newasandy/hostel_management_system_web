@@ -38,7 +38,7 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO, Serializ
     @Override
     public List<Users> getUnallocatedUsers(){
         try{
-            return entityManager.createQuery("SELECT u FROM Users u WHERE u.roles = :roles AND u.id NOT IN (SELECT ra.studentId.id FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL)", Users.class)
+            return entityManager.createQuery("SELECT u FROM Users u WHERE u.roles.userTypes = :roles AND u.id NOT IN (SELECT ra.studentId.id FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL)", Users.class)
                     .setParameter("roles", "USER")
                     .getResultList();
         }catch (NoResultException e){

@@ -1,5 +1,6 @@
 package service;
 
+import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import model.Rooms;
 import model.StatusMessageModel;
@@ -7,9 +8,11 @@ import model.StatusMessageModel;
 public class RoomsService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private RoomDAO roomDAO;
+    private RoomAllocationDAO roomAllocationDAO;
 
-    public RoomsService(RoomDAO roomDAO){
+    public RoomsService(RoomDAO roomDAO, RoomAllocationDAO roomAllocationDAO){
         this.roomDAO = roomDAO;
+        this.roomAllocationDAO = roomAllocationDAO;
     }
 
     public StatusMessageModel addNewRoom(int roomNumber , int capacity){
@@ -32,5 +35,7 @@ public class RoomsService {
         }
         return statusMessageModel;
     }
+
+
 
 }

@@ -117,16 +117,30 @@ public class ViewVisitorBean implements Serializable {
         this.reason = reason;
     }
 
-    public void addVisitor(){
+    public String addVisitor(){
         statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
-        if (statusMessageModel.isStatus()){
-            refreshVisitorList();
-            refreshVisitorByEachStudent();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+        if (selectStudent == null){
+            if (statusMessageModel.isStatus()){
+                refreshVisitorList();
+                resetFields();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+            return null;
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            if (statusMessageModel.isStatus()){
+                refreshVisitorList();
+                resetFields();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+            return "/admin/viewVisitor.xhtml?faces-redirect=true";
         }
     }
 

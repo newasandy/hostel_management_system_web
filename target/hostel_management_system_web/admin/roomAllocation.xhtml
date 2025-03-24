@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>View Rooms</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div class="top-bar">
+            <h3 >Room List</h3>
+            <p:commandButton value=" Add" icon="pi pi-plus"
+                             style="right: 5px; margin-left: 15px"
+                             action="#{viewRoomsBean.prepareAddRoom}"
+                             partialSubmit="true"
+                             update=":main-form:message :main-form:roomTable"
+                             oncomplete="PF('addRoom').show()" />
+        </div>
+
+        <div style="display:flex;">
+            <p:dataTable id="userTable" value="#{viewRoomsBean.unallocatedUser}" rowIndexVar="rowIndex" var="users" paginator="true" paginatorPosition="bottom" rows="10">
+                <p:column headerText="SN" style="width: 30px;">
+                    <h:outputText value="#{rowIndex + 1}" />
+                </p:column>
+                <p:column headerText="Room Number" sortBy="#{users.fullName}" filterBy="#{users.fullName}">
+                    <h:outputText value="#{users.fullName}" />
+                </p:column>
+
+                <p:column headerText="Select Student" style="width: 50px;" >
+                    <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.selectStudent eq users ? 'pi-minus-circle' : 'pi-plus-circle'}"
+                                     style="margin-right: 5px; background-color: #{viewRoomsBean.selectStudent eq users ? 'red' : '#3498DB'}"
+                                     action="#{viewRoomsBean.setSelectStudent(users)}"
+                                     partialSubmit="true"
+                                     update=":main-form:userTable :main-form:roomTable :confirmationForm"
+                    />
+                    <p:tooltip for="select-btn" value="Update" position="top"/>
+                </p:column>
+            </p:dataTable>
+            <p:dataTable id="roomTable" value="#{viewRoomsBean.availableRoom}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+                <p:column headerText="Select Room" style="width: 50px;">
+                    <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                                     rendered="#{viewRoomsBean.selectStudent != null}"
+                                     action="#{viewRoomsBean.setSelectRoom(room)}"
+                                     partialSubmit="true"
+                                     update=":main-form:userTable :main-form:roomTable :confirmationForm"
+                                     oncomplete="PF('allocateDialog').show()"
+                    />
+                    <p:tooltip for="update-btn" value="Update" position="top"/>
+                </p:column>
+                <p:column headerText="Room Number" sortBy="#{room.roomNumber}" filterBy="#{room.roomNumber}">
+                    <h:outputText value="#{room.roomNumber}" />
+                </p:column>
+                <p:column headerText="Capacity" sortBy="#{room.capacity}" filterBy="#{room.capacity}">
+                    <h:outputText value="#{room.capacity}" />
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+
+    <p:dialog header="Confirmation" widgetVar="allocateDialog" modal="true" resizable="false">
+
+        <h:form id="confirmationForm">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel value="Are you sure the #{viewRoomsBean.selectStudent.fullName} is allocated to room #{viewRoomsBean.selectRoom.roomNumber}?" />
+                <p:commandButton value="Allocate"
+                                 action="#{viewRoomsBean.allocateStudentInARoom}"
+                                 validateClient="true"
+                                 update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
+                                 oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); #{viewRoomsBean.resetFields()}; }"
+                                 style="margin-top:10px; width:100px;"/>
+                <p:commandButton value="Cancel"
+                                 action="#{viewRoomsBean.resetFields}"
+                                 onclick="PF('allocateDialog').hide();"
+                                 style="margin-top:10px; width:100px;" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</h:body>
+</html>
