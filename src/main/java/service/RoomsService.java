@@ -2,8 +2,13 @@ package service;
 
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
+import model.RoomAllocation;
 import model.Rooms;
 import model.StatusMessageModel;
+import model.Users;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class RoomsService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
@@ -36,6 +41,21 @@ public class RoomsService {
         return statusMessageModel;
     }
 
+    public StatusMessageModel allocateStudentInRoom(Users selectStudent, Rooms selectRoom){
+        RoomAllocation roomAllocation = new RoomAllocation();
+        roomAllocation.setStudentId(selectStudent);
+        roomAllocation.setRoomId(selectRoom);
+        Date date = new Date();
+        Timestamp allocatedDate = new Timestamp(date.getTime());
+        roomAllocation.setAllocationDate(allocatedDate);
+        if (roomAllocationDAO.add(roomAllocation)){
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("Allocated student Success");
+        }else {
 
-
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("Allocation Unsuccessful");
+        }
+        return statusMessageModel;
+    }
 }

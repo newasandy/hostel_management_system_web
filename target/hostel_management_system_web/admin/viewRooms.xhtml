@@ -28,7 +28,7 @@
     <h:form id="main-form">
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
         <div class="top-bar">
-            <h3 >Room List</h3>
+            <h3 >Room</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
                              style="right: 5px; margin-left: 15px"
                              action="#{viewRoomsBean.prepareAddRoom}"
@@ -38,7 +38,6 @@
         </div>
 
         <p:dataTable id="roomTable" value="#{viewRoomsBean.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
-            <!-- Sortable columns -->
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>
@@ -53,9 +52,7 @@
                               style="color: #{room.status ? 'green' : 'red'}; font-weight: bold;"/>
             </p:column>
 
-            <!-- Action Column -->
             <p:column headerText="Actions">
-                <!-- Update Button -->
                 <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
                                  rendered="#{room.status}"
                                  action="#{viewRoomsBean.prepareEditRoom(room)}"
@@ -64,8 +61,6 @@
                                  oncomplete="PF('updateRoom').show()"
                 />
                 <p:tooltip for="update-btn" value="Update" position="top"/>
-
-                <!-- Deactivate Button -->
 
                 <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
                                  rendered="#{room.status}"

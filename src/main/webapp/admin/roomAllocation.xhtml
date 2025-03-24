@@ -90,8 +90,9 @@
                                  style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel"
                                  action="#{viewRoomsBean.resetFields}"
+                                 update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
                                  onclick="PF('allocateDialog').hide();"
-                                 style="margin-top:10px; width:100px;" />
+                                 style="margin-top:10px; width:100px; background-color:red;" />
             </h:panelGrid>
         </h:form>
     </p:dialog>

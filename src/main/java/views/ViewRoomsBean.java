@@ -6,6 +6,7 @@ import daoImp.UserDAOImpl;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
+import model.RoomAllocation;
 import model.Rooms;
 import model.StatusMessageModel;
 import model.Users;
@@ -17,7 +18,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Named
@@ -35,6 +38,7 @@ public class ViewRoomsBean implements Serializable {
 
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
+    private List<RoomAllocation> roomAllocationList;
 
     private List<Users> unallocatedUser;
     private List<Rooms> availableRoom;
@@ -45,16 +49,18 @@ public class ViewRoomsBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        orginalRoomsList = roomDAO.getAll();
-        viewRoomsList = new ArrayList<>(orginalRoomsList);
-        unallocatedUser = usersDAO.getUnallocatedUsers();
-        availableRoom = roomDAO.getAvailableRoom();
+        refreshRoomList();
     }
     public void refreshRoomList(){
         orginalRoomsList = roomDAO.getAll();
         viewRoomsList = new ArrayList<>(orginalRoomsList);
         unallocatedUser = usersDAO.getUnallocatedUsers();
         availableRoom = roomDAO.getAvailableRoom();
+        roomAllocationList = roomAllocationDAO.getAll();
+    }
+
+    public List<RoomAllocation> getRoomAllocationList() {
+        return roomAllocationList;
     }
 
     public List<Rooms> getAvailableRoom() {
@@ -127,15 +133,6 @@ public class ViewRoomsBean implements Serializable {
         resetFields();
     }
 
-    public void handleButtonAction(Users user) {
-        if (selectStudent != null && selectStudent.equals(user)) {
-            onCancel();
-        } else {
-            // Select the new student
-            setSelectStudent(user);
-        }
-    }
-
     public void addNewRoom(){
         statusMessageModel = roomsService.addNewRoom(roomNumber,capacity);
         try{
@@ -172,6 +169,7 @@ public class ViewRoomsBean implements Serializable {
         room.setStatus(false);
         try{
             if (roomDAO.update(room)){
+                disableRoomUnallocatedStudent(room);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
             }else {
@@ -200,14 +198,72 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
-    public void allocateStudentInARoom(){
-
+    public String forAllocation(){
+        return "/admin/roomAllocation.xhtml?faces-redirect=true";
     }
 
-    public void onCancel(){
+    public String allocateStudentInARoom(){
+        statusMessageModel = roomsService.allocateStudentInRoom(selectStudent,selectRoom);
+        try{
+            if (statusMessageModel.isStatus()){
+                resetSelected();
+                resetFields();
+                refreshRoomList();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+            return "/admin/viewRoomAllocation.xhtml?faces-redirect=true";
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            return null;
+        }
+    }
+
+    public void unAllocatedStudent(RoomAllocation unallocated){
+        Date date = new Date();
+        Timestamp unAllocatedDate = new Timestamp(date.getTime());
+        unallocated.setUnallocationDate(unAllocatedDate);
+        try{
+            if (roomAllocationDAO.update(unallocated)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Unallocated Successfully"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated"));
+            }
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated"));
+        }
+    }
+    public void disableRoomUnallocatedStudent(Rooms disableRoom){
+        Date date = new Date();
+        Timestamp unAllocatedDate = new Timestamp(date.getTime());
+        try{
+            if (roomAllocationDAO.getRoomOccupancy(disableRoom) > 0){
+                if (roomAllocationDAO.disableRoomUnallocatedStudent(disableRoom.getId(), unAllocatedDate)){
+                    refreshRoomList();
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Unallocated All Student from Disable Room"));
+                }else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated all Student"));
+                }
+            }
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated  all Student"));
+        }
+    }
+
+    public void resetSelected(){
         this.selectStudent = null;
+        this.selectRoom = null;
     }
-
 
     public void resetFields(){
         this.roomNumber = 1;
