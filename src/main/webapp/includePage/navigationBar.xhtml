@@ -21,7 +21,15 @@
                 <p:menuitem value="About" outcome="about" rendered="#{userBean.isGuest()}" url="#"/>
                 <p:menuitem value="Contact" outcome="contact" rendered="#{userBean.isGuest()}" url="#"/>
 
-                <p:menuitem value="Service" rendered="#{userBean.isUser()}"/>
+                <p:submenu label="Service" rendered="#{userBean.isUser()}" icon="ui-icon-check">
+                    <p:column>
+                        <p:submenu label="Service">
+                            <p:menuitem value="Leave Application" />
+                            <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
+                            <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
 
                 <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>

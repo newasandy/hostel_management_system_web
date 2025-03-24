@@ -45,7 +45,6 @@ public class LoginFilter implements Filter {
             }
         }
 
-        // Continue with the filter chain
         chain.doFilter(request, response);
     }
 
@@ -57,13 +56,12 @@ public class LoginFilter implements Filter {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                System.out.println("Cookie: " + cookie.getName() + " = " + cookie.getValue());
                 if (cookie.getName().equals(cookieName)) {
                     return cookie.getValue();
                 }
             }
         }
-        return null; // Return null if no matching cookie is found
+        return null;
     }
 }
 

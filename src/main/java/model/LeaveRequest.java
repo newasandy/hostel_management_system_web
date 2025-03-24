@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "leave_request", schema = "hostelmanagement")
@@ -18,24 +19,24 @@ public class LeaveRequest extends BaseEntity {
     @Column(name = "apply_date", nullable = false)
     private Timestamp applyDate;
 
-    @Column(name = "start_from", nullable = false, length = 25)
-    private String startFrom;
+    @Column(name = "start_from", nullable = false)
+    private LocalDate startFrom;
 
-    @Column(name = "leave_days", nullable = false , length = 25)
-    private String leaveDays;
+    @Column(name = "end_on", nullable = false)
+    private LocalDate endOn;
 
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public LeaveRequest() {
     }
 
-    public LeaveRequest(Users studentId, String reason, Timestamp applyDate, String startFrom, String leaveDays, String status) {
+    public LeaveRequest(Users studentId, String reason, Timestamp applyDate, LocalDate startFrom, LocalDate endOn, Status status) {
         this.studentId = studentId;
         this.reason = reason;
         this.applyDate = applyDate;
         this.startFrom = startFrom;
-        this.leaveDays = leaveDays;
+        this.endOn = endOn;
         this.status = status;
     }
 
@@ -63,27 +64,31 @@ public class LeaveRequest extends BaseEntity {
         this.applyDate = applyDate;
     }
 
-    public String getStartFrom() {
+    public LocalDate getStartFrom() {
         return startFrom;
     }
 
-    public void setStartFrom(String startFrom) {
+    public void setStartFrom(LocalDate startFrom) {
         this.startFrom = startFrom;
     }
 
-    public String getLeaveDays() {
-        return leaveDays;
+    public LocalDate getEndOn() {
+        return endOn;
     }
 
-    public void setLeaveDays(String leaveDays) {
-        this.leaveDays = leaveDays;
+    public void setEndOn(LocalDate endOn) {
+        this.endOn = endOn;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public enum Status {
+        ACCEPTED, PENDING, REJECTED
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Room Allocation</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div class="top-bar">
+            <h3 style="margin-right: 150px;">Room Allocation</h3>
+        </div>
+
+        <p:dataTable id="roomAllocatedTable" value="#{viewRoomsBean.roomAllocationListByStudent}" rowIndexVar="rowIndex" var="allocate" paginator="true" paginatorPosition="bottom" rows="10">
+            <p:column headerText="SN" style="width: 30px;">
+                <h:outputText value="#{rowIndex + 1}" />
+            </p:column>
+            <p:column headerText="Name" sortBy="#{allocate.studentId.fullName}">
+                <h:outputText value="#{allocate.studentId.fullName}" />
+            </p:column>
+            <p:column headerText="Room Number" sortBy="#{allocate.roomId.roomNumber}" filterBy="#{allocate.roomId.roomNumber}">
+                <h:outputText value="#{allocate.roomId.roomNumber}" />
+            </p:column>
+            <p:column headerText="Allocated Date" sortBy="#{allocate.allocationDate}" >
+                <h:outputText value="#{allocate.allocationDate}" />
+            </p:column>
+            <p:column headerText="Unallocated Date" sortBy="#{allocate.unallocationDate}">
+                <h:outputText value="#{allocate.unallocationDate}" />
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+</h:body>
+</html>

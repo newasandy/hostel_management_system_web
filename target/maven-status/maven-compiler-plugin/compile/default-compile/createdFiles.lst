@@ -13,9 +13,9 @@ views/UserBean.class
 model/MonthlyFee.class
 views/UserDashboardBean.class
 model/UserType.class
+utils/GetCookiesValues.class
 model/Address.class
 service/RoomsService.class
-views/DynamicTableBean$Car.class
 utils/EntityManageUtils.class
 daoImp/UserTypeDAOImp.class
 model/LeaveRequest.class
@@ -32,7 +32,6 @@ daoImp/VisitorsDAOImp.class
 service/AuthenticationService.class
 views/AdminDashboardBean.class
 daoInterface/BaseDAO.class
-views/DynamicTableBean.class
 daoInterface/LeaveRequestDAO.class
 views/UserTypeConverter.class
 daoInterface/RoomDAO.class

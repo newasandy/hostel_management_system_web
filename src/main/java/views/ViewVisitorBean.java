@@ -2,12 +2,16 @@ package views;
 
 import java.util.Collections;
 import java.util.Comparator;
+
+import daoImp.UserDAOImpl;
 import daoImp.VisitorsDAOImp;
+import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
 import model.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 import service.VisitorService;
+import utils.GetCookiesValues;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 @SessionScoped
 public class ViewVisitorBean implements Serializable {
     private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
+    private UsersDAO usersDAO = new UserDAOImpl();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private VisitorService visitorService = new VisitorService(visitorsDAO);
 
@@ -39,6 +44,7 @@ public class ViewVisitorBean implements Serializable {
     private Users selectStudent;
     private String relation;
 
+    private String userRole = GetCookiesValues.getUserRoleFromCookie();
 
     @PostConstruct
     public void init(){
@@ -63,6 +69,10 @@ public class ViewVisitorBean implements Serializable {
             }
         });
         visitorList = new ArrayList<>(orginalVisitorList);
+        if ("USER".equals(userRole)){
+            Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+            viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(loginUser.getId());
+        }
     }
 
     public String getRelation() {

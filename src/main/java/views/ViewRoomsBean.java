@@ -11,6 +11,7 @@ import model.Rooms;
 import model.StatusMessageModel;
 import model.Users;
 import service.RoomsService;
+import utils.GetCookiesValues;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -39,6 +40,7 @@ public class ViewRoomsBean implements Serializable {
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
     private List<RoomAllocation> roomAllocationList;
+    private List<RoomAllocation> roomAllocationListByStudent;
 
     private List<Users> unallocatedUser;
     private List<Rooms> availableRoom;
@@ -57,6 +59,14 @@ public class ViewRoomsBean implements Serializable {
         unallocatedUser = usersDAO.getUnallocatedUsers();
         availableRoom = roomDAO.getAvailableRoom();
         roomAllocationList = roomAllocationDAO.getAll();
+        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
+            Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+            roomAllocationListByStudent = roomAllocationDAO.getUserAllocated(loginUser.getId());
+        }
+    }
+
+    public List<RoomAllocation> getRoomAllocationListByStudent() {
+        return roomAllocationListByStudent;
     }
 
     public List<RoomAllocation> getRoomAllocationList() {
