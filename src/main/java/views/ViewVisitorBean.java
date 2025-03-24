@@ -42,16 +42,7 @@ public class ViewVisitorBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        orginalVisitorList = visitorsDAO.getAll();
-
-        Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
-            @Override
-            public int compare(Visitors v1, Visitors v2) {
-                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
-            }
-        });
-
-        visitorList = new ArrayList<>(orginalVisitorList);
+        refreshVisitorList();
     }
 
     public void searchList(){
@@ -155,23 +146,11 @@ public class ViewVisitorBean implements Serializable {
     public String viewStudentVisitor(Users student){
         selectStudent = student;
         viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(student.getId());
-        Collections.sort(viewVisitorByEachStudent, new Comparator<Visitors>() {
-            @Override
-            public int compare(Visitors v1, Visitors v2) {
-                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
-            }
-        });
         return "/admin/studentVisitor.xhtml?faces-redirect=true";
     }
 
     public void refreshVisitorByEachStudent(){
         viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(selectStudent.getId());
-        Collections.sort(viewVisitorByEachStudent, new Comparator<Visitors>() {
-            @Override
-            public int compare(Visitors v1, Visitors v2) {
-                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
-            }
-        });
     }
 
     public void resetFields(){

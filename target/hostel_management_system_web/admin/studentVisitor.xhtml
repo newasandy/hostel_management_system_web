@@ -32,9 +32,9 @@
             <h3><h:outputLabel value="#{viewVisitorBean.selectStudent.fullName}'s Visitor Log" /></h3>
 
             <p:commandButton value=" Add" icon="pi pi-user-plus"
+                             rendered="#{viewVisitorBean.selectStudent.status}"
                              style="right: 0px; margin-left: 15px"
                              partialSubmit="true"
-                             action="#{viewVisitorBean.resetFields}"
                              update=":main-form:message :main-form:visitorTable"
                              oncomplete="PF('addVisitor').show()" />
         </div>
@@ -46,9 +46,6 @@
             </p:column>
             <p:column headerText="Full Name" sortBy="#{visitor.fullName}">
                 <h:outputText value="#{visitor.fullName}" />
-            </p:column>
-            <p:column headerText="Student Name" sortBy="#{visitor.studentId.fullName}">
-                <h:outputText value="#{visitor.studentId.fullName}" />
             </p:column>
             <p:column headerText="Relation" sortBy="#{visitor.relation}">
                 <h:outputText value="#{visitor.relation}" />
