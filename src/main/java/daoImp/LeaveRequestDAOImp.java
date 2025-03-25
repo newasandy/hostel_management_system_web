@@ -37,7 +37,7 @@ public class LeaveRequestDAOImp extends BaseDAOImp<LeaveRequest> implements Leav
         try{
             return entityManager.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.studentId.id = :studentId and lr.status = :status", LeaveRequest.class)
                     .setParameter("studentId",userId)
-                    .setParameter("status", "PENDING")
+                    .setParameter("status", LeaveRequest.Status.PENDING)
                     .getSingleResult();
         }catch (NoResultException e){
             return null;
@@ -48,7 +48,7 @@ public class LeaveRequestDAOImp extends BaseDAOImp<LeaveRequest> implements Leav
     public List<LeaveRequest> getAllPendingRequest(){
         try{
             return entityManager.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.status= :status",LeaveRequest.class)
-                    .setParameter("status","PENDING")
+                    .setParameter("status",LeaveRequest.Status.PENDING)
                     .getResultList();
         }catch (NoResultException e){
             return null;

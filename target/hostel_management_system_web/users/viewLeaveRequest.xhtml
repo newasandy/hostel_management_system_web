@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Leave Request</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div class="top-bar">
+            <h3>Leave Request</h3>
+            <p:commandButton value=" Add" icon="pi pi-plus"
+                             style="right: 5px; margin-left: 15px"
+                             action="#{viewRoomsBean.prepareAddRoom}"
+                             partialSubmit="true"
+                             update=":main-form:message :main-form:leaveTable"
+                             oncomplete="PF('applyLeaveRequest').show()" />
+        </div>
+
+        <p:dataTable id="leaveTable" value="#{leaveRequestBean.userLeaveRequestList}" rowIndexVar="rowIndex" var="leave" paginator="true" paginatorPosition="bottom" rows="10">
+            <p:column headerText="SN" style="width: 30px;">
+                <h:outputText value="#{rowIndex + 1}" />
+            </p:column>
+            <p:column headerText="Reason" >
+                <h:outputText value="#{leave.reason}"/>
+            </p:column>
+            <p:column headerText="Apply Date" sortBy="#{leave.applyDate}">
+                <h:outputText value="#{leave.applyDate}" />
+            </p:column>
+            <p:column headerText="Start" sortBy="#{leave.startFrom}">
+                <h:outputText value="#{leave.startFrom}" />
+            </p:column>
+            <p:column headerText="End" sortBy="#{leave.endOn}">
+                <h:outputText value="#{leave.endOn}" />
+            </p:column>
+            <p:column headerText="Status" sortBy="#{leave.endOn}">
+                <h:outputText value="#{leave.status}" />
+            </p:column>
+
+            <p:column headerText="Actions">
+                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                                 rendered="#{leave.status eq 'PENDING'}"
+                                 action="#{viewRoomsBean.prepareEditRoom(room)}"
+                                 partialSubmit="true"
+                                 oncomplete="PF('applyLeaveRequest').show()"
+                />
+                <p:tooltip for="update-btn" value="Update" position="top"/>
+
+
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <p:dialog header="Apply Leave Request" widgetVar="applyLeaveRequest" modal="true" resizable="false">
+
+        <h:form id="leaveForm">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="reason" value="Reason:" />
+                <p:inputText id="reason" value="#{leaveRequestBean.reason}" required="true" />
+
+
+                <h:outputLabel for="startDate" value="Start Date:" />
+                <p:datePicker id="startDate" value="#{leaveRequestBean.startDate}" pattern="yyyy-MM-dd" required="true" />
+
+                <h:outputLabel for="endDate" value="End Date:" />
+                <p:datePicker id="endDate" value="#{leaveRequestBean.endDate}" pattern="yyyy-MM-dd" required="true" />
+
+                <p:commandButton value="Add}"
+                                 action="#{leaveRequestBean.applyLeaveRequest()}"
+                                 validateClient="true"
+                                 update=":main-form:message :leaveForm :main-form:leaveTable"
+                                 oncomplete="if (!args.validationFailed) { PF('applyLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
+                                 style="margin-top:10px; width:100px;"/>
+                <p:commandButton value="Cancel"
+                                 actionListener="#{leaveRequestBean.resetFields()}"
+                                 onclick="PF('applyLeaveRequest').hide();"
+                                 style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+</h:body>
+</html>

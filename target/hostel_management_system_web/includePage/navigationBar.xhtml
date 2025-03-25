@@ -24,7 +24,7 @@
                 <p:submenu label="Service" rendered="#{userBean.isUser()}" icon="ui-icon-check">
                     <p:column>
                         <p:submenu label="Service">
-                            <p:menuitem value="Leave Application" />
+                            <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
                             <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
                             <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
                         </p:submenu>
@@ -44,6 +44,8 @@
                 </p:submenu>
 
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Monthly Fee" rendered="#{userBean.isAdmin()}"/>
 
                 <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}"/>
                 <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}"/>
