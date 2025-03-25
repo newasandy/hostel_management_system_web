@@ -57,7 +57,7 @@
             <p:column headerText="Actions">
                 <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
                                  rendered="#{leave.status eq 'PENDING'}"
-                                 action="#{leaveRequestBean.prepareEditLeaveRequest(leave)}"
+                                 action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                                  partialSubmit="true"
                                  update=":updateForm"
                                  oncomplete="PF('updateLeaveRequest').show()"
@@ -69,47 +69,20 @@
         </p:dataTable>
     </h:form>
 
-    <p:dialog header="Apply Leave Request" widgetVar="applyLeaveRequest" modal="true" resizable="false">
-
-        <h:form id="leaveForm">
-            <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="reason" value="Reason:" />
-                <p:inputText id="reason" value="#{leaveRequestBean.reason}" required="true" />
-
-
-                <h:outputLabel for="startDate" value="Start Date:" />
-                <p:datePicker id="startDate" value="#{leaveRequestBean.startDate}" pattern="yyyy-MM-dd" required="true" />
-
-                <h:outputLabel for="endDate" value="End Date:" />
-                <p:datePicker id="endDate" value="#{leaveRequestBean.endDate}" pattern="yyyy-MM-dd" required="true" />
-
-                <p:commandButton value="Add}"
-                                 action="#{leaveRequestBean.applyLeaveRequest()}"
-                                 validateClient="true"
-                                 update=":main-form:message :leaveForm :main-form:leaveTable"
-                                 oncomplete="if (!args.validationFailed) { PF('applyLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
-                <p:commandButton value="Cancel"
-                                 actionListener="#{leaveRequestBean.resetFields()}"
-                                 onclick="PF('applyLeaveRequest').hide();"
-                                 style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
-            </h:panelGrid>
-        </h:form>
-    </p:dialog>
 
     <p:dialog header="Apply Leave Request" widgetVar="updateLeaveRequest" modal="true" resizable="false">
 
         <h:form id="updateForm">
             <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="reason" value="#{selectLeaveRequest.reason}" />
-                <p:inputText id="reason" value="#{selectLeaveRequest.reason}" required="true" />
+                <h:outputLabel for="reason" value="Reason:" />
+                <p:inputText id="reason" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.reason}" required="true" />
 
 
-                <h:outputLabel for="startDate" value="#{selectLeaveRequest.startFrom}" />
-                <p:datePicker id="startDate" value="#{selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
+                <h:outputLabel for="startDate" value="Start From:" />
+                <p:datePicker id="startDate" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
 
-                <h:outputLabel for="endDate" value="#{selectLeaveRequest.endOn}" />
-                <p:datePicker id="endDate" value="#{selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
+                <h:outputLabel for="endDate" value="End On:" />
+                <p:datePicker id="endDate" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
 
                 <p:commandButton value="Accept"
                                  action="#{leaveRequestBean.updateByAdmin('ACCEPTED')}"

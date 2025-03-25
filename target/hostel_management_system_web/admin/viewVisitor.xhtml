@@ -29,7 +29,7 @@
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
 
         <div class="top-bar">
-            <p:inputText id="searchItem" value="#{viewVisitorBean.searchItem}" placeholder="Search By Name or Email" style="width:250px;">
+            <p:inputText id="searchItem" value="#{viewVisitorBean.searchItem}" placeholder="Search By Name" style="width:250px;">
                 <p:ajax event="keyup" listener="#{viewVisitorBean.searchList}" update="visitorTable" />
             </p:inputText>
 

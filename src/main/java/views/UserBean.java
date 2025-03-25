@@ -178,7 +178,6 @@ public class UserBean implements Serializable{
     }
 
     private void setUserRoleFromCookieOrSession() {
-        // Try to get the userRole from the cookie
         Cookie cookie = (Cookie) FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getRequestCookieMap()

@@ -101,9 +101,6 @@ public class LeaveRequestBean implements Serializable {
         this.selectLeaveRequest = selectLeaveRequest;
     }
 
-    public void prepareEditLeaveRequest(LeaveRequest leaveRequest){
-        this.selectLeaveRequest = leaveRequest;
-    }
 
     public void applyLeaveRequest(){
         LeaveRequest checkLeaveRequest = leaveRequestDAO.checkLeaveRequest(loginUser.getId());
@@ -136,6 +133,18 @@ public class LeaveRequestBean implements Serializable {
             resetFields();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", status+" Leave Request"));
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request"));
+        }
+    }
+
+    public void updatePendingLeaveRequestByUser(){
+        if (leaveRequestDAO.update(selectLeaveRequest)){
+            refreshLeaveRequestList();
+            resetFields();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Leave Request"));
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request"));

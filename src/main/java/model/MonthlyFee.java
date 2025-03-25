@@ -17,7 +17,7 @@ public class MonthlyFee extends BaseEntity{
     private int year;
 
     @Column(name = "month", nullable = false , length = 20)
-    private String Month;
+    private String month;
 
     @Column(name = "issue_date", nullable = false)
     private Timestamp issueDate;
@@ -38,7 +38,7 @@ public class MonthlyFee extends BaseEntity{
     public MonthlyFee(Users studentId, int year, String month, Timestamp issueDate, double feeAmount, double paid, double due) {
         this.studentId = studentId;
         this.year = year;
-        Month = month;
+        this.month = month;
         this.issueDate = issueDate;
         this.feeAmount = feeAmount;
         this.paid = paid;
@@ -62,11 +62,11 @@ public class MonthlyFee extends BaseEntity{
     }
 
     public String getMonth() {
-        return Month;
+        return month;
     }
 
     public void setMonth(String month) {
-        Month = month;
+        this.month = month;
     }
 
     public Timestamp getIssueDate() {

@@ -60,7 +60,7 @@
             <p:column headerText="Actions">
                 <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
                                  rendered="#{leave.status eq 'PENDING'}"
-                                 action="#{viewRoomsBean.prepareEditRoom(room)}"
+                                 action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                                  partialSubmit="true"
                                  oncomplete="PF('applyLeaveRequest').show()"
                 />
@@ -94,6 +94,35 @@
                 <p:commandButton value="Cancel"
                                  actionListener="#{leaveRequestBean.resetFields()}"
                                  onclick="PF('applyLeaveRequest').hide();"
+                                 style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+
+    <p:dialog header="Apply Leave Request" widgetVar="updateLeaveRequest" modal="true" resizable="false">
+
+        <h:form id="updateForm">
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="reason" value="Reason:" />
+                <p:inputText id="reason" value="#{leaveRequestBean.selectLeaveRequest.reason}" required="true" />
+
+
+                <h:outputLabel for="startDate" value="Start From:" />
+                <p:datePicker id="startDate" value="#{leaveRequestBean.selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
+
+                <h:outputLabel for="endDate" value="End On:" />
+                <p:datePicker id="endDate" value="#{leaveRequestBean.selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
+
+                <p:commandButton value="Update"
+                                 action="#{leaveRequestBean.updatePendingLeaveRequestByUser}"
+                                 validateClient="true"
+                                 update=":main-form:message :updateForm :main-form:leaveTable"
+                                 oncomplete="if (!args.validationFailed) { PF('updateLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
+                                 style="margin-top:10px; width:100px;"/>
+                <p:commandButton value="Cancel"
+                                 update=":main-form:message :updateForm :main-form:leaveTable"
+                                 onclick="PF('updateLeaveRequest').hide();"
                                  style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
             </h:panelGrid>
         </h:form>

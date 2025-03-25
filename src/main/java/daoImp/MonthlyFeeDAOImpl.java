@@ -49,4 +49,16 @@ public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements Monthly
             return null;
         }
     }
+
+    @Override
+    public MonthlyFee checkAssignFee(Long studentId, String month, int years) {
+        try{
+            return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.studentId.id = :studentId AND m.month = :month AND m.year = :years", MonthlyFee.class)
+                    .setParameter("studentId", studentId)
+                    .setParameter("month",month).setParameter("years",years)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
+    }
 }

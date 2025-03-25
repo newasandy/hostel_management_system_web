@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>View Student</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+
+        .input-group {
+        display: block;
+        margin-bottom: 2px;
+        }
+
+        .error-message {
+        color: #e62a10;
+        font-size: 0.70em;
+        display: block;
+        margin-top: 2px;
+        }
+
+        .form-label {
+        font-weight: bold;
+        }
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+    <f:view>
+
+        <f:metadata>
+            <f:viewAction action="#{monthlyFeeBean.setFeeContext(true)}" />
+        </f:metadata>
+
+        <h:form id="main-form">
+            <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+            <div class="top-bar">
+                <p:inputText id="searchItem" value="#{viewStudentBean.searchItem}" placeholder="Search By Name" style="width:250px;">
+                    <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
+                </p:inputText>
+
+                <h3 style="margin-left:50px;">Student Fee</h3>
+
+            </div>
+            <ui:include src="/includePage/studentTable.xhtml" />
+        </h:form>
+
+    </f:view>
+
+    <p:dialog header="Assign Monthly Fee" widgetVar="assignFeeDialog" modal="true" resizable="false">
+        <h:form id="feeAssignForm">
+            <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel for="fullName" value="First Name:" />
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="fullName" disabled="true" value="#{monthlyFeeBean.selectStudent.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                        <h:message for="fullName" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="email" value="Email:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="email" disabled="true" value="#{monthlyFeeBean.selectStudent.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <h:message for="email" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="assignAmount" value="Assign Fee Amount:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputNumber id="assignAmount" minValue="1" value="#{monthlyFeeBean.assignFeeAmount}" required="true" requiredMessage="Amount is required." style="width:100%"/>
+                        <h:message for="assignAmount" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
+                    <p:commandButton value="Assign" action="#{monthlyFeeBean.assignMonthlyFee}"
+                                     validateClient="true"
+                                     update=":main-form:message :feeAssignForm :main-form:userTable"
+                                     oncomplete="if (!args.validationFailed) PF('assignFeeDialog').hide()"
+                                     style="margin-top:10px; margin-left:10px; width:100px;"/>
+                    <p:commandButton value="Cancel" onclick="PF('assignFeeDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+                </h:panelGroup>
+
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+</h:body>
+</html>

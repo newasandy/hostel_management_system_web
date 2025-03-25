@@ -18,6 +18,22 @@
         border-radius: 5px;
         height: 45px;
         }
+
+        .input-group {
+        display: block;
+        margin-bottom: 2px;
+        }
+
+        .error-message {
+        color: #e62a10;
+        font-size: 0.70em;
+        display: block;
+        margin-top: 2px;
+        }
+
+        .form-label {
+        font-weight: bold;
+        }
     </h:outputStylesheet>
 </h:head>
 <h:body>
@@ -25,134 +41,116 @@
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
 
-    <h:form id="main-form">
-        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
-        <div class="top-bar">
-            <p:inputText id="searchItem" value="#{viewStudentBean.searchItem}" placeholder="Search By Name or Email" style="width:250px;">
-                <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
-            </p:inputText>
+    <f:view>
+        <f:metadata>
+            <f:viewAction action="#{monthlyFeeBean.setFeeContext(false)}" />
+        </f:metadata>
+        <h:form id="main-form">
+            <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+            <div class="top-bar">
+                <p:inputText id="searchItem" value="#{viewStudentBean.searchItem}" placeholder="Search By Name" style="width:250px;">
+                    <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
+                </p:inputText>
 
-            <h3 style="margin-right: 150px;">Students</h3>
+                <h3 style="margin-right: 150px;">Students</h3>
 
-            <p:commandButton value=" Add" icon="pi pi-user-plus"
-                             style="right: 0px; margin-left: 15px color:#FFFFFF; background-color:#3498DB;"
-                             partialSubmit="true"
-                             action="#{userBean.resetFields}"
-                             update=":main-form:message :main-form:userTable"
-                             oncomplete="PF('regDialog').show()" />
-        </div>
-
-        <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}" rowIndexVar="rowIndex" var="student" paginator="true" paginatorPosition="bottom" rows="10">
-
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Full Name" sortBy="#{student.fullName}">
-                <h:outputText value="#{student.fullName}" />
-            </p:column>
-            <p:column headerText="Email" sortBy="#{student.email}">
-                <h:outputText value="#{student.email}" />
-            </p:column>
-            <p:column headerText="Country" sortBy="#{student.address.country}">
-                <h:outputText value="#{student.address.country}" />
-            </p:column>
-            <p:column headerText="District" sortBy="#{student.address.district}">
-                <h:outputText value="#{student.address.district}" />
-            </p:column>
-            <p:column headerText="Municipality" sortBy="#{student.address.rmcMc}">
-                <h:outputText value="#{student.address.rmcMc}" />
-            </p:column>
-            <p:column headerText="Ward Number">
-                <h:outputText value="#{student.address.wardNo}" />
-            </p:column>
-
-            <p:column headerText="Status">
-                <h:outputText value="#{student.status ? 'Active' : 'Inactive'}"
-                              style="color: #{student.status ? 'green' : 'red'}; font-weight: bold;"/>
-            </p:column>
-
-            <!-- Action Column -->
-            <p:column headerText="Actions">
-                <!-- Update Button -->
-                <p:commandButton id="update-btn" icon="pi pi-pencil"
-                                 rendered="#{student.status}"
-                                 action="#{userBean.prepareUpdateStudent(student)}"
-                                 style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
+                <p:commandButton value=" Add" icon="pi pi-user-plus"
+                                 style="right: 0px; margin-left: 15px color:#FFFFFF; background-color:#3498DB;"
                                  partialSubmit="true"
-                                 update=":updateForm"
-                                 oncomplete="PF('updateDialog').show()"
-                />
-                <p:tooltip for="update-btn" value="Update" position="top"/>
+                                 action="#{userBean.resetFields}"
+                                 update=":main-form:message :main-form:userTable"
+                                 oncomplete="PF('regDialog').show()" />
+            </div>
 
-                <!-- Deactivate Button -->
+            <ui:include src="/includePage/studentTable.xhtml" />
+        </h:form>
+    </f:view>
 
-                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
-                                 rendered="#{student.status}"
-                                 action="#{userBean.deactivateStudent(student)}"
-                                 update=":main-form:message :main-form:userTable" />
-                <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
 
-                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#2ECC71;"
-                                 rendered="#{not student.status}"
-                                 action="#{userBean.activateStudent(student)}"
-                                 update=":main-form:message :main-form:userTable" />
-                <p:tooltip for="activate-btn" value="Activate" position="top"/>
-
-                <p:commandButton id="view-btn" icon="pi pi-eye" style="margin-right: 5px; color:#000000; background-color:#00FFFF;"
-                                 action="#{viewVisitorBean.viewStudentVisitor(student)}"
-                                 update=":main-form:message :main-form:userTable" />
-                <p:tooltip for="view-btn" value="View Visitor" position="top"/>
-
-            </p:column>
-        </p:dataTable>
-    </h:form>
 
     <p:dialog header="Registration Form" widgetVar="regDialog" modal="true" resizable="false">
 
         <h:form id="registrationForm">
-            <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="fullName" value="First Name:" />
-                <p:inputText id="fullName" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+            <h:panelGrid columns="2" >
 
-                <h:outputLabel for="email" value="Email:"/>
-                <p:inputText id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                <h:panelGrid columns="2" cellpadding="5">
 
-                <h:outputLabel for="password" value="Password:"/>
-                <p:password id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" style="width:100%"/>
-
-
-                <h:outputLabel for="role" value="Role:"/>
-                <p:selectOneMenu id="role" value="#{userBean.selectUserType}" required="true" requiredMessage="Role is required." converter="userTypeConverter">
-                    <f:selectItem itemLabel="Select Role" itemValue="#{null}"/>
-                    <f:selectItems value="#{userBean.userTypes}"
-                                   var="userType"
-                                   itemLabel="#{userType.userTypes}"
-                                   itemValue="#{userType}"/>
-                </p:selectOneMenu>
-
-                <h:outputLabel for="country" value="Country:"/>
-                <p:inputText id="country" value="#{userBean.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
-
-                <h:outputLabel for="district" value="District:"/>
-                <p:inputText id="district" value="#{userBean.district}" required="true" requiredMessage="District is required." style="width:100%"/>
-
-                <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
-                <p:inputText id="rmcMc" value="#{userBean.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+                    <h:outputLabel for="fullName" value="First Name: "/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="fullName" value="#{userBean.name}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                        <h:message for="fullName" styleClass="error-message"/>
+                    </h:panelGroup>
 
 
-                <h:outputLabel for="wardNumber" value="Ward Number:"/>
-                <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                    <h:outputLabel for="email" value="Email:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="email" value="#{userBean.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <h:message for="email" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <p:commandButton value="Register"
-                                 action="#{userBean.registrationUser}"
-                                 validateClient="true"
-                                 update=":main-form:message :registrationForm :main-form:userTable"
-                                 oncomplete="if (!args.validationFailed) { PF('regDialog').hide(); #{userBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
-                <p:commandButton value="Cancel"
-                                 actionListener="#{userBean.resetFields}"
-                                 onclick="PF('regDialog').hide();"
-                                 style="margin-top:10px; width:100px;" />
+
+                    <h:outputLabel for="password" value="Password:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:password id="password" value="#{userBean.password}" required="true" requiredMessage="Password is required" style="width:100%"/>
+                        <h:message for="password" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="role" value="Role:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:selectOneMenu id="role" value="#{userBean.selectUserType}" required="true" requiredMessage="Role is required." converter="userTypeConverter">
+                            <f:selectItem itemLabel="Select Role" itemValue="#{null}"/>
+                            <f:selectItems value="#{userBean.userTypes}"
+                                           var="userType"
+                                           itemLabel="#{userType.userTypes}"
+                                           itemValue="#{userType}"/>
+                            <f:converter converterId="userTypeConverter"/>
+                        </p:selectOneMenu>
+                        <h:message for="role" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+                <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel for="country" value="Country:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="country" value="#{userBean.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+                        <h:message for="country" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="district" value="District:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="district" value="#{userBean.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+                        <h:message for="district" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="rmcMc" value="#{userBean.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+                        <h:message for="rmcMc" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.wardNumber}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                        <h:message for="wardNumber" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
+                    <p:commandButton value="Register"
+                                     action="#{userBean.registrationUser}"
+                                     validateClient="true"
+                                     update=":main-form:message :registrationForm :main-form:userTable"
+                                     oncomplete="if (!args.validationFailed) { PF('regDialog').hide(); #{userBean.resetFields()}; }"
+                                     style="margin-top:10px; width:100px; margin-right:20px;"/>
+                    <p:commandButton value="Cancel"
+                                     actionListener="#{userBean.resetFields}"
+                                     onclick="PF('regDialog').hide();"
+                                     style="margin-top:10px; width:100px; background-color:red;" />
+                </h:panelGroup>
             </h:panelGrid>
         </h:form>
     </p:dialog>
@@ -160,32 +158,58 @@
     <p:dialog header="Update Form" widgetVar="updateDialog" modal="true" resizable="false">
 
         <h:form id="updateForm">
-            <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="fullName" value="First Name:" />
-                <p:inputText id="fullName" value="#{userBean.selectUser.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+            <h:panelGrid columns="2" >
 
-                <h:outputLabel for="email" value="Email:"/>
-                <p:inputText id="email" value="#{userBean.selectUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="fullName" value="First Name:" />
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="fullName" value="#{userBean.selectUser.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                        <h:message for="fullName" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <h:outputLabel for="country" value="Country:"/>
-                <p:inputText id="country" value="#{userBean.selectUser.address.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+                    <h:outputLabel for="email" value="Email:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="email" value="#{userBean.selectUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <h:message for="email" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <h:outputLabel for="district" value="District:"/>
-                <p:inputText id="district" value="#{userBean.selectUser.address.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+                    <h:outputLabel for="country" value="Country:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="country" value="#{userBean.selectUser.address.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+                        <h:message for="country" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
-                <p:inputText id="rmcMc" value="#{userBean.selectUser.address.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+                </h:panelGrid>
 
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="district" value="District:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="district" value="#{userBean.selectUser.address.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+                        <h:message for="district" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <h:outputLabel for="wardNumber" value="Ward Number:"/>
-                <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.selectUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                    <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="rmcMc" value="#{userBean.selectUser.address.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+                        <h:message for="rmcMc" styleClass="error-message"/>
+                    </h:panelGroup>
 
-                <p:commandButton value="Save" action="#{userBean.updateUser}"
-                                 validateClient="true"
-                                 update=":main-form:message :updateForm :main-form:userTable"
-                                 oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
-                                 style="margin-top:10px; margin-left:10px; width:100px;"/>
-                <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+                    <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputNumber id="wardNumber"  minValue="1" value="#{userBean.selectUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                        <h:message for="wardNumber" styleClass="error-message"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+                <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
+                    <p:commandButton value="Save" action="#{userBean.updateUser}"
+                                     validateClient="true"
+                                     update=":main-form:message :updateForm :main-form:userTable"
+                                     oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
+                                     style="margin-top:10px; margin-left:10px; width:100px;"/>
+                    <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+                </h:panelGroup>
+
             </h:panelGrid>
         </h:form>
     </p:dialog>
