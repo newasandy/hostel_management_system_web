@@ -18,6 +18,17 @@
         border-radius: 5px;
         height: 45px;
         }
+        .pending-row {
+        background-color: #d4ebf2 !important;
+        }
+
+        .accepted-row {
+        background-color: #ddffdd !important;
+        }
+
+        .rejected-row {
+        background-color: #ffdddd !important;
+        }
     </h:outputStylesheet>
 </h:head>
 <h:body>
@@ -31,7 +42,12 @@
             <h3>Leave Request</h3>
         </div>
 
-        <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestList}" rowIndexVar="rowIndex" var="leave" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestList}"
+                     rowIndexVar="rowIndex"
+                     var="leave"
+                     rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
+                     paginator="true"
+                     paginatorPosition="bottom" rows="10">
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>

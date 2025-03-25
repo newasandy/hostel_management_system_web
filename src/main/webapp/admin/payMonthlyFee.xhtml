@@ -18,6 +18,15 @@
         border-radius: 5px;
         height: 45px;
         }
+        .row-due {
+        background-color: #ffdddd !important;
+        }
+        .row-paid {
+        background-color: #ddffdd !important;
+        }
+        .row-due:hover, .row-paid:hover {
+        background-color: #f0f0f0 !important;
+        }
     </h:outputStylesheet>
 </h:head>
 <h:body>
@@ -31,7 +40,12 @@
             <h3 style="margin-right: 150px;">Fee Details</h3>
         </div>
 
-        <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeList}" rowIndexVar="rowIndex" var="monthlyFee" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeList}"
+                     rowIndexVar="rowIndex"
+                     var="monthlyFee"
+                     paginator="true"
+                     paginatorPosition="bottom" rowStyleClass="#{monthlyFee.due gt 0 ? 'row-due' : 'row-paid'}"
+                     rows="10">
 
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
@@ -59,7 +73,8 @@
             </p:column>
 
             <p:column headerText="Actions">
-                <p:commandButton id="pay-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
+                <p:commandButton id="pay-btn" icon="pi pi-money-bill"
+                                 style="margin-right: 5px; color:#FFFFFF; background-color:#27AE60;"
                                  rendered="#{monthlyFee.due > 0}"
                                  action="#{monthlyFeeBean.setSelectForPayFee(monthlyFee)}"
                                  oncomplete="PF('payFeeDialog').show()"
@@ -96,7 +111,7 @@
                 </h:panelGroup>
 
                 <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
-                    <p:commandButton value="Assign"
+                    <p:commandButton value="Pay"
                                      validateClient="true"
                                      oncomplete="PF('confirmationDialog').show()"
                                      style="margin-top:10px; margin-left:10px; width:100px;"/>
@@ -106,17 +121,16 @@
         </h:form>
     </p:dialog>
 
-    <p:dialog header="Pay Monthly Fee" widgetVar="confirmationDialog" modal="true" resizable="false">
+    <p:dialog header="Confirmation" widgetVar="confirmationDialog" modal="true" resizable="false">
         <h:form id="confirmForm">
-            <h:panelGrid columns="2" cellpadding="5">
+            <h:panelGrid columns="1" cellpadding="5">
 
-                <h:outputLabel for="password" value="First Name:" />
                 <h:panelGroup styleClass="input-group">
-                    <p:password id="password" value="#{monthlyFeeBean.verifyPassword}" required="true" requiredMessage="Password is required." style="width:100%" />
+                    <p:password id="password" placeholder="Enter Password" value="#{monthlyFeeBean.verifyPassword}" required="true" requiredMessage="Password is required." style="width:100%" />
                 </h:panelGroup>
 
                 <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
-                    <p:commandButton value="Assign"
+                    <p:commandButton value="Pay"
                                      action="#{monthlyFeeBean.monthlyFeePay}"
                                      validateClient="true"
                                      update=":main-form:message :payFeeForm :confirmForm :main-form:monthlyFeeTable"
@@ -127,6 +141,5 @@
             </h:panelGrid>
         </h:form>
     </p:dialog>
-
 </h:body>
 </html>

@@ -101,6 +101,26 @@ public class LeaveRequestBean implements Serializable {
         this.selectLeaveRequest = selectLeaveRequest;
     }
 
+    public LocalDate getMinDate() {
+        return LocalDate.now();  // Disables past dates
+    }
+
+    public String getRowStyleClass(LeaveRequest leave) {
+        if (leave == null || leave.getStatus() == null) {
+            return "";
+        }
+
+        switch (leave.getStatus().toString()) {
+            case "PENDING":
+                return "pending-row";
+            case "ACCEPTED":
+                return "accepted-row";
+            case "REJECTED":
+                return "rejected-row";
+            default:
+                return "";
+        }
+    }
 
     public void applyLeaveRequest(){
         LeaveRequest checkLeaveRequest = leaveRequestDAO.checkLeaveRequest(loginUser.getId());

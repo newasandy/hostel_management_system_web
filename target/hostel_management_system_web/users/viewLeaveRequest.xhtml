@@ -18,6 +18,17 @@
         border-radius: 5px;
         height: 45px;
         }
+        .pending-row {
+        background-color: #d4ebf2 !important;
+        }
+
+        .accepted-row {
+        background-color: #ddffdd !important;
+        }
+
+        .rejected-row {
+        background-color: #ffdddd !important;
+        }
     </h:outputStylesheet>
 </h:head>
 <h:body>
@@ -37,7 +48,14 @@
                              oncomplete="PF('applyLeaveRequest').show()" />
         </div>
 
-        <p:dataTable id="leaveTable" value="#{leaveRequestBean.userLeaveRequestList}" rowIndexVar="rowIndex" var="leave" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="leaveTable"
+                     value="#{leaveRequestBean.userLeaveRequestList}"
+                     rowIndexVar="rowIndex"
+                     var="leave"
+                     paginator="true"
+                     rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
+                     paginatorPosition="bottom"
+                     rows="10">
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>
@@ -62,7 +80,8 @@
                                  rendered="#{leave.status eq 'PENDING'}"
                                  action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                                  partialSubmit="true"
-                                 oncomplete="PF('applyLeaveRequest').show()"
+                                 update=":updateForm"
+                                 oncomplete="PF('updateLeaveRequest').show()"
                 />
                 <p:tooltip for="update-btn" value="Update" position="top"/>
 
@@ -80,12 +99,20 @@
 
 
                 <h:outputLabel for="startDate" value="Start Date:" />
-                <p:datePicker id="startDate" value="#{leaveRequestBean.startDate}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="startDate"
+                              value="#{leaveRequestBean.startDate}"
+                              pattern="yyyy-MM-dd"
+                              mindate="#{leaveRequestBean.minDate}"
+                              required="true" />
 
                 <h:outputLabel for="endDate" value="End Date:" />
-                <p:datePicker id="endDate" value="#{leaveRequestBean.endDate}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="endDate"
+                              value="#{leaveRequestBean.endDate}"
+                              pattern="yyyy-MM-dd"
+                              mindate="#{leaveRequestBean.minDate}"
+                              required="true" />
 
-                <p:commandButton value="Add}"
+                <p:commandButton value="Add"
                                  action="#{leaveRequestBean.applyLeaveRequest()}"
                                  validateClient="true"
                                  update=":main-form:message :leaveForm :main-form:leaveTable"
@@ -109,10 +136,16 @@
 
 
                 <h:outputLabel for="startDate" value="Start From:" />
-                <p:datePicker id="startDate" value="#{leaveRequestBean.selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="startDate" value="#{leaveRequestBean.selectLeaveRequest.startFrom}"
+                              pattern="yyyy-MM-dd"
+                              mindate="#{leaveRequestBean.minDate}"
+                              required="true" />
 
                 <h:outputLabel for="endDate" value="End On:" />
-                <p:datePicker id="endDate" value="#{leaveRequestBean.selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="endDate" value="#{leaveRequestBean.selectLeaveRequest.endOn}"
+                              pattern="yyyy-MM-dd"
+                              mindate="#{leaveRequestBean.minDate}"
+                              required="true" />
 
                 <p:commandButton value="Update"
                                  action="#{leaveRequestBean.updatePendingLeaveRequestByUser}"

@@ -38,6 +38,9 @@ public class MonthlyFeeBean implements Serializable {
     private MonthlyFee selectForPayFee;
     private String verifyPassword;
     private List<MonthlyFee> monthlyFeeList;
+    private List<MonthlyFee> monthlyFeeListEachUser;
+    private String userRole = GetCookiesValues.getUserRoleFromCookie();
+    private Users loginUser;
 
     @PostConstruct
     public void init(){
@@ -52,14 +55,26 @@ public class MonthlyFeeBean implements Serializable {
                 return v2.getIssueDate().compareTo(v1.getIssueDate());
             }
         });
+        if ("USER".equals(userRole)){
+            loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+            monthlyFeeListEachUser = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
+        }
     }
 
     public String getVerifyPassword() {
         return verifyPassword;
     }
 
+    public Users getLoginUser() {
+        return loginUser;
+    }
+
     public void setVerifyPassword(String verifyPassword) {
         this.verifyPassword = verifyPassword;
+    }
+
+    public List<MonthlyFee> getMonthlyFeeListEachUser() {
+        return monthlyFeeListEachUser;
     }
 
     public double getPaidAmount() {
