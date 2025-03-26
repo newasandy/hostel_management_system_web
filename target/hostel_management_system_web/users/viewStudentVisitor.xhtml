@@ -32,26 +32,7 @@
             <h3>Visitors</h3>
         </div>
 
-        <p:dataTable id="visitorTable" value="#{viewVisitorBean.viewVisitorByEachStudent}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="10">
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Full Name" sortBy="#{visitor.fullName}">
-                <h:outputText value="#{visitor.fullName}" />
-            </p:column>
-            <p:column headerText="Relation" sortBy="#{visitor.relation}">
-                <h:outputText value="#{visitor.relation}" />
-            </p:column>
-            <p:column headerText="Reason" sortBy="#{visitor.reason}">
-                <h:outputText value="#{visitor.reason}" />
-            </p:column>
-            <p:column headerText="Entry Date Time" sortBy="#{visitor.entryDatetime}">
-                <h:outputText value="#{visitor.entryDatetime}" />
-            </p:column>
-            <p:column headerText="Exit Date Time" sortBy="#{visitor.exitDatetime}">
-                <h:outputText value="#{visitor.exitDatetime}" />
-            </p:column>
-        </p:dataTable>
+        <ui:include src="/includePage/studentVisitorTable.xhtml"/>
     </h:form>
 </h:body>
 </html>

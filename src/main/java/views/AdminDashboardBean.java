@@ -8,6 +8,7 @@ import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
+import model.Cards;
 import org.primefaces.model.chart.DonutChartModel;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +28,7 @@ public class AdminDashboardBean implements Serializable {
     private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
     private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
 
-    private List<Card> cards;
+    private List<Cards> cards;
     private Long countOnlyAllocated;
     private Long countOnlyStudent;
 
@@ -47,10 +48,10 @@ public class AdminDashboardBean implements Serializable {
 
     public void cardModel(){
         cards = new ArrayList<>();
-        cards.add(new Card("Users", countOnlyStudent));
-        cards.add(new Card("Rooms", roomDAO.getCount()));
-        cards.add(new Card("Allocated", countOnlyAllocated));
-        cards.add(new Card("Visitor", visitorsDAO.getCount()));
+        cards.add(new Cards("Users", countOnlyStudent));
+        cards.add(new Cards("Rooms", roomDAO.getCount()));
+        cards.add(new Cards("Allocated", countOnlyAllocated));
+        cards.add(new Cards("Visitor", visitorsDAO.getCount()));
     }
 
     public void roomOccupancyChartModel() {
@@ -84,20 +85,9 @@ public class AdminDashboardBean implements Serializable {
         return userStatusChart;
     }
 
-    public List<Card> getCards() {
+    public List<Cards> getCards() {
         return cards;
     }
 
-    public static class Card {
-        private String title;
-        private Long value;
 
-        public Card(String title, Long value) {
-            this.title = title;
-            this.value = value;
-        }
-
-        public String getTitle() { return title; }
-        public Long getValue() { return value; }
-    }
 }

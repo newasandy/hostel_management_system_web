@@ -12,4 +12,5 @@ public interface RoomAllocationDAO extends BaseDAO<RoomAllocation> {
     List<RoomAllocation> getOnlyAllocatedDetails();
     boolean disableRoomUnallocatedStudent(Long roomId, Timestamp unallocationDate);
     Long getCountOnlyAllocated();
+    RoomAllocation getRecentUserRoomAllocation(Long userId);
 }

@@ -5,17 +5,90 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <title>Home</title>
+    <h:outputStylesheet>
+        .container{
+        margin-left: auto;
+        margin-right: auto;
+        width:80%;
+        }
+
+        .ui-panelgrid,
+        .ui-panelgrid td,
+        .ui-panelgrid tr,
+        .ui-panelgrid tbody {
+        border: none !important;
+        border-collapse: collapse !important;
+        background: transparent !important;
+        }
+
+        .panelContainer.ui-panel {
+        border: none !important;
+        height: 150px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+        border-radius: 12px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panelContainer .ui-panel-content {
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        gap: 4px;
+        }
+
+        .panelContainer .top-text {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        }
+
+        .panelContainer .bottom-text {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-weight: normal;
+        font-size: 14px;
+        }
+    </h:outputStylesheet>
 </h:head>
 <h:body>
     <header>
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
-    <div class="card">
-        <h2>Welcome, <h:outputText value="#{userDashboardBean.email}" /></h2>
-        <h:form>
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-            <p:commandButton value="Logout" action="#{userBean.logout}" />
-        </h:form>
+    <h3>Hi, <h:outputText value="#{userDashboardBean.loginUser.fullName}" /></h3>
+    <div class="container">
+
+
+    <h:form>
+        <p:panelGrid columns="3" style="width: 100%; border: none;">
+            <p:panel styleClass="panelContainer">
+                <h:outputText value="#{userDashboardBean.recentUserVisitor.fullName}" styleClass="top-text"/>
+                <h:outputText value="Visitor" styleClass="bottom-text"/>
+            </p:panel>
+            <p:panel styleClass="panelContainer">
+                <h:outputText value="#{userDashboardBean.recentRoom.roomId.roomNumber}" styleClass="top-text"/>
+                <h:outputText value="Room Number" styleClass="bottom-text"/>
+            </p:panel>
+            <p:panel styleClass="panelContainer">
+                <h:outputText value="#{userDashboardBean.recentLeaveRequest.status}" styleClass="top-text"/>
+                <h:outputText value="Leave Request" styleClass="bottom-text"/>
+            </p:panel>
+        </p:panelGrid>
+    </h:form>
     </div>
 </h:body>
 </html>

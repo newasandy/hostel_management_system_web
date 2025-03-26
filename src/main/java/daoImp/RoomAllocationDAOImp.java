@@ -75,4 +75,15 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
         return entityManager.createQuery("SELECT COUNT(*) FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL",Long.class)
                 .getSingleResult();
     }
+
+    @Override
+    public RoomAllocation getRecentUserRoomAllocation(Long userId) {
+        try{
+            return entityManager.createQuery("SELECT r FROM RoomAllocation r WHERE r.studentId.id = :studentId AND r.unallocationDate IS NULL", RoomAllocation.class)
+                    .setParameter("studentId",userId)
+                    .getSingleResult();
+            } catch (NoResultException e) {
+                return null;
+            }
+    }
 }

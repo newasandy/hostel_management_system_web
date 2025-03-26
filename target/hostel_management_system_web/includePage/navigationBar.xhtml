@@ -21,7 +21,7 @@
                 <p:menuitem value="Contact" outcome="contact" rendered="#{userBean.isGuest()}" url="#"/>
 
                 <p:menuitem value="Dashboard" url="userDashboard.xhtml"  rendered="#{userBean.isUser()}"/>
-                <p:submenu label="Service" rendered="#{userBean.isUser()}" icon="ui-icon-check">
+                <p:submenu label="Service" rendered="#{userBean.isUser()}">
                     <p:column>
                         <p:submenu label="Service">
                             <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
@@ -35,7 +35,7 @@
                 <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
 
-                <p:submenu label="Room" rendered="#{userBean.isAdmin()}" icon="ui-icon-check">
+                <p:submenu label="Room" rendered="#{userBean.isAdmin()}">
                     <p:column>
                         <p:submenu label="Service">
                             <p:menuitem value="Rooms" url="viewRooms.xhtml" />
@@ -47,7 +47,7 @@
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.isAdmin()}"/>
 
-                <p:submenu label="Monthly Fee" rendered="#{userBean.isAdmin()}" icon="ui-icon-check">
+                <p:submenu label="Monthly Fee"  rendered="#{userBean.isAdmin()}">
                     <p:column>
                         <p:submenu label="Fee Service">
                             <p:menuitem value="Assign Fee" url="assignMonthlyFee.xhtml" />

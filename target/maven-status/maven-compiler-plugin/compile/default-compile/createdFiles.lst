@@ -12,7 +12,6 @@ model/LeaveRequest.class
 model/Visitors.class
 daoInterface/VisitorsDAO.class
 model/BaseEntity.class
-views/AdminDashboardBean$Card.class
 model/Rooms.class
 service/AuthenticationService.class
 views/LeaveRequestBean$1.class
@@ -48,5 +47,6 @@ views/UserTypeConverter.class
 utils/PasswordUtils.class
 daoImp/MonthlyFeeDAOImpl.class
 service/UserService.class
+model/Cards.class
 model/Users.class
 model/RoomAllocation.class

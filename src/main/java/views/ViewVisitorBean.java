@@ -14,7 +14,6 @@ import service.VisitorService;
 import utils.GetCookiesValues;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -27,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Named("viewVisitorBean")
-@SessionScoped
+@ViewScoped
 public class ViewVisitorBean implements Serializable {
     private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
     private UsersDAO usersDAO = new UserDAOImpl();
@@ -72,6 +71,9 @@ public class ViewVisitorBean implements Serializable {
         if ("USER".equals(userRole)){
             Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(loginUser.getId());
+        }
+        if (selectStudent != null){
+            viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(selectStudent.getId());
         }
     }
 
@@ -127,30 +129,16 @@ public class ViewVisitorBean implements Serializable {
         this.reason = reason;
     }
 
-    public String addVisitor(){
+    public void addVisitor(){
         statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
-        if (selectStudent == null){
-            if (statusMessageModel.isStatus()){
-                refreshVisitorList();
-                resetFields();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            }
-            return null;
+        if (statusMessageModel.isStatus()){
+            refreshVisitorList();
+            resetFields();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
         }else {
-            if (statusMessageModel.isStatus()){
-                refreshVisitorList();
-                resetFields();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            }
-            return "/admin/viewVisitor.xhtml?faces-redirect=true";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
         }
     }
 
@@ -167,10 +155,14 @@ public class ViewVisitorBean implements Serializable {
         }
     }
 
-    public String viewStudentVisitor(Users student){
+    public void viewStudentVisitor(Users student){
         selectStudent = student;
         viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(student.getId());
-        return "/admin/studentVisitor.xhtml?faces-redirect=true";
+        debuggg();
+    }
+
+    public void debuggg(){
+        System.out.println(selectStudent.getFullName()+" / "+selectStudent.isStatus());
     }
 
     public void refreshVisitorByEachStudent(){

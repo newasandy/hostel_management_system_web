@@ -7,6 +7,7 @@
     <h:outputStylesheet>
         .custom-card{
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 150px;
@@ -46,7 +47,7 @@
 </h:head>
 <h:body>
         <div class="custom-card">
-            <h:outputText value="#{card.value}" style="font-size:20px; font-weight: bold; margin-right:5px;"/><br/>
+            <h:outputText value="#{card.value}" style="font-size:20px; font-weight: bold; margin-right:5px;"/>
             <h:outputText value="#{card.title}" style="font-weight: bold;" />
         </div>
 </h:body>

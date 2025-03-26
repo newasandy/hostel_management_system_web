@@ -54,4 +54,16 @@ public class LeaveRequestDAOImp extends BaseDAOImp<LeaveRequest> implements Leav
             return null;
         }
     }
+
+    @Override
+    public LeaveRequest getRecentLeaveRequest(Long userId) {
+        try{
+            return entityManager.createQuery("SELECT l FROM LeaveRequest l WHERE l.studentId.id = :studentId ORDER BY l.applyDate DESC",LeaveRequest.class)
+                    .setParameter("studentId", userId)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

@@ -116,7 +116,6 @@
 
                 </h:panelGrid>
 
-
                 <h:panelGrid columns="2" cellpadding="5">
 
                     <h:outputLabel for="country" value="Country:"/>
@@ -215,9 +214,51 @@
                                      style="margin-top:10px; margin-left:10px; width:100px;"/>
                     <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
                 </h:panelGroup>
-
             </h:panelGrid>
         </h:form>
     </p:dialog>
+
+    <p:dialog header="Visitor Details"
+              widgetVar="visitorDialog"
+              modal="true"
+              resizable="false"
+              width="95%">
+        <h:form id="visitorDataTable">
+            <ui:include src="/includePage/studentVisitorTable.xhtml"/>
+            <p:commandButton value="Add" icon="pi pi-plus"
+                             rendered="#{viewVisitorBean.selectStudent.status}"
+                             style="margin-left: 15px; width:100px; margin-top:10px;"
+                             update=":main-form:message :visitorDataTable:visitorTable :visitor-form"
+                             oncomplete="PF('addVisitor').show()" />
+            <p:commandButton value="Cancel"
+                             oncomplete="PF('visitorDialog').hide();"
+                             style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+        </h:form>
+    </p:dialog>
+
+    <p:dialog header="Add Visitor" widgetVar="addVisitor" modal="true" resizable="false">
+        <h:form id="visitor-form">
+            <h:outputLabel value="Student Name: #{viewVisitorBean.selectStudent.fullName}" style="font-weight:bold;" />
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="fullName" value="Full Name:" />
+                <p:inputText id="fullName" value="#{viewVisitorBean.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                <h:outputLabel for="relation" value="Relation:"/>
+                <p:inputText id="relation" value="#{viewVisitorBean.relation}" required="true" requiredMessage="Relation is required." style="width:100%"/>
+                <h:outputLabel for="Reason" value="Reason:"/>
+                <p:inputText id="Reason" value="#{viewVisitorBean.reason}" required="true" requiredMessage="Reason is required." style="width:100%"/>
+                <p:commandButton value="Add"
+                                 action="#{viewVisitorBean.addVisitor}"
+                                 validateClient="true"
+                                 update=":main-form:message :visitor-form :visitorDataTable:visitorTable"
+                                 oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); PF('visitorDialog').hide();}"
+                                 style="margin-top:10px; width:50px;"/>
+                <p:commandButton value="Cancel"
+                                 action="#{viewVisitorBean.resetFields}"
+                                 oncomplete="PF('addVisitor').hide(); PF('visitorDialog').hide(); "
+                                 style="margin-top:10px; width:100px; color:#FFFFFF; background-color:red; " />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
 </h:body>
 </html>
