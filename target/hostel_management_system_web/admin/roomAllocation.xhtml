@@ -80,19 +80,23 @@
     <p:dialog header="Confirmation" widgetVar="allocateDialog" modal="true" resizable="false">
 
         <h:form id="confirmationForm">
-            <h:panelGrid columns="2" cellpadding="5">
+            <h:panelGrid columns="1" cellpadding="5">
                 <h:outputLabel value="Are you sure the #{viewRoomsBean.selectStudent.fullName} is allocated to room #{viewRoomsBean.selectRoom.roomNumber}?" />
-                <p:commandButton value="Allocate"
-                                 action="#{viewRoomsBean.allocateStudentInARoom}"
-                                 validateClient="true"
-                                 update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
-                                 oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); #{viewRoomsBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
-                <p:commandButton value="Cancel"
-                                 action="#{viewRoomsBean.resetFields}"
-                                 update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
-                                 onclick="PF('allocateDialog').hide();"
-                                 style="margin-top:10px; width:100px; background-color:red;" />
+
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:commandButton value="Allocate"
+                                     action="#{viewRoomsBean.allocateStudentInARoom}"
+                                     validateClient="true"
+                                     update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
+                                     oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); #{viewRoomsBean.resetFields()}; }"
+                                     style="margin-top:10px; width:100px;"/>
+                    <p:commandButton value="Cancel"
+                                     action="#{viewRoomsBean.resetFields}"
+                                     update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
+                                     onclick="PF('allocateDialog').hide();"
+                                     style="margin-top:10px; width:100px; background-color:red;" />
+                </h:panelGrid>
+
             </h:panelGrid>
         </h:form>
     </p:dialog>

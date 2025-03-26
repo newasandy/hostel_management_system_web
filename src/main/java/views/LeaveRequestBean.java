@@ -52,12 +52,6 @@ public class LeaveRequestBean implements Serializable {
         });
         if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
             userLeaveRequestList = leaveRequestDAO.getUserLeaveRequestByUserId(loginUser.getId());
-            Collections.sort(userLeaveRequestList, new Comparator<LeaveRequest>() {
-                @Override
-                public int compare(LeaveRequest v1, LeaveRequest v2) {
-                    return v2.getApplyDate().compareTo(v1.getApplyDate());
-                }
-            });
         }
     }
 

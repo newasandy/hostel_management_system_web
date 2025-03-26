@@ -23,7 +23,7 @@ public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO 
     @Override
     public List<Visitors> getUserVisitedBy(Long userId){
         try{
-            return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId",Visitors.class)
+            return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId ORDER BY v.entryDatetime DESC",Visitors.class)
                     .setParameter("studentId", userId)
                     .getResultList();
         }catch (NoResultException e){

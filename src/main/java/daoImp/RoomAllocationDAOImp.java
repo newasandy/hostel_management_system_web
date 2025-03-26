@@ -34,7 +34,7 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
     @Override
     public List<RoomAllocation> getUserAllocated(Long userId){
         try{
-            return entityManager.createQuery("SELECT ra FROM RoomAllocation ra WHERE ra.studentId.id = :studentId",RoomAllocation.class)
+            return entityManager.createQuery("SELECT ra FROM RoomAllocation ra WHERE ra.studentId.id = :studentId ORDER BY ra.allocationDate DESC",RoomAllocation.class)
                     .setParameter("studentId", userId)
                     .getResultList();
         }catch (NoResultException e){

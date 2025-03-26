@@ -24,7 +24,7 @@ public class LeaveRequestDAOImp extends BaseDAOImp<LeaveRequest> implements Leav
     @Override
     public List<LeaveRequest> getUserLeaveRequestByUserId(Long userId){
         try{
-            return entityManager.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.studentId.id = :studentId", LeaveRequest.class)
+            return entityManager.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.studentId.id = :studentId ORDER BY lr.applyDate DESC", LeaveRequest.class)
                     .setParameter("studentId", userId)
                     .getResultList();
         }catch (NoResultException e){

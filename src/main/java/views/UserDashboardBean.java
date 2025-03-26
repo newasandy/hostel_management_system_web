@@ -14,11 +14,8 @@ import model.Users;
 import model.Visitors;
 import utils.GetCookiesValues;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 @Named
 @RequestScoped

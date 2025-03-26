@@ -6,7 +6,6 @@ daoImp/RoomAllocationDAOImp.class
 service/VisitorService.class
 service/LeaveRequestService.class
 model/Address.class
-views/LeaveRequestBean$2.class
 utils/EntityManageUtils.class
 model/LeaveRequest.class
 model/Visitors.class
@@ -37,6 +36,7 @@ views/MonthlyFeeBean$1.class
 views/MonthlyFeeBean.class
 service/MonthlyFeeService.class
 model/StatusMessageModel.class
+views/ViewRoomsBean$1.class
 daoImp/BaseDAOImp.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class

@@ -6,10 +6,7 @@ import daoImp.UserDAOImpl;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
-import model.RoomAllocation;
-import model.Rooms;
-import model.StatusMessageModel;
-import model.Users;
+import model.*;
 import service.RoomsService;
 import utils.GetCookiesValues;
 
@@ -20,9 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -59,6 +54,12 @@ public class ViewRoomsBean implements Serializable {
         unallocatedUser = usersDAO.getUnallocatedUsers();
         availableRoom = roomDAO.getAvailableRoom();
         roomAllocationList = roomAllocationDAO.getAll();
+        Collections.sort(roomAllocationList, new Comparator<RoomAllocation>() {
+            @Override
+            public int compare(RoomAllocation v1, RoomAllocation v2) {
+                return v2.getAllocationDate().compareTo(v1.getAllocationDate());
+            }
+        });
         if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
             Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             roomAllocationListByStudent = roomAllocationDAO.getUserAllocated(loginUser.getId());

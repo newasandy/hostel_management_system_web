@@ -71,14 +71,14 @@
             </p:column>
 
             <p:column headerText="Actions">
-                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px;"
                                  rendered="#{leave.status eq 'PENDING'}"
                                  action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                                  partialSubmit="true"
                                  update=":updateForm"
                                  oncomplete="PF('updateLeaveRequest').show()"
                 />
-                <p:tooltip for="update-btn" value="Update" position="top"/>
+                <p:tooltip for="response-btn" value="Response" position="top"/>
 
 
             </p:column>

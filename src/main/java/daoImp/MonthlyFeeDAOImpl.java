@@ -21,7 +21,7 @@ public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements Monthly
     @Override
     public List<MonthlyFee> getUserFeeDetails(Long userId){
         try{
-            return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.studentId.id = :studentId", MonthlyFee.class)
+            return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.studentId.id = :studentId ORDER BY m.issueDate DESC", MonthlyFee.class)
                     .setParameter("studentId", userId)
                     .getResultList();
         }catch (NoResultException e){
