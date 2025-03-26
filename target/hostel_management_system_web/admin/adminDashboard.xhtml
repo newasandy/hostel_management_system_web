@@ -19,8 +19,16 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding-top: 20px;
+        padding-bottom: 25px;
         gap: 30px;
+        }
+
+        .centered-panelGrid {
+        margin: 0 auto;
+        }
+
+        .centered-panelGrid > *:first-child {
+        margin-right: 20px;
         }
 
         @media screen and (max-width: 1000px) {
@@ -35,7 +43,7 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding-top: 10px;
+        padding-bottom: 25px;
         gap: 20px;
         }
         }
@@ -46,7 +54,6 @@
     <header>
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
-    <p:growl id="message" showDetail="true" life="3000" sticky="false" />
     <div class="container">
         <h:form>
             <div style="width:100%; display:flex; justify-content: center;">
@@ -60,6 +67,13 @@
                 </ui:repeat>
             </div>
         </h:form>
+        <h:form style="display: flex; justify-content: center;">
+            <p:panelGrid columns="2" styleClass="centered-panelGrid" >
+                <p:chart type="donut" model="#{adminDashboardBean.roomOccupancyChart}" style="width:400px;height:300px"/>
+                <p:chart type="donut" model="#{adminDashboardBean.userStatusChart}" style="width:400px;height:300px"/>
+            </p:panelGrid>
+        </h:form>
     </div>
+
 </h:body>
 </html>

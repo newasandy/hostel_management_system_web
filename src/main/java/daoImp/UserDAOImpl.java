@@ -56,4 +56,17 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO, Serializ
             return new ArrayList<>();
         }
     }
+
+    @Override
+    public Long getCountOnlyStudent() {
+        return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles", Long.class)
+                .setParameter("roles","USER")
+                .getSingleResult();
+    }
+    @Override
+    public Long getCountActiveStudent() {
+        return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles AND u.status = true", Long.class)
+                .setParameter("roles","USER")
+                .getSingleResult();
+    }
 }

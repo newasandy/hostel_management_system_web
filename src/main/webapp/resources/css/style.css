@@ -55,4 +55,11 @@ right:0;
 margin-right:5px;
 }
 
+.inactive-row{
+        background-color: #ffdddd !important;
+        }
+        .active-row {
+        background-color: #ddffdd !important;
+        }
+
 
