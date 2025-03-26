@@ -1,8 +1,10 @@
 package service;
 
+import daoImp.TransactionStatementDAOImp;
 import daoInterface.MonthlyFeeDAO;
 import model.MonthlyFee;
 import model.StatusMessageModel;
+import model.TransactionStatement;
 import model.Users;
 
 import java.sql.Timestamp;
@@ -13,9 +15,11 @@ import java.util.Date;
 public class MonthlyFeeService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private MonthlyFeeDAO monthlyFeeDAO;
+    private TransactionStatementDAOImp transactionStatementDAOImp;
 
-    public MonthlyFeeService(MonthlyFeeDAO monthlyFeeDAO) {
+    public MonthlyFeeService(MonthlyFeeDAO monthlyFeeDAO, TransactionStatementDAOImp transactionStatementDAOImp) {
         this.monthlyFeeDAO = monthlyFeeDAO;
+        this.transactionStatementDAOImp = transactionStatementDAOImp;
     }
 
     public StatusMessageModel assignStudentMonthlyFee(Users student, double assignFeeAmount){
@@ -56,12 +60,32 @@ public class MonthlyFeeService {
         selectFee.setPaid(totalPayAmount);
         selectFee.setDue(totalDueAmount);
         if (monthlyFeeDAO.update(selectFee)){
-            statusMessageModel.setStatus(true);
-            statusMessageModel.setMessage("Fee Payment Success");
+            if (addPayTransactionStatement(selectFee.getStudentId(),selectFee,payAmount)){
+                statusMessageModel.setStatus(true);
+                statusMessageModel.setMessage("Fee Payment Success");
+            }else {
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("Fee Payment Success but not Add Transaction History");
+            }
         }else {
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("Failed to Pay Fee");
         }
         return statusMessageModel;
+    }
+
+    public boolean addPayTransactionStatement(Users selectUser, MonthlyFee selectAssignFee, double payAmount){
+        Date date = new Date();
+        Timestamp payDate = new Timestamp(date.getTime());
+        TransactionStatement newPayTransaction = new TransactionStatement();
+        newPayTransaction.setStudentId(selectUser);
+        newPayTransaction.setFeeId(selectAssignFee);
+        newPayTransaction.setPayAmount(payAmount);
+        newPayTransaction.setPaymentDate(payDate);
+        if (transactionStatementDAOImp.add(newPayTransaction)){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

@@ -1,11 +1,13 @@
 package views;
 
 import daoImp.MonthlyFeeDAOImpl;
+import daoImp.TransactionStatementDAOImp;
 import daoImp.UserDAOImpl;
 import daoInterface.MonthlyFeeDAO;
 import daoInterface.UsersDAO;
 import model.MonthlyFee;
 import model.StatusMessageModel;
+import model.TransactionStatement;
 import model.Users;
 import service.MonthlyFeeService;
 import utils.GetCookiesValues;
@@ -26,8 +28,9 @@ import java.util.List;
 public class MonthlyFeeBean implements Serializable {
 
     private MonthlyFeeDAO monthlyFeeDAO = new MonthlyFeeDAOImpl();
+    private TransactionStatementDAOImp transactionStatementDAOImp = new TransactionStatementDAOImp();
     private UsersDAO usersDAO = new UserDAOImpl();
-    private MonthlyFeeService monthlyFeeService = new MonthlyFeeService(monthlyFeeDAO);
+    private MonthlyFeeService monthlyFeeService = new MonthlyFeeService(monthlyFeeDAO, transactionStatementDAOImp);
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
@@ -39,6 +42,7 @@ public class MonthlyFeeBean implements Serializable {
     private String verifyPassword;
     private List<MonthlyFee> monthlyFeeList;
     private List<MonthlyFee> monthlyFeeListEachUser;
+    private List<TransactionStatement> statementListEachStudent;
     private String userRole = GetCookiesValues.getUserRoleFromCookie();
     private Users loginUser;
 
@@ -58,7 +62,15 @@ public class MonthlyFeeBean implements Serializable {
         if ("USER".equals(userRole)){
             loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             monthlyFeeListEachUser = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
+            statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(loginUser.getId());
         }
+        if (selectStudent != null){
+            statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(selectStudent.getId());
+        }
+    }
+
+    public List<TransactionStatement> getStatementListEachStudent() {
+        return statementListEachStudent;
     }
 
     public String getVerifyPassword() {
@@ -160,6 +172,10 @@ public class MonthlyFeeBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
         }
+    }
+
+    public void viewStatementForStudent(Users student){
+        statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(student.getId());
     }
 
     public void resetField(){

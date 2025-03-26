@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dataTable id="statementTable" value="#{monthlyFeeBean.statementListEachStudent}" rowIndexVar="rowIndex" var="transaction" paginator="true" paginatorPosition="bottom" rows="5">
+        <p:column headerText="SN" style="width: 30px;">
+            <h:outputText value="#{rowIndex + 1}" />
+        </p:column>
+        <p:column headerText="Payment Date" >
+            <h:outputText value="#{transaction.paymentDate}" />
+        </p:column>
+        <p:column headerText="Full Name" >
+            <h:outputText value="#{transaction.studentId.fullName}" />
+        </p:column>
+        <p:column headerText="Year" >
+            <h:outputText value="#{transaction.feeId.year}" />
+        </p:column>
+        <p:column headerText="Month" >
+            <h:outputText value="#{transaction.feeId.month}" />
+        </p:column>
+        <p:column headerText="Paid Amount" sortBy="#{transaction.payAmount}">
+            <h:outputText value="#{transaction.payAmount}" />
+        </p:column>
+    </p:dataTable>
+</ui:composition>

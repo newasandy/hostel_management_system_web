@@ -8,6 +8,7 @@
         <class>model.LeaveRequest</class>
         <class>model.MonthlyFee</class>
         <class>model.RoomAllocation</class>
+        <class>model.TransactionStatement</class>
         <class>model.Rooms</class>
         <class>model.Visitors</class>
         <properties>

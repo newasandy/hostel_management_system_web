@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.Year;
+import java.util.List;
 
 @Entity
 @Table(name = "monthly_fee", schema = "hostelmanagement")
@@ -31,11 +32,13 @@ public class MonthlyFee extends BaseEntity{
     @Column(name = "due", nullable = false)
     private double due;
 
+    @OneToMany(mappedBy = "feeId", cascade = CascadeType.ALL)
+    private List<TransactionStatement> transactionStatements;
 
     public MonthlyFee() {
     }
 
-    public MonthlyFee(Users studentId, int year, String month, Timestamp issueDate, double feeAmount, double paid, double due) {
+    public MonthlyFee(Users studentId, int year, String month, Timestamp issueDate, double feeAmount, double paid, double due, List<TransactionStatement> transactionStatements) {
         this.studentId = studentId;
         this.year = year;
         this.month = month;
@@ -43,6 +46,7 @@ public class MonthlyFee extends BaseEntity{
         this.feeAmount = feeAmount;
         this.paid = paid;
         this.due = due;
+        this.transactionStatements = transactionStatements;
     }
 
     public Users getStudentId() {
@@ -99,5 +103,13 @@ public class MonthlyFee extends BaseEntity{
 
     public void setDue(double due) {
         this.due = due;
+    }
+
+    public List<TransactionStatement> getTransactionStatements() {
+        return transactionStatements;
+    }
+
+    public void setTransactionStatements(List<TransactionStatement> transactionStatements) {
+        this.transactionStatements = transactionStatements;
     }
 }

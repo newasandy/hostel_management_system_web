@@ -101,5 +101,16 @@
         </h:form>
     </p:dialog>
 
+
+    <p:dialog header="Transaction Statement"
+              widgetVar="statementDialog"
+              modal="true"
+              resizable="false"
+              width="95%">
+        <h:form id="statementDataTable">
+            <ui:include src="/includePage/transactionStatementTable.xhtml"/>
+        </h:form>
+    </p:dialog>
+
 </h:body>
 </html>

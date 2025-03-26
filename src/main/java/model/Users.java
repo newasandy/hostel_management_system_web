@@ -37,10 +37,13 @@ public class Users extends BaseEntity{
     @OneToMany(mappedBy = "studentId", cascade = CascadeType.ALL)
     private List<MonthlyFee> monthlyFees;
 
+    @OneToMany(mappedBy = "studentId", cascade = CascadeType.ALL)
+    private List<TransactionStatement> transactionStatements;
+
     public Users() {
     }
 
-    public Users(String fullName, String email, String passwords, UserType roles, boolean status, Address address, List<LeaveRequest> leaveRequests, List<RoomAllocation> roomAllocations, List<Visitors> visitors, List<MonthlyFee> monthlyFees) {
+    public Users(String fullName, String email, String passwords, UserType roles, boolean status, Address address, List<LeaveRequest> leaveRequests, List<RoomAllocation> roomAllocations, List<Visitors> visitors, List<MonthlyFee> monthlyFees, List<TransactionStatement> transactionStatements) {
         this.fullName = fullName;
         this.email = email;
         this.passwords = passwords;
@@ -51,6 +54,7 @@ public class Users extends BaseEntity{
         this.roomAllocations = roomAllocations;
         this.visitors = visitors;
         this.monthlyFees = monthlyFees;
+        this.transactionStatements = transactionStatements;
     }
 
     public String getFullName() {
@@ -131,5 +135,13 @@ public class Users extends BaseEntity{
 
     public void setMonthlyFees(List<MonthlyFee> monthlyFees) {
         this.monthlyFees = monthlyFees;
+    }
+
+    public List<TransactionStatement> getTransactionStatements() {
+        return transactionStatements;
+    }
+
+    public void setTransactionStatements(List<TransactionStatement> transactionStatements) {
+        this.transactionStatements = transactionStatements;
     }
 }

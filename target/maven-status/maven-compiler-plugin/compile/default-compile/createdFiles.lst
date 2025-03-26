@@ -11,7 +11,9 @@ model/LeaveRequest.class
 model/Visitors.class
 daoInterface/VisitorsDAO.class
 model/BaseEntity.class
+daoInterface/TransactionStatementDAO.class
 model/Rooms.class
+daoImp/TransactionStatementDAOImp.class
 service/AuthenticationService.class
 views/LeaveRequestBean$1.class
 daoInterface/RoomDAO.class
@@ -46,6 +48,7 @@ daoInterface/LeaveRequestDAO.class
 views/UserTypeConverter.class
 utils/PasswordUtils.class
 daoImp/MonthlyFeeDAOImpl.class
+model/TransactionStatement.class
 service/UserService.class
 model/Cards.class
 model/Users.class

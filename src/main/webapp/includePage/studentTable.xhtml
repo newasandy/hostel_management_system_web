@@ -76,8 +76,14 @@
                              style="margin-right: 5px; color:#FFFFFF; background-color:#27AE60;"
                              update=":feeAssignForm"
                              oncomplete="PF('assignFeeDialog').show()" />
-            <p:tooltip for="assign-fee-btn" value="Assign Fee" position="top" />
 
+            <p:commandButton id="viewStatement-btn" icon="pi pi-file"
+                             rendered="#{student.status and monthlyFeeBean.feeContext}"
+                             action="#{monthlyFeeBean.viewStatementForStudent(student)}"
+                             style="margin-right: 5px; color:#000000; background-color:#00FFFF;"
+                             update=":statementDataTable:statementTable :statementDataTable "
+                             oncomplete="PF('statementDialog').show()" />
+            <p:tooltip for="viewStatement-btn" value="Statement" position="top" />
         </p:column>
     </p:dataTable>
 </ui:composition>
