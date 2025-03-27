@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dataTable id="roomAllocatedTable" value="#{viewRoomsBean.roomAllocationList}" rowIndexVar="rowIndex" var="allocate" paginator="true" paginatorPosition="bottom" rows="10">
+
+        <p:column headerText="SN" style="width: 30px;">
+            <h:outputText value="#{rowIndex + 1}" />
+        </p:column>
+        <p:column headerText="Student Name" sortBy="#{allocate.studentId.fullName}" filterBy="#{allocate.studentId.fullName}" rendered="#{viewRoomsBean.userRoles == 'ADMIN'}">
+            <h:outputText value="#{allocate.studentId.fullName}" />
+        </p:column>
+        <p:column headerText="Room Number" sortBy="#{allocate.roomId.roomNumber}" filterBy="#{allocate.roomId.roomNumber}">
+            <h:outputText value="#{allocate.roomId.roomNumber}" />
+        </p:column>
+        <p:column headerText="Allocated Date" sortBy="#{allocate.allocationDate}" >
+            <h:outputText value="#{allocate.allocationDate}" />
+        </p:column>
+        <p:column headerText="Unallocated Date" sortBy="#{allocate.unallocationDate}">
+            <h:outputText value="#{allocate.unallocationDate}" />
+        </p:column>
+
+        <p:column headerText="Actions" rendered="#{viewRoomsBean.userRoles == 'ADMIN'}">
+            <p:commandButton id="unallocated-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
+                             rendered="#{allocate.unallocationDate == null}"
+                             action="#{viewRoomsBean.unAllocatedStudent(allocate)}"
+                             update=":main-form:message :main-form:roomAllocatedTable" />
+            <p:tooltip for="unallocated-btn" value="Unallocated" position="top"/>
+        </p:column>
+    </p:dataTable>
+</ui:composition>

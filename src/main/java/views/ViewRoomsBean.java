@@ -35,10 +35,10 @@ public class ViewRoomsBean implements Serializable {
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
     private List<RoomAllocation> roomAllocationList;
-    private List<RoomAllocation> roomAllocationListByStudent;
 
     private List<Users> unallocatedUser;
     private List<Rooms> availableRoom;
+    private String userRoles;
 
     private Rooms selectRoom;
     private Users selectStudent;
@@ -49,29 +49,32 @@ public class ViewRoomsBean implements Serializable {
         refreshRoomList();
     }
     public void refreshRoomList(){
+        userRoles = GetCookiesValues.getUserRoleFromCookie();
         orginalRoomsList = roomDAO.getAll();
         viewRoomsList = new ArrayList<>(orginalRoomsList);
         unallocatedUser = usersDAO.getUnallocatedUsers();
         availableRoom = roomDAO.getAvailableRoom();
-        roomAllocationList = roomAllocationDAO.getAll();
-        Collections.sort(roomAllocationList, new Comparator<RoomAllocation>() {
-            @Override
-            public int compare(RoomAllocation v1, RoomAllocation v2) {
-                return v2.getAllocationDate().compareTo(v1.getAllocationDate());
-            }
-        });
-        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
+        if ("USER".equals(userRoles)){
             Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-            roomAllocationListByStudent = roomAllocationDAO.getUserAllocated(loginUser.getId());
+            roomAllocationList = roomAllocationDAO.getUserAllocated(loginUser.getId());
         }
-    }
-
-    public List<RoomAllocation> getRoomAllocationListByStudent() {
-        return roomAllocationListByStudent;
+        if ("ADMIN".equals(userRoles)){
+            roomAllocationList = roomAllocationDAO.getAll();
+            Collections.sort(roomAllocationList, new Comparator<RoomAllocation>() {
+                @Override
+                public int compare(RoomAllocation v1, RoomAllocation v2) {
+                    return v2.getAllocationDate().compareTo(v1.getAllocationDate());
+                }
+            });
+        }
     }
 
     public List<RoomAllocation> getRoomAllocationList() {
         return roomAllocationList;
+    }
+
+    public String getUserRoles() {
+        return userRoles;
     }
 
     public List<Rooms> getAvailableRoom() {

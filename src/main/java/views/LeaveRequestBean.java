@@ -37,21 +37,26 @@ public class LeaveRequestBean implements Serializable {
     private LocalDate startDate;
     private LocalDate endDate;
     private Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+    private String userRoles;
+
     @PostConstruct
     public void init(){
         refreshLeaveRequestList();
     }
 
     public void refreshLeaveRequestList(){
-        leaveRequestList = leaveRequestDAO.getAll();
-        Collections.sort(leaveRequestList, new Comparator<LeaveRequest>() {
-            @Override
-            public int compare(LeaveRequest v1, LeaveRequest v2) {
-                return v2.getApplyDate().compareTo(v1.getApplyDate());
-            }
-        });
+        userRoles = GetCookiesValues.getUserRoleFromCookie();
         if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
-            userLeaveRequestList = leaveRequestDAO.getUserLeaveRequestByUserId(loginUser.getId());
+            leaveRequestList = leaveRequestDAO.getUserLeaveRequestByUserId(loginUser.getId());
+        }
+        if ("ADMIN".equals(userRoles)){
+            leaveRequestList = leaveRequestDAO.getAll();
+            Collections.sort(leaveRequestList, new Comparator<LeaveRequest>() {
+                @Override
+                public int compare(LeaveRequest v1, LeaveRequest v2) {
+                    return v2.getApplyDate().compareTo(v1.getApplyDate());
+                }
+            });
         }
     }
 
@@ -61,6 +66,10 @@ public class LeaveRequestBean implements Serializable {
 
     public List<LeaveRequest> getUserLeaveRequestList() {
         return userLeaveRequestList;
+    }
+
+    public String getUserRoles() {
+        return userRoles;
     }
 
     public String getReason() {

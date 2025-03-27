@@ -31,23 +31,7 @@
             <h3 style="margin-right: 150px;">Room Allocation</h3>
         </div>
 
-        <p:dataTable id="roomAllocatedTable" value="#{viewRoomsBean.roomAllocationListByStudent}" rowIndexVar="rowIndex" var="allocate" paginator="true" paginatorPosition="bottom" rows="10">
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Name" sortBy="#{allocate.studentId.fullName}">
-                <h:outputText value="#{allocate.studentId.fullName}" />
-            </p:column>
-            <p:column headerText="Room Number" sortBy="#{allocate.roomId.roomNumber}" >
-                <h:outputText value="#{allocate.roomId.roomNumber}" />
-            </p:column>
-            <p:column headerText="Allocated Date" sortBy="#{allocate.allocationDate}" >
-                <h:outputText value="#{allocate.allocationDate}" />
-            </p:column>
-            <p:column headerText="Unallocated Date" sortBy="#{allocate.unallocationDate}">
-                <h:outputText value="#{allocate.unallocationDate}" />
-            </p:column>
-        </p:dataTable>
+        <ui:include src="/includePage/roomAllocation.xhtml"/>
     </h:form>
 
 </h:body>

@@ -47,47 +47,7 @@
                              update=":main-form:message :main-form:leaveTable"
                              oncomplete="PF('applyLeaveRequest').show()" />
         </div>
-
-        <p:dataTable id="leaveTable"
-                     value="#{leaveRequestBean.userLeaveRequestList}"
-                     rowIndexVar="rowIndex"
-                     var="leave"
-                     paginator="true"
-                     rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
-                     paginatorPosition="bottom"
-                     rows="10">
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Reason" >
-                <h:outputText value="#{leave.reason}"/>
-            </p:column>
-            <p:column headerText="Apply Date" sortBy="#{leave.applyDate}">
-                <h:outputText value="#{leave.applyDate}" />
-            </p:column>
-            <p:column headerText="Start" sortBy="#{leave.startFrom}">
-                <h:outputText value="#{leave.startFrom}" />
-            </p:column>
-            <p:column headerText="End" sortBy="#{leave.endOn}">
-                <h:outputText value="#{leave.endOn}" />
-            </p:column>
-            <p:column headerText="Status" >
-                <h:outputText value="#{leave.status}" />
-            </p:column>
-
-            <p:column headerText="Actions">
-                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
-                                 rendered="#{leave.status eq 'PENDING'}"
-                                 action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
-                                 partialSubmit="true"
-                                 update=":updateForm"
-                                 oncomplete="PF('updateLeaveRequest').show()"
-                />
-                <p:tooltip for="update-btn" value="Update" position="top"/>
-
-
-            </p:column>
-        </p:dataTable>
+        <ui:include src="/includePage/leaveRequestTable.xhtml"/>
     </h:form>
 
     <p:dialog header="Apply Leave Request" widgetVar="applyLeaveRequest" modal="true" resizable="false">

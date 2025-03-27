@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestList}"
+                 rowIndexVar="rowIndex"
+                 var="leave"
+                 rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
+                 paginator="true"
+                 paginatorPosition="bottom" rows="10">
+        <p:column headerText="SN" style="width: 30px;">
+            <h:outputText value="#{rowIndex + 1}" />
+        </p:column>
+        <p:column headerText="Name" >
+            <h:outputText value="#{leave.studentId.fullName}"/>
+        </p:column>
+        <p:column headerText="Reason" >
+            <h:outputText value="#{leave.reason}"/>
+        </p:column>
+        <p:column headerText="Apply Date" sortBy="#{leave.applyDate}">
+            <h:outputText value="#{leave.applyDate}" />
+        </p:column>
+        <p:column headerText="Start" sortBy="#{leave.startFrom}">
+            <h:outputText value="#{leave.startFrom}" />
+        </p:column>
+        <p:column headerText="End" sortBy="#{leave.endOn}">
+            <h:outputText value="#{leave.endOn}" />
+        </p:column>
+        <p:column headerText="Status" sortBy="#{leave.endOn}">
+            <h:outputText value="#{leave.status}" />
+        </p:column>
+
+        <p:column headerText="Actions">
+            <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px;"
+                             rendered="#{leave.status eq 'PENDING' and leaveRequestBean.userRoles.equals('ADMIN')}"
+                             action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
+                             partialSubmit="true"
+                             update=":updateForm"
+                             oncomplete="PF('updateLeaveRequest').show()"
+            />
+
+            <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                             rendered="#{leave.status eq 'PENDING' and leaveRequestBean.userRoles.equals('USER')}"
+                             action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
+                             partialSubmit="true"
+                             update=":updateForm"
+                             oncomplete="PF('updateLeaveRequest').show()"
+            />
+            <p:tooltip for="response-btn" value="Response" position="top"/>
+
+        </p:column>
+    </p:dataTable>
+</ui:composition>
