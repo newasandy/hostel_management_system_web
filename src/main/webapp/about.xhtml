@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>About Hostel Management System</title>
+    <style>
+        .about-container {
+            width: 95%;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .about-header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .about-text {
+            flex: 2;
+            line-height: 1.6;
+            color: #555;
+        }
+        .about-image {
+            flex: 1;
+            text-align: center;
+        }
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+    </style>
+</h:head>
+<h:body>
+
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+    <div class="about-container">
+        <h:form>
+            <p:panel styleClass="about-header">
+                <h3>Hostel Management System</h3>
+                <p:separator />
+            </p:panel>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <p:panel header="About">
+                        <p>Our Hostel Management System is a comprehensive digital solution designed to streamline and optimize the administrative processes of hostel operations. Developed using cutting-edge PrimeFaces technology, this system provides an intuitive and efficient platform for managing hostel resources, student accommodations, and administrative tasks.</p>
+
+                        <p>Key features of our system include:</p>
+                        <ul>
+                            <li>Seamless student registration and room allocation</li>
+                            <li>Real-time occupancy tracking</li>
+                            <li>Automated fee management</li>
+                            <li>Visitor and security log maintenance</li>
+                            <li>Comprehensive reporting and analytics</li>
+                        </ul>
+
+                        <p>Our goal is to provide an innovative technological solution that simplifies hostel management, enhances security, and improves overall operational efficiency.</p>
+                    </p:panel>
+                </div>
+
+                <div class="about-image">
+                    <p:panel>
+                        <p:graphicImage name="image/hostelpic.png" alt="Hostel Management System" />
+                        <h:panelGroup layout="block" style="margin-top: 15px; text-align: center; color: #777;">
+                            Transforming Hostel Management through Technology
+                        </h:panelGroup>
+                    </p:panel>
+                </div>
+            </div>
+
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -24,11 +24,11 @@
         gap: 30px;
         }
 
-        .centered-panelGrid {
+        .chart-panelGrid {
         margin: 0 auto;
         }
 
-        .centered-panelGrid > *:first-child {
+        .chart-panelGrid > *:first-child {
         margin-right: 20px;
         }
 
@@ -65,13 +65,7 @@
                 </ui:repeat>
             </div>
         </h:form>
-        <h:form style="display: flex; justify-content: center;">
-            <p:panelGrid columns="2" styleClass="centered-panelGrid" >
-                <p:chart type="donut" model="#{adminDashboardBean.roomOccupancyChart}" style="width:400px;height:300px"/>
-                <p:chart type="donut" model="#{adminDashboardBean.userStatusChart}" style="width:400px;height:300px"/>
-            </p:panelGrid>
-        </h:form>
+        <ui:include src="/includePage/statusChart.xhtml"/>
     </div>
-
 </h:body>
 </html>
