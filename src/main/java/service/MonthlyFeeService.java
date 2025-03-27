@@ -60,7 +60,7 @@ public class MonthlyFeeService {
         selectFee.setPaid(totalPayAmount);
         selectFee.setDue(totalDueAmount);
         if (monthlyFeeDAO.update(selectFee)){
-            if (addPayTransactionStatement(selectFee.getStudentId(),selectFee,payAmount)){
+            if (addPayTransactionStatement(selectFee.getStudentId(),selectFee,payAmount, totalDueAmount)){
                 statusMessageModel.setStatus(true);
                 statusMessageModel.setMessage("Fee Payment Success");
             }else {
@@ -74,7 +74,7 @@ public class MonthlyFeeService {
         return statusMessageModel;
     }
 
-    public boolean addPayTransactionStatement(Users selectUser, MonthlyFee selectAssignFee, double payAmount){
+    public boolean addPayTransactionStatement(Users selectUser, MonthlyFee selectAssignFee, double payAmount, double newDue){
         Date date = new Date();
         Timestamp payDate = new Timestamp(date.getTime());
         TransactionStatement newPayTransaction = new TransactionStatement();
@@ -82,6 +82,7 @@ public class MonthlyFeeService {
         newPayTransaction.setFeeId(selectAssignFee);
         newPayTransaction.setPayAmount(payAmount);
         newPayTransaction.setPaymentDate(payDate);
+        newPayTransaction.setStatementDue(newDue);
         if (transactionStatementDAOImp.add(newPayTransaction)){
             return true;
         }else {

@@ -10,9 +10,6 @@
         <p:column headerText="Payment Date" >
             <h:outputText value="#{transaction.paymentDate}" />
         </p:column>
-        <p:column headerText="Full Name" >
-            <h:outputText value="#{transaction.studentId.fullName}" />
-        </p:column>
         <p:column headerText="Year" >
             <h:outputText value="#{transaction.feeId.year}" />
         </p:column>
@@ -21,6 +18,9 @@
         </p:column>
         <p:column headerText="Paid Amount" sortBy="#{transaction.payAmount}">
             <h:outputText value="#{transaction.payAmount}" />
+        </p:column>
+        <p:column headerText="Due Amount" >
+            <h:outputText value="#{transaction.statementDue}" />
         </p:column>
     </p:dataTable>
 </ui:composition>

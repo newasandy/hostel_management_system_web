@@ -21,14 +21,18 @@ public class TransactionStatement extends BaseEntity {
     @Column(name = "pay_amount", nullable = false)
     private double payAmount;
 
+    @Column(name = "statement_due", nullable = false)
+    private double statementDue;
+
     public TransactionStatement() {
     }
 
-    public TransactionStatement(Users studentId, MonthlyFee feeId, Timestamp paymentDate, double payAmount) {
-        this.studentId = studentId;
-        this.feeId = feeId;
-        this.paymentDate = paymentDate;
+    public TransactionStatement(double statementDue, double payAmount, Timestamp paymentDate, MonthlyFee feeId, Users studentId) {
+        this.statementDue = statementDue;
         this.payAmount = payAmount;
+        this.paymentDate = paymentDate;
+        this.feeId = feeId;
+        this.studentId = studentId;
     }
 
     public Users getStudentId() {
@@ -61,5 +65,13 @@ public class TransactionStatement extends BaseEntity {
 
     public void setPayAmount(double payAmount) {
         this.payAmount = payAmount;
+    }
+
+    public double getStatementDue() {
+        return statementDue;
+    }
+
+    public void setStatementDue(double statementDue) {
+        this.statementDue = statementDue;
     }
 }

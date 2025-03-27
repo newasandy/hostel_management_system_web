@@ -44,6 +44,7 @@ public class MonthlyFeeBean implements Serializable {
     private List<MonthlyFee> monthlyFeeListEachUser;
     private List<TransactionStatement> statementListEachStudent;
     private String userRole = GetCookiesValues.getUserRoleFromCookie();
+    private double selectStudentDueAmount;
     private Users loginUser;
 
     @PostConstruct
@@ -62,6 +63,7 @@ public class MonthlyFeeBean implements Serializable {
         if ("USER".equals(userRole)){
             loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             monthlyFeeListEachUser = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
+            selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(loginUser.getId());
             statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(loginUser.getId());
         }
         if (selectStudent != null){
@@ -71,6 +73,10 @@ public class MonthlyFeeBean implements Serializable {
 
     public List<TransactionStatement> getStatementListEachStudent() {
         return statementListEachStudent;
+    }
+
+    public double getSelectStudentDueAmount() {
+        return selectStudentDueAmount;
     }
 
     public String getVerifyPassword() {
@@ -175,6 +181,8 @@ public class MonthlyFeeBean implements Serializable {
     }
 
     public void viewStatementForStudent(Users student){
+        selectStudent = student;
+        selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(student.getId());
         statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(student.getId());
     }
 

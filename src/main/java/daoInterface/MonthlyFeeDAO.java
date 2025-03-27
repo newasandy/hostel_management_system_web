@@ -9,4 +9,5 @@ public interface MonthlyFeeDAO extends BaseDAO<MonthlyFee> {
     List<MonthlyFee> getUserUnPaidFee(Long userId);
     List<MonthlyFee> getAllUserUnPaidFee();
     MonthlyFee checkAssignFee(Long studentId, String month, int years);
+    double getTotalDueAmount(Long userId);
 }

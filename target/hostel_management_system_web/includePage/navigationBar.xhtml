@@ -27,7 +27,14 @@
                             <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
                             <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
                             <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:submenu label="Fee" rendered="#{userBean.isUser()}">
+                    <p:column>
+                        <p:submenu label="Service">
                             <p:menuitem value="View Monthly Fee" url="viewFee.xhtml"/>
+                            <p:menuitem value="Statement" url="viewTransactionStatement.xhtml"/>
                         </p:submenu>
                     </p:column>
                 </p:submenu>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Visitor</title>
+    <h:outputStylesheet>
+
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+        <div style="width:95%; margin-left:10px; display:flex; align-items:center; justify-content:space-between; font-size:20px; font-weight:bold; text-align:center;">
+            <h:outputLabel value="#{monthlyFeeBean.loginUser.fullName}" />
+            <h:outputLabel value="Total Due Amount: #{monthlyFeeBean.selectStudentDueAmount}" />
+        </div>
+        <ui:include src="/includePage/transactionStatementTable.xhtml"/>
+    </h:form>
+</h:body>
+</html>

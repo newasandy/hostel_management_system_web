@@ -61,4 +61,19 @@ public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements Monthly
             return null;
         }
     }
+
+    @Override
+    public double getTotalDueAmount(Long userId) {
+        try{
+            Double result = entityManager.createQuery(
+                            "SELECT COALESCE(SUM(m.due), 0.0) FROM MonthlyFee m WHERE m.studentId.id = :studentId",
+                            Double.class)
+                    .setParameter("studentId", userId)
+                    .getSingleResult();
+
+            return result != null ? result : 0.0;
+        } catch (NoResultException e) {
+            return 0.0;
+        }
+    }
 }
