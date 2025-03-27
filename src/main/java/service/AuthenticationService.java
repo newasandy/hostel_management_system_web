@@ -5,7 +5,6 @@ import model.Users;
 import utils.PasswordUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 @ApplicationScoped
 public class AuthenticationService {

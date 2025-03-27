@@ -1,7 +1,6 @@
 package service;
 
 import daoImp.AddressDAOImp;
-import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
 import model.Address;
 import model.StatusMessageModel;
@@ -10,7 +9,6 @@ import model.Users;
 import utils.PasswordUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 @ApplicationScoped
 public class UserService {

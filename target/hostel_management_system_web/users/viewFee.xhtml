@@ -40,36 +40,7 @@
             <h3 style="margin-right: 150px;"><h:outputText value="#{monthlyFeeBean.loginUser.fullName} Fee Details" /></h3>
         </div>
 
-        <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeListEachUser}"
-                     rowIndexVar="rowIndex"
-                     var="monthlyFee"
-                     paginator="true"
-                     rowStyleClass="#{monthlyFee.due gt 0 ? 'row-due' : 'row-paid'}"
-                     paginatorPosition="bottom"
-                     rows="10">
-
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Issued Date" sortBy="#{monthlyFee.issueDate}" >
-                <h:outputText value="#{monthlyFee.issueDate}" />
-            </p:column>
-            <p:column headerText="Year">
-                <h:outputText value="#{monthlyFee.year}" />
-            </p:column>
-            <p:column headerText="Month">
-                <h:outputText value="#{monthlyFee.month}" />
-            </p:column>
-            <p:column headerText="Amount">
-                <h:outputText value="#{monthlyFee.feeAmount}" />
-            </p:column>
-            <p:column headerText="Paid Amount">
-                <h:outputText value="#{monthlyFee.paid}" />
-            </p:column>
-            <p:column headerText="Due Amount">
-                <h:outputText value="#{monthlyFee.due}" />
-            </p:column>
-        </p:dataTable>
+        <ui:include src="/includePage/monthlyFeeTable.xhtml"/>
     </h:form>
 
 </h:body>

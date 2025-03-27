@@ -32,16 +32,6 @@ public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO 
     }
 
     @Override
-    public List<Visitors> getAllNotExitVistior(){
-        try{
-            return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.exitDatetime IS NULL",Visitors.class)
-                    .getResultList();
-        }catch (NoResultException e){
-            return null;
-        }
-    }
-
-    @Override
     public Visitors getRecentUserVisitor(Long userId) {
         try{
             return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId ORDER BY v.entryDatetime DESC", Visitors.class)

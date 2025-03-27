@@ -30,27 +30,6 @@ public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements Monthly
     }
 
     @Override
-    public List<MonthlyFee> getUserUnPaidFee(Long userId){
-        try{
-            return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.studentId.id = :studentId AND m.paid < m.feeAmount", MonthlyFee.class)
-                    .setParameter("studentId", userId)
-                    .getResultList();
-        }catch (NoResultException e){
-            return null;
-        }
-    }
-
-    @Override
-    public List<MonthlyFee> getAllUserUnPaidFee(){
-        try{
-            return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.paid < m.feeAmount", MonthlyFee.class)
-                    .getResultList();
-        }catch (NoResultException e){
-            return null;
-        }
-    }
-
-    @Override
     public MonthlyFee checkAssignFee(Long studentId, String month, int years) {
         try{
             return entityManager.createQuery("SELECT m FROM MonthlyFee m WHERE m.studentId.id = :studentId AND m.month = :month AND m.year = :years", MonthlyFee.class)

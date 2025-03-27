@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Room Allocation</title>
@@ -40,48 +39,7 @@
             <h3 style="margin-right: 150px;">Fee Details</h3>
         </div>
 
-        <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeList}"
-                     rowIndexVar="rowIndex"
-                     var="monthlyFee"
-                     paginator="true"
-                     paginatorPosition="bottom" rowStyleClass="#{monthlyFee.due gt 0 ? 'row-due' : 'row-paid'}"
-                     rows="10">
-
-            <p:column headerText="SN" style="width: 30px;">
-                <h:outputText value="#{rowIndex + 1}" />
-            </p:column>
-            <p:column headerText="Issued Date" sortBy="#{monthlyFee.issueDate}" >
-                <h:outputText value="#{monthlyFee.issueDate}" />
-            </p:column>
-            <p:column headerText="Student Name" sortBy="#{monthlyFee.studentId.fullName}" filterBy="#{monthlyFee.studentId.fullName}">
-                <h:outputText value="#{monthlyFee.studentId.fullName}" />
-            </p:column>
-            <p:column headerText="Year">
-                <h:outputText value="#{monthlyFee.year}" />
-            </p:column>
-            <p:column headerText="Month">
-                <h:outputText value="#{monthlyFee.month}" />
-            </p:column>
-            <p:column headerText="Amount">
-                <h:outputText value="#{monthlyFee.feeAmount}" />
-            </p:column>
-            <p:column headerText="Paid Amount">
-                <h:outputText value="#{monthlyFee.paid}" />
-            </p:column>
-            <p:column headerText="Due Amount">
-                <h:outputText value="#{monthlyFee.due}" />
-            </p:column>
-
-            <p:column headerText="Actions">
-                <p:commandButton id="pay-btn" icon="pi pi-money-bill"
-                                 style="margin-right: 5px; color:#FFFFFF; background-color:#27AE60;"
-                                 rendered="#{monthlyFee.due > 0}"
-                                 action="#{monthlyFeeBean.setSelectForPayFee(monthlyFee)}"
-                                 oncomplete="PF('payFeeDialog').show()"
-                                 update=":main-form:message :payFeeForm :main-form:monthlyFeeTable" />
-                <p:tooltip for="pay-btn" value="Fee Pay" position="top"/>
-            </p:column>
-        </p:dataTable>
+        <ui:include src="/includePage/monthlyFeeTable.xhtml"/>
     </h:form>
 
     <p:dialog header="Pay Monthly Fee" widgetVar="payFeeDialog" modal="true" resizable="false">

@@ -30,7 +30,6 @@ public class LeaveRequestBean implements Serializable {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
     private List<LeaveRequest> leaveRequestList;
-    private List<LeaveRequest> userLeaveRequestList;
     private LeaveRequest selectLeaveRequest;
 
     private String reason;
@@ -64,9 +63,6 @@ public class LeaveRequestBean implements Serializable {
         return leaveRequestList;
     }
 
-    public List<LeaveRequest> getUserLeaveRequestList() {
-        return userLeaveRequestList;
-    }
 
     public String getUserRoles() {
         return userRoles;

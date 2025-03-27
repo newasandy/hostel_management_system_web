@@ -7,7 +7,7 @@ import javax.faces.convert.FacesConverter;
 
 import daoImp.UserTypeDAOImp;
 import daoInterface.UserTypeDAO;
-import model.UserType; // Adjust the import based on your package structure
+import model.UserType;
 
 @FacesConverter("userTypeConverter")
 public class UserTypeConverter implements Converter {
@@ -15,11 +15,11 @@ public class UserTypeConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        // Convert the String value (e.g., ID) back to a UserType object
+
         if (value == null || value.isEmpty()) {
             return null;
         }
-        // Fetch the UserType object from the database using the ID
+
         Long id = Long.valueOf(value);
         return userTypeDAO.getById(id);
     }

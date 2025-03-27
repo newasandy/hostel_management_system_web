@@ -9,7 +9,6 @@ import java.util.List;
 public interface RoomAllocationDAO extends BaseDAO<RoomAllocation> {
     Long getRoomOccupancy(Rooms roomId);
     List<RoomAllocation> getUserAllocated(Long userId);
-    List<RoomAllocation> getOnlyAllocatedDetails();
     boolean disableRoomUnallocatedStudent(Long roomId, Timestamp unallocationDate);
     Long getCountOnlyAllocated();
     RoomAllocation getRecentUserRoomAllocation(Long userId);

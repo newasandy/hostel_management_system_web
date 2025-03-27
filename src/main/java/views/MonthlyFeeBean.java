@@ -19,7 +19,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +41,6 @@ public class MonthlyFeeBean implements Serializable {
     private MonthlyFee selectForPayFee;
     private String verifyPassword;
     private List<MonthlyFee> monthlyFeeList;
-    private List<MonthlyFee> monthlyFeeListEachUser;
     private List<TransactionStatement> statementListEachStudent;
     private String userRole = GetCookiesValues.getUserRoleFromCookie();
     private double selectStudentDueAmount;
@@ -54,18 +52,20 @@ public class MonthlyFeeBean implements Serializable {
     }
 
     public void refreshMonthlyFeeList(){
-        monthlyFeeList = monthlyFeeDAO.getAll();
-        Collections.sort(monthlyFeeList, new Comparator<MonthlyFee>() {
-            @Override
-            public int compare(MonthlyFee v1, MonthlyFee v2) {
-                return v2.getIssueDate().compareTo(v1.getIssueDate());
-            }
-        });
         if ("USER".equals(userRole)){
             loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-            monthlyFeeListEachUser = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
+            monthlyFeeList = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
             selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(loginUser.getId());
             statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(loginUser.getId());
+        }
+        if ("ADMIN".equals(userRole)){
+            monthlyFeeList = monthlyFeeDAO.getAll();
+            Collections.sort(monthlyFeeList, new Comparator<MonthlyFee>() {
+                @Override
+                public int compare(MonthlyFee v1, MonthlyFee v2) {
+                    return v2.getIssueDate().compareTo(v1.getIssueDate());
+                }
+            });
         }
         if (selectStudent != null){
             statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(selectStudent.getId());
@@ -80,6 +80,10 @@ public class MonthlyFeeBean implements Serializable {
         return selectStudentDueAmount;
     }
 
+    public String getUserRole() {
+        return userRole;
+    }
+
     public String getVerifyPassword() {
         return verifyPassword;
     }
@@ -92,9 +96,6 @@ public class MonthlyFeeBean implements Serializable {
         this.verifyPassword = verifyPassword;
     }
 
-    public List<MonthlyFee> getMonthlyFeeListEachUser() {
-        return monthlyFeeListEachUser;
-    }
 
     public double getPaidAmount() {
         return paidAmount;

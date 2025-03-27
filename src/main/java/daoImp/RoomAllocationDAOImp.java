@@ -43,16 +43,6 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
     }
 
     @Override
-    public List<RoomAllocation> getOnlyAllocatedDetails(){
-        try{
-            return entityManager.createQuery("SELECT ra FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL",RoomAllocation.class)
-                    .getResultList();
-        }catch (NoResultException e){
-            return null;
-        }
-    }
-
-    @Override
     public boolean disableRoomUnallocatedStudent(Long roomId, Timestamp unallocationDate){
         try{
             entityTransaction.begin();
