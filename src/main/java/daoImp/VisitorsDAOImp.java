@@ -7,6 +7,7 @@ import daoInterface.VisitorsDAO;
 import model.Visitors;
 import utils.EntityManageUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO {
@@ -20,17 +21,25 @@ public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO 
 
     @Override
     public List<Visitors> getUserVisitedBy(Long userId){
+        if (entityManager == null) {
+            return Collections.emptyList();
+        }
+
         try{
             return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId ORDER BY v.entryDatetime DESC",Visitors.class)
                     .setParameter("studentId", userId)
                     .getResultList();
         }catch (NoResultException e){
-            return null;
+            return Collections.emptyList();
         }
     }
 
     @Override
     public Visitors getRecentUserVisitor(Long userId) {
+        if (entityManager == null) {
+            return null;
+        }
+
         try{
             return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId ORDER BY v.entryDatetime DESC", Visitors.class)
                     .setParameter("studentId", userId)

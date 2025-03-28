@@ -9,6 +9,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Named
@@ -23,6 +24,10 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
 
     @Override
     public Users getByEmail(String email){
+        if (entityManager == null) {
+            return null;
+        }
+
         try{
             return entityManager.createQuery("SELECT e FROM Users e WHERE e.email = :email", Users.class)
                     .setParameter("email",email)
@@ -34,17 +39,25 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
 
     @Override
     public List<Users> getUnallocatedUsers(){
+        if (entityManager == null) {
+            return Collections.emptyList();
+        }
+
         try{
             return entityManager.createQuery("SELECT u FROM Users u WHERE u.roles.userTypes = :roles AND u.status = TRUE AND u.id NOT IN (SELECT ra.studentId.id FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL)", Users.class)
                     .setParameter("roles", "USER")
                     .getResultList();
         }catch (NoResultException e){
-            return null;
+            return Collections.emptyList();
         }
     }
 
     @Override
     public List<Users> getOnlyStudent(){
+        if (entityManager == null) {
+            return new ArrayList<>();
+        }
+
         try{
             return entityManager.createQuery("SELECT u FROM Users u LEFT JOIN FETCH u.address WHERE u.roles.userTypes = :roles",Users.class)
                     .setParameter("roles", "USER")
@@ -56,14 +69,30 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
 
     @Override
     public Long getCountOnlyStudent() {
-        return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles", Long.class)
-                .setParameter("roles","USER")
-                .getSingleResult();
+        if (entityManager == null) {
+            return 0L;
+        }
+
+        try{
+            return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles", Long.class)
+                    .setParameter("roles","USER")
+                    .getSingleResult();
+        } catch (Exception e) {
+            return 0L;
+        }
     }
     @Override
     public Long getCountActiveStudent() {
-        return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles AND u.status = true", Long.class)
-                .setParameter("roles","USER")
-                .getSingleResult();
+        if (entityManager == null) {
+            return 0L;
+        }
+
+        try{
+            return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles AND u.status = true", Long.class)
+                    .setParameter("roles","USER")
+                    .getSingleResult();
+        } catch (Exception e) {
+            return 0L;
+        }
     }
 }

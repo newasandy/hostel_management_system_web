@@ -52,6 +52,7 @@
 
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.isUser()}"/>
 
                 <p:submenu label="Monthly Fee"  rendered="#{userBean.isAdmin()}">
                     <p:column>
@@ -68,5 +69,52 @@
         </h:form>
     </div>
 
+    <p:dialog header="Info" widgetVar="userInfo" modal="true" rendered="#{userBean.isUser()}" resizable="false">
+
+        <h:form id="userInfoField">
+            <h:panelGrid columns="2" >
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="fullName" value="First Name:" />
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="fullName" disabled="true" value="#{userDashboardBean.loginUser.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                        <h:message for="fullName" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="email" value="Email:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="email" disabled="true" value="#{userDashboardBean.loginUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <h:message for="email" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="country" value="Country:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="country" disabled="true" value="#{userDashboardBean.loginUser.address.country}" required="true" requiredMessage="Country is required." style="width:100%"/>
+                        <h:message for="country" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="district" value="District:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="district" disabled="true" value="#{userDashboardBean.loginUser.address.district}" required="true" requiredMessage="District is required." style="width:100%"/>
+                        <h:message for="district" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="rmcMc" value="Rural Municipality/Municipality:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputText id="rmcMc" disabled="true" value="#{userDashboardBean.loginUser.address.rmcMc}" required="true" requiredMessage="RMC/MC is required." style="width:100%"/>
+                        <h:message for="rmcMc" styleClass="error-message"/>
+                    </h:panelGroup>
+
+                    <h:outputLabel for="wardNumber" value="Ward Number:"/>
+                    <h:panelGroup styleClass="input-group">
+                        <p:inputNumber id="wardNumber" disabled="true" minValue="1" value="#{userDashboardBean.loginUser.address.wardNo}" required="true" requiredMessage="Ward Number is required." style="width:100%"/>
+                        <h:message for="wardNumber" styleClass="error-message"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
 </h:body>
 </html>

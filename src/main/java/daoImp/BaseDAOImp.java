@@ -7,6 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
+import java.util.Collections;
 import java.util.List;
 
 @Named
@@ -25,6 +27,10 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     @Override
     public boolean add(T entity){
         boolean status = false;
+        if (entityManager == null) {
+            return status;
+        }
+
         EntityTransaction transaction = entityManager.getTransaction();
         try{
             transaction.begin();
@@ -42,6 +48,10 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     @Override
     public boolean update(T entity){
         boolean status = false;
+        if (entityManager == null) {
+            return status;
+        }
+
         EntityTransaction transaction = entityManager.getTransaction();
         try{
             transaction.begin();
@@ -60,6 +70,10 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     public boolean delete(Long id){
         EntityTransaction transaction = entityManager.getTransaction();
         boolean status = false;
+        if (entityManager == null) {
+            return status;
+        }
+
         try{
             transaction.begin();
             T entity = entityManager.find(entityClass , id);
@@ -76,18 +90,42 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     }
     @Override
     public T getById(Long id){
-        return entityManager.find(entityClass ,id);
+        if (entityManager == null) {
+            return null;
+        }
+
+        try{
+            return entityManager.find(entityClass ,id);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve entity by ID: " + id, e);
+        }
     }
 
     @Override
     public List<T> getAll() {
-        return entityManager.createQuery("SELECT e FROM "+ entityClass.getName() + " e",entityClass)
-                .getResultList();
+        if (entityManager == null) {
+            return Collections.emptyList();
+        }
+
+        try {
+            return entityManager.createQuery("SELECT e FROM " + entityClass.getName() + " e", entityClass)
+                    .getResultList();
+        }catch (PersistenceException e){
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public Long getCount(){
-        return entityManager.createQuery("SELECT COUNT(*) FROM "+ entityClass.getName() +" e",Long.class)
-                .getSingleResult();
+        if (entityManager == null) {
+            return 0L;
+        }
+        try{
+            return entityManager.createQuery("SELECT COUNT(*) FROM "+ entityClass.getName() +" e",Long.class)
+                    .getSingleResult();
+        } catch (Exception e) {
+            // Log the exception if needed
+            return 0L; // or throw a custom exception
+        }
     }
 }
