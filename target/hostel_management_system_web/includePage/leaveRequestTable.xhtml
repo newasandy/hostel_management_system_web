@@ -32,7 +32,7 @@
         </p:column>
 
         <p:column headerText="Actions">
-            <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px;"
+            <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              rendered="#{leave.status eq 'PENDING' and leaveRequestBean.userRoles.equals('ADMIN')}"
                              action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"
@@ -40,7 +40,7 @@
                              oncomplete="PF('updateLeaveRequest').show()"
             />
 
-            <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+            <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              rendered="#{leave.status eq 'PENDING' and leaveRequestBean.userRoles.equals('USER')}"
                              action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"

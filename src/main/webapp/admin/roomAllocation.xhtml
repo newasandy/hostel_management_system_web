@@ -27,9 +27,8 @@
     <h:form id="main-form">
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
         <div class="top-bar">
-            <h3 >Room List</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
-                             style="right: 5px; margin-left: 15px"
+                             style="right: 5px; margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              action="#{viewRoomsBean.prepareAddRoom}"
                              partialSubmit="true"
                              update=":main-form:message :main-form:roomTable"
@@ -46,8 +45,8 @@
                 </p:column>
 
                 <p:column headerText="Select Student" style="width: 50px;" >
-                    <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.selectStudent eq users ? 'pi-minus-circle' : 'pi-plus-circle'}"
-                                     style="margin-right: 5px; background-color: #{viewRoomsBean.selectStudent eq users ? 'red' : '#3498DB'}"
+                    <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.selectStudent eq users ? 'pi-check-circle' : 'pi-plus-circle'}"
+                                     style="margin-right: 5px; background-color: #{viewRoomsBean.selectStudent eq users ? '#E74C3C' : '#3498DB'}"
                                      action="#{viewRoomsBean.setSelectStudent(users)}"
                                      partialSubmit="true"
                                      update=":main-form:userTable :main-form:roomTable :confirmationForm"
@@ -57,7 +56,7 @@
             </p:dataTable>
             <p:dataTable id="roomTable" value="#{viewRoomsBean.availableRoom}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
                 <p:column headerText="Select Room" style="width: 50px;">
-                    <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                    <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px; background-color: #3498DB;"
                                      rendered="#{viewRoomsBean.selectStudent != null}"
                                      action="#{viewRoomsBean.setSelectRoom(room)}"
                                      partialSubmit="true"
@@ -88,7 +87,7 @@
                                      validateClient="true"
                                      update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
                                      oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); #{viewRoomsBean.resetFields()}; }"
-                                     style="margin-top:10px; width:100px;"/>
+                                     style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                     <p:commandButton value="Cancel"
                                      action="#{viewRoomsBean.resetFields}"
                                      update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"

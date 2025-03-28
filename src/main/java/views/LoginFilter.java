@@ -10,7 +10,6 @@ import java.io.IOException;
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
 
@@ -25,7 +24,6 @@ public class LoginFilter implements Filter {
         String email = getCookieValue(httpRequest, "email");
         String userRole = getCookieValue(httpRequest, "userRole");
 
-        // Check if the requested page is a protected page and user is not logged in
         if (uri.contains("/users/")) {
             if (email == null || userRole == null){
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
@@ -43,7 +41,6 @@ public class LoginFilter implements Filter {
                 return;
             }
         }
-
         chain.doFilter(request, response);
     }
 

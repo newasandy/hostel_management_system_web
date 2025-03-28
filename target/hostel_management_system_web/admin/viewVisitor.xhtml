@@ -35,7 +35,7 @@
             <h3>Visitors</h3>
 
             <p:commandButton value=" Add" icon="pi pi-user-plus"
-                             style="right: 0px; margin-left: 15px"
+                             style="right: 0px; margin-left: 15px; color:#FFFFFF; background-color:#3498DB;"
                              partialSubmit="true"
                              update=":main-form:message :main-form:visitorTable"
                              oncomplete="PF('addVisitor').show()" />
@@ -86,7 +86,7 @@
                                  validateClient="true"
                                  update=":main-form:message :visitor-form :main-form:visitorTable"
                                  oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); #{viewVisitorBean.resetFields()}; }"
-                                 style="margin-top:10px; width:50px;"/>
+                                 style="margin-top:10px; width:50px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
                                  actionListener="#{userBean.resetFields}"
                                  onclick="PF('addVisitor').hide();"

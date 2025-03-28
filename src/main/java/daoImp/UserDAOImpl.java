@@ -8,15 +8,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Named
 @ApplicationScoped
-public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO, Serializable {
-    private static final long serialVersionUID = 1L;
+public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
 
     public UserDAOImpl(){
         super(Users.class);

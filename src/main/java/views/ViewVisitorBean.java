@@ -77,6 +77,32 @@ public class ViewVisitorBean implements Serializable {
         }
     }
 
+    public void addVisitor(){
+        statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
+        if (statusMessageModel.isStatus()){
+            refreshVisitorList();
+            resetFields();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+        }
+    }
+
+    public void exitVisitor(Visitors exitVisitor){
+        Date date = new Date();
+        Timestamp exitDate = new Timestamp(date.getTime());
+        exitVisitor.setExitDatetime(exitDate);
+        if (visitorsDAO.update(exitVisitor)){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit."));
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor."));
+        }
+    }
+
     public String getRelation() {
         return relation;
     }
@@ -129,40 +155,10 @@ public class ViewVisitorBean implements Serializable {
         this.reason = reason;
     }
 
-    public void addVisitor(){
-        statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
-        if (statusMessageModel.isStatus()){
-            refreshVisitorList();
-            resetFields();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-        }
-    }
-
-    public void exitVisitor(Visitors exitVisitor){
-        Date date = new Date();
-        Timestamp exitDate = new Timestamp(date.getTime());
-        exitVisitor.setExitDatetime(exitDate);
-        if (visitorsDAO.update(exitVisitor)){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit."));
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor."));
-        }
-    }
 
     public void viewStudentVisitor(Users student){
         selectStudent = student;
         viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(student.getId());
-        debuggg();
-    }
-
-    public void debuggg(){
-        System.out.println(selectStudent.getFullName()+" / "+selectStudent.isStatus());
     }
 
     public void refreshVisitorByEachStudent(){

@@ -70,17 +70,17 @@
                              update=":visitorDataTable:visitorTable :visitorDataTable" />
             <p:tooltip for="view-btn" value="View Visitor" position="top"/>
 
-            <p:commandButton id="assign-fee-btn" icon="pi pi-money-bill"
+            <p:commandButton id="assign-fee-btn" icon="pi pi-dollar"
                              rendered="#{student.status and monthlyFeeBean.feeContext}"
                              action="#{monthlyFeeBean.setSelectStudent(student)}"
-                             style="margin-right: 5px; color:#FFFFFF; background-color:#27AE60;"
+                             style="margin-right: 5px; color:#FFFFFF; background-color:#FFC107;"
                              update=":feeAssignForm"
                              oncomplete="PF('assignFeeDialog').show()" />
 
             <p:commandButton id="viewStatement-btn" icon="pi pi-file"
                              rendered="#{student.status and monthlyFeeBean.feeContext}"
                              action="#{monthlyFeeBean.viewStatementForStudent(student)}"
-                             style="margin-right: 5px; color:#000000; background-color:#00FFFF;"
+                             style="margin-right: 5px; color:#FFFFFF; background-color:#2980B9;"
                              update=":statementDataTable:statementTable :statementDataTable "
                              oncomplete="PF('statementDialog').show()" />
             <p:tooltip for="viewStatement-btn" value="Statement" position="top" />

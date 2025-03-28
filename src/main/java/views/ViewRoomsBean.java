@@ -31,6 +31,7 @@ public class ViewRoomsBean implements Serializable {
 
     private int roomNumber;
     private int capacity;
+    private int updatedCapacity;
 
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
@@ -69,84 +70,6 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
-    public List<RoomAllocation> getRoomAllocationList() {
-        return roomAllocationList;
-    }
-
-    public String getUserRoles() {
-        return userRoles;
-    }
-
-    public List<Rooms> getAvailableRoom() {
-        return availableRoom;
-    }
-
-    public List<Users> getUnallocatedUser() {
-        return unallocatedUser;
-    }
-
-    public Users getSelectStudent() {
-        return selectStudent;
-    }
-
-    public void setSelectStudent(Users selectStudent) {
-        this.selectStudent = selectStudent;
-    }
-
-    public Rooms getSelectRoom() {
-        return selectRoom;
-    }
-
-    public void setSelectRoom(Rooms selectRoom) {
-        this.selectRoom = selectRoom;
-    }
-
-    public boolean getIsEditMode() {
-        return isEditMode;
-    }
-
-    public void setEditMode(boolean editMode) {
-        isEditMode = editMode;
-    }
-
-    public List<Rooms> getViewRoomsList() {
-        return viewRoomsList;
-    }
-
-    public int getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void prepareEditRoom(Rooms room) {
-        this.selectRoom = room;
-    }
-
-    public void prepareAddRoom() {
-        resetFields();
-        this.isEditMode = false;
-    }
-
-    public void saveOrUpdateRoom() {
-        if (isEditMode) {
-            updateRoom();
-        } else {
-            addNewRoom();
-        }
-        resetFields();
-    }
-
     public void addNewRoom(){
         statusMessageModel = roomsService.addNewRoom(roomNumber,capacity);
         try{
@@ -166,14 +89,24 @@ public class ViewRoomsBean implements Serializable {
 
     public void updateRoom(){
         try{
-            if (roomDAO.update(selectRoom)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+            if (updatedCapacity >= roomAllocationDAO.getRoomOccupancy(selectRoom)){
+                selectRoom.setCapacity(updatedCapacity);
+                if (roomDAO.update(selectRoom)){
+                    refreshRoomList();
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+                }else {
+                    refreshRoomList();
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Room Not Update"));
+                }
             }else {
+                refreshRoomList();
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Capacity is less then Room Occupancy"));
             }
         }catch (Exception e){
+            refreshRoomList();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
         }
@@ -274,6 +207,93 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    public int getUpdatedCapacity() {
+        return updatedCapacity;
+    }
+
+    public void setUpdatedCapacity(int updatedCapacity) {
+        this.updatedCapacity = updatedCapacity;
+    }
+
+    public List<RoomAllocation> getRoomAllocationList() {
+        return roomAllocationList;
+    }
+
+    public String getUserRoles() {
+        return userRoles;
+    }
+
+    public List<Rooms> getAvailableRoom() {
+        return availableRoom;
+    }
+
+    public List<Users> getUnallocatedUser() {
+        return unallocatedUser;
+    }
+
+    public Users getSelectStudent() {
+        return selectStudent;
+    }
+
+    public void setSelectStudent(Users selectStudent) {
+        this.selectStudent = selectStudent;
+    }
+
+    public Rooms getSelectRoom() {
+        return selectRoom;
+    }
+
+    public void setSelectRoom(Rooms selectRoom) {
+        this.selectRoom = selectRoom;
+    }
+
+    public boolean getIsEditMode() {
+        return isEditMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
+    }
+
+    public List<Rooms> getViewRoomsList() {
+        return viewRoomsList;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void prepareEditRoom(Rooms room) {
+        this.selectRoom = room;
+        this.updatedCapacity = room.getCapacity();
+    }
+
+    public void prepareAddRoom() {
+        resetFields();
+        this.isEditMode = false;
+    }
+
+    public void saveOrUpdateRoom() {
+        if (isEditMode) {
+            updateRoom();
+        } else {
+            addNewRoom();
+        }
+        resetFields();
+    }
+
     public void resetSelected(){
         this.selectStudent = null;
         this.selectRoom = null;
@@ -282,5 +302,6 @@ public class ViewRoomsBean implements Serializable {
     public void resetFields(){
         this.roomNumber = 1;
         this.capacity = 1;
+
     }
 }

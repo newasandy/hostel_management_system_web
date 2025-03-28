@@ -58,4 +58,19 @@ public class LeaveRequestServiceTest {
                         leaveRequest.getStatus() == LeaveRequest.Status.PENDING
         ));
     }
+
+    @Test
+    void testApplyLeaveRequest_Failure() {
+        // Arrange
+        when(leaveRequestDAO.add(any(LeaveRequest.class))).thenReturn(false);
+
+        // Act
+        StatusMessageModel result = leaveRequestService.applyLeaveRequest(
+                testStudent, testReason, testStartDate, testEndDate);
+
+        // Assert
+        assertFalse(result.isStatus());
+        assertEquals("!! Leave Application is not Submit", result.getMessage());
+        verify(leaveRequestDAO, times(1)).add(any(LeaveRequest.class));
+    }
 }

@@ -1,5 +1,4 @@
 package views;
-
 import daoImp.AddressDAOImp;
 import daoImp.UserDAOImpl;
 import daoImp.UserTypeDAOImp;
@@ -62,11 +61,15 @@ public class UserBean implements Serializable{
     public void init() {
         try {
             setUserRoleFromCookieOrSession();
-            userTypes = userTypeDAOImp.getAll();
+            loadUserTypes();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize UserBean", e);
         }
+    }
+
+    public void loadUserTypes() {
+        userTypes = userTypeDAOImp.getAll();
     }
 
     public String getUserRole() {
@@ -329,5 +332,6 @@ public class UserBean implements Serializable{
         this.district = "";
         this.rmcMc = "";
         this.wardNumber = 1;
+        loadUserTypes();
     }
 }

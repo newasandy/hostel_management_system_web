@@ -3,6 +3,7 @@ package views;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 import daoImp.UserTypeDAOImp;
@@ -15,21 +16,29 @@ public class UserTypeConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-
-        if (value == null || value.isEmpty()) {
+        if (value == null || value.trim().isEmpty()) {
             return null;
         }
-
-        Long id = Long.valueOf(value);
-        return userTypeDAO.getById(id);
+        try {
+            Long id = Long.valueOf(value);
+            UserType type = userTypeDAO.getById(id);
+            if (type == null) {
+                throw new ConverterException("UserType not found with ID: " + value);
+            }
+            return type;
+        } catch (NumberFormatException e) {
+            throw new ConverterException("Invalid UserType ID format: " + value, e);
+        }
     }
-
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         if (value == null) {
             return "";
         }
-        UserType userType = (UserType) value;
-        return userType.getId().toString();
+        if (value instanceof UserType) {
+            return ((UserType) value).getId().toString();
+        } else {
+            throw new ConverterException("Value is not a valid UserType: " + value);
+        }
     }
 }

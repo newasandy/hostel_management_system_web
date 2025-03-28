@@ -35,8 +35,6 @@ public class AdminDashboardBean implements Serializable {
     private DonutChartModel roomOccupancyChart;
     private DonutChartModel userStatusChart;
 
-
-
     @PostConstruct
     public void init(){
         countOnlyAllocated = roomAllocationDAO.getCountOnlyAllocated();
@@ -88,6 +86,5 @@ public class AdminDashboardBean implements Serializable {
     public List<Cards> getCards() {
         return cards;
     }
-
 
 }

@@ -103,13 +103,13 @@
 
                     <h:outputLabel for="role" value="Role:"/>
                     <h:panelGroup styleClass="input-group">
-                        <p:selectOneMenu id="role" value="#{userBean.selectUserType}" required="true" requiredMessage="Role is required." converter="userTypeConverter">
-                            <f:selectItem itemLabel="Select Role" itemValue="#{null}"/>
+                        <p:selectOneMenu id="role" value="#{userBean.selectUserType}" required="true"
+                                         requiredMessage="Role is required." converter="userTypeConverter">
+                            <f:selectItem itemLabel="Select Role" itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{userBean.userTypes}"
                                            var="userType"
                                            itemLabel="#{userType.userTypes}"
                                            itemValue="#{userType}"/>
-                            <f:converter converterId="userTypeConverter"/>
                         </p:selectOneMenu>
                         <h:message for="role" styleClass="error-message"/>
                     </h:panelGroup>
@@ -150,7 +150,7 @@
                                      validateClient="true"
                                      update=":main-form:message :registrationForm :main-form:userTable"
                                      oncomplete="if (!args.validationFailed) { PF('regDialog').hide(); #{userBean.resetFields()}; }"
-                                     style="margin-top:10px; width:100px; margin-right:20px;"/>
+                                     style="margin-top:10px; width:100px; margin-right:20px; color:#FFFFFF; background-color:#3498DB;"/>
                     <p:commandButton value="Cancel"
                                      actionListener="#{userBean.resetFields}"
                                      onclick="PF('regDialog').hide();"
@@ -174,7 +174,7 @@
 
                     <h:outputLabel for="email" value="Email:"/>
                     <h:panelGroup styleClass="input-group">
-                        <p:inputText id="email" value="#{userBean.selectUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <p:inputText id="email" disabled="true" value="#{userBean.selectUser.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
                         <h:message for="email" styleClass="error-message"/>
                     </h:panelGroup>
 
@@ -211,7 +211,7 @@
                                      validateClient="true"
                                      update=":main-form:message :updateForm :main-form:userTable"
                                      oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
-                                     style="margin-top:10px; margin-left:10px; width:100px;"/>
+                                     style="margin-top:10px; margin-left:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                     <p:commandButton value="Cancel" onclick="PF('updateDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
                 </h:panelGroup>
             </h:panelGrid>
@@ -251,7 +251,7 @@
                                  validateClient="true"
                                  update=":main-form:message :visitor-form :visitorDataTable:visitorTable"
                                  oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); PF('visitorDialog').hide();}"
-                                 style="margin-top:10px; width:50px;"/>
+                                 style="margin-top:10px; width:50px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
                                  action="#{viewVisitorBean.resetFields}"
                                  oncomplete="PF('addVisitor').hide(); PF('visitorDialog').hide(); "

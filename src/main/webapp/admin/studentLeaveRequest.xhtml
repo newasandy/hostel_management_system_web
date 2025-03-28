@@ -64,7 +64,7 @@
                                  validateClient="true"
                                  update=":main-form:message :updateForm :main-form:leaveTable"
                                  oncomplete="if (!args.validationFailed) { PF('updateLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
+                                 style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Reject"
                                  action="#{leaveRequestBean.updateByAdmin('REJECTED')}"
                                  update=":main-form:message :updateForm :main-form:leaveTable"

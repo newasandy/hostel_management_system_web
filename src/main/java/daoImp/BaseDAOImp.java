@@ -7,14 +7,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-import java.io.Serializable;
 import java.util.List;
 
 @Named
 @ApplicationScoped
-public abstract class BaseDAOImp <T> implements BaseDAO<T> , Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     private final Class<T> entityClass;
 
     public BaseDAOImp(Class<T> entity){

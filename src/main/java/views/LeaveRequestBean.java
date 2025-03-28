@@ -59,68 +59,6 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
-    public List<LeaveRequest> getLeaveRequestList() {
-        return leaveRequestList;
-    }
-
-
-    public String getUserRoles() {
-        return userRoles;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public LeaveRequest getSelectLeaveRequest() {
-        return selectLeaveRequest;
-    }
-
-    public void setSelectLeaveRequest(LeaveRequest selectLeaveRequest) {
-        this.selectLeaveRequest = selectLeaveRequest;
-    }
-
-    public LocalDate getMinDate() {
-        return LocalDate.now();  // Disables past dates
-    }
-
-    public String getRowStyleClass(LeaveRequest leave) {
-        if (leave == null || leave.getStatus() == null) {
-            return "";
-        }
-
-        switch (leave.getStatus().toString()) {
-            case "PENDING":
-                return "pending-row";
-            case "ACCEPTED":
-                return "accepted-row";
-            case "REJECTED":
-                return "rejected-row";
-            default:
-                return "";
-        }
-    }
-
     public void applyLeaveRequest(){
         LeaveRequest checkLeaveRequest = leaveRequestDAO.checkLeaveRequest(loginUser.getId());
         try{
@@ -167,6 +105,68 @@ public class LeaveRequestBean implements Serializable {
         }else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request"));
+        }
+    }
+
+    public List<LeaveRequest> getLeaveRequestList() {
+        return leaveRequestList;
+    }
+
+
+    public String getUserRoles() {
+        return userRoles;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public LeaveRequest getSelectLeaveRequest() {
+        return selectLeaveRequest;
+    }
+
+    public void setSelectLeaveRequest(LeaveRequest selectLeaveRequest) {
+        this.selectLeaveRequest = selectLeaveRequest;
+    }
+
+    public LocalDate getMinDate() {
+        return LocalDate.now();
+    }
+
+    public String getRowStyleClass(LeaveRequest leave) {
+        if (leave == null || leave.getStatus() == null) {
+            return "";
+        }
+
+        switch (leave.getStatus().toString()) {
+            case "PENDING":
+                return "pending-row";
+            case "ACCEPTED":
+                return "accepted-row";
+            case "REJECTED":
+                return "rejected-row";
+            default:
+                return "";
         }
     }
 

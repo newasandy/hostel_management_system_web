@@ -2,10 +2,8 @@ package daoImp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import daoInterface.VisitorsDAO;
-import model.LeaveRequest;
 import model.Visitors;
 import utils.EntityManageUtils;
 

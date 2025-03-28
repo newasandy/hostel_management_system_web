@@ -29,7 +29,7 @@
         <div class="top-bar">
             <h3 >Room</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
-                             style="right: 5px; margin-left: 15px"
+                             style="right: 5px; margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              action="#{viewRoomsBean.prepareAddRoom}"
                              partialSubmit="true"
                              update=":main-form:message :main-form:roomTable"
@@ -52,7 +52,7 @@
             </p:column>
 
             <p:column headerText="Actions">
-                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px;"
+                <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                                  rendered="#{room.status}"
                                  action="#{viewRoomsBean.prepareEditRoom(room)}"
                                  partialSubmit="true"
@@ -61,13 +61,13 @@
                 />
                 <p:tooltip for="update-btn" value="Update" position="top"/>
 
-                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="color:#FFFFFF; background-color:red;"
+                <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
                                  rendered="#{room.status}"
                                  action="#{viewRoomsBean.disableRoom(room)}"
                                  update=":main-form:message :main-form:roomTable" />
                 <p:tooltip for="deactivate-btn" value="Not Allow" position="top"/>
 
-                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="color:#FFFFFF; background-color:green;"
+                <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#2ECC71;"
                                  rendered="#{not room.status}"
                                  action="#{viewRoomsBean.enableRoom(room)}"
                                  update=":main-form:message :main-form:roomTable" />
@@ -87,12 +87,12 @@
                 <h:outputLabel for="capacity" value="Capacity:"/>
                 <p:inputNumber id="capacity" minValue="1" value="#{viewRoomsBean.capacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
 
-                <p:commandButton value="Add}"
+                <p:commandButton value="Add"
                                  action="#{viewRoomsBean.addNewRoom()}"
                                  validateClient="true"
                                  update=":main-form:message :roomForm :main-form:roomTable"
                                  oncomplete="if (!args.validationFailed) { PF('addRoom').hide(); #{viewRoomsBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
+                                 style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
                                  actionListener="#{viewRoomsBean.resetFields()}"
                                  onclick="PF('addRoom').hide();"
@@ -106,17 +106,17 @@
         <h:form id="updateRoomForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="roomNumber" value="Room Number:" />
-                <p:inputNumber id="roomNumber"  minValue="1" value="#{viewRoomsBean.selectRoom.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
+                <p:inputNumber id="roomNumber" disabled="true"  minValue="1" value="#{viewRoomsBean.selectRoom.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
 
                 <h:outputLabel for="capacity"  value="Capacity:"/>
-                <p:inputNumber id="capacity"  minValue="1" value="#{viewRoomsBean.selectRoom.capacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
+                <p:inputNumber id="capacity"  minValue="1" value="#{viewRoomsBean.updatedCapacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
 
                 <p:commandButton value="Update"
                                  action="#{viewRoomsBean.updateRoom()}"
                                  validateClient="true"
                                  update=":main-form:message :updateRoomForm :main-form:roomTable"
                                  oncomplete="if (!args.validationFailed) { PF('updateRoom').hide(); #{viewRoomsBean.resetFields()}; }"
-                                 style="margin-top:10px; width:100px;"/>
+                                 style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
                                  actionListener="#{viewRoomsBean.resetFields()}"
                                  onclick="PF('updateRoom').hide();"
