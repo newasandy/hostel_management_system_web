@@ -2,6 +2,7 @@ import daoImp.TransactionStatementDAOImp;
 import daoInterface.MonthlyFeeDAO;
 import model.MonthlyFee;
 import model.StatusMessageModel;
+import model.TransactionStatement;
 import model.Users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.MonthlyFeeService;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.Year;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,6 +34,8 @@ public class MonthlyFeeServiceTest {
     private double testFeeAmount;
     private String currentMonth;
     private int currentYear;
+    private MonthlyFee testFee;
+    private double testPayAmount;
 
     @BeforeEach
     void setUp() {
@@ -44,6 +44,15 @@ public class MonthlyFeeServiceTest {
         testFeeAmount = 1000.0;
         currentMonth = LocalDate.now().getMonth().toString();
         currentYear = Year.now().getValue();
+
+        testFee = new MonthlyFee();
+        testFee.setId(1L);
+        testFee.setStudentId(testStudent);
+        testFee.setFeeAmount(1000.0);
+        testFee.setPaid(200.0);
+        testFee.setDue(800.0);
+
+        testPayAmount = 300.0;
     }
 
     @Test
@@ -79,5 +88,23 @@ public class MonthlyFeeServiceTest {
         assertFalse(result.isStatus());
         assertEquals("This Month Fee Already Assign", result.getMessage());
         verify(monthlyFeeDAO, never()).add(any());
+    }
+
+    @Test
+    void testPayFee_SuccessfulPayment() {
+        when(monthlyFeeDAO.update(any(MonthlyFee.class))).thenReturn(true);
+        when(transactionStatementDAOImp.add(any(TransactionStatement.class))).thenReturn(true);
+
+        StatusMessageModel result = monthlyFeeService.payFee(testFee, testPayAmount);
+
+        assertTrue(result.isStatus());
+        assertEquals("Fee Payment Success", result.getMessage());
+
+        verify(monthlyFeeDAO).update(argThat(fee ->
+                fee.getPaid() == 500.0 &&
+                        fee.getDue() == 500.0
+        ));
+
+        verify(transactionStatementDAOImp).add(any(TransactionStatement.class));
     }
 }

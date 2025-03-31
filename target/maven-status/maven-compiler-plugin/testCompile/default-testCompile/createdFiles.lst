@@ -1,3 +1,4 @@
 MonthlyFeeServiceTest.class
 AuthenticationServiceTest.class
 LeaveRequestServiceTest.class
+RoomServiceTest.class

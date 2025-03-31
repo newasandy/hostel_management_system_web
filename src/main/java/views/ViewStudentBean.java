@@ -33,7 +33,7 @@ public class ViewStudentBean implements Serializable {
             refreshStudentList();
         }else {
             String lowerSearch = searchItem.toLowerCase();
-            onlyStudent = originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList());
+            onlyStudent = originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch) || (users.getEmail() != null && users.getEmail().toLowerCase().contains(lowerSearch))).collect(Collectors.toList());
         }
     }
 

@@ -58,9 +58,16 @@
                     <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
                 </p:inputText>
 
-                <h3 style="margin-left:50px;">Student Fee</h3>
+                <h3 style="margin-left:20px;">Assign Fee</h3>
 
             </div>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Export to Excel" icon="pi pi-file-excel" ajax="false">
+                        <p:dataExporter type="xls" target="statementTable" fileName="fee_statement" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
             <ui:include src="/includePage/studentTable.xhtml" />
         </h:form>
 
