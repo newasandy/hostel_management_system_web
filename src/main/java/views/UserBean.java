@@ -1,12 +1,11 @@
 package views;
 import daoImp.AddressDAOImp;
+import daoImp.RoomAllocationDAOImp;
 import daoImp.UserDAOImpl;
 import daoImp.UserTypeDAOImp;
+import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
-import model.Address;
-import model.StatusMessageModel;
-import model.UserType;
-import model.Users;
+import model.*;
 import service.AuthenticationService;
 import service.UserService;
 
@@ -35,7 +34,9 @@ public class UserBean implements Serializable{
 
     private UserTypeDAOImp userTypeDAOImp = new UserTypeDAOImp();
 
-    private UserService userService = new UserService(usersDAO,addressDAOImp);
+    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
+
+    private UserService userService = new UserService(usersDAO,addressDAOImp, roomAllocationDAO);
 
     private AuthenticationService authenticationService = new AuthenticationService(usersDAO);
 
@@ -51,10 +52,13 @@ public class UserBean implements Serializable{
     private String rmcMc;
     private int wardNumber;
     private UserType selectUserType;
+    private Rooms selectRoom;
 
     private List<UserType> userTypes;
     private Users selectUser;
     private Address selectUserAddress;
+
+    private boolean selectRoomForNewUser = false;
 
 
     @PostConstruct
@@ -66,6 +70,24 @@ public class UserBean implements Serializable{
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize UserBean", e);
         }
+    }
+
+    public Rooms getSelectRoom() {
+        return selectRoom;
+    }
+
+    public void setSelectRoom(Rooms selectRoom) {
+        this.selectRoom = selectRoom;
+    }
+
+
+
+    public boolean isSelectRoomForNewUser() {
+        return selectRoomForNewUser;
+    }
+
+    public void setSelectRoomForNewUser(boolean selectRoomForNewUser) {
+        this.selectRoomForNewUser = selectRoomForNewUser;
     }
 
     public void loadUserTypes() {
@@ -193,7 +215,7 @@ public class UserBean implements Serializable{
     }
 
     public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber);
+        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
         resetFields();
         try {
             if (statusMessageModel.isStatus()){
@@ -322,6 +344,10 @@ public class UserBean implements Serializable{
         return "/index.xhtml?faces-redirect=true";
     }
 
+    public void cancelBtn(){
+        resetFields();
+    }
+
     public void resetFields() {
         this.name = "";
         this.email = "";
@@ -332,6 +358,8 @@ public class UserBean implements Serializable{
         this.district = "";
         this.rmcMc = "";
         this.wardNumber = 1;
+        this.selectRoom = null;
+        this.selectRoomForNewUser = false;
         loadUserTypes();
     }
 }
