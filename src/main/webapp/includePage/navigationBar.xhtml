@@ -37,7 +37,6 @@
 
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.isUser()}"/>
 
                 <p:submenu label="Monthly Fee"  rendered="#{userBean.isAdmin()}">
 

@@ -21,7 +21,7 @@
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
 
         <div style="width:95%; margin-left:10px; display:flex; align-items:center; justify-content:space-between; font-size:20px; font-weight:bold; text-align:center;">
-            <h:outputLabel value="#{monthlyFeeBean.loginUser.fullName}" />
+            <h:outputLabel value="Statement" />
             <h:outputLabel value="Total Due Amount: #{monthlyFeeBean.selectStudentDueAmount}" />
         </div>
         <ui:include src="/includePage/transactionStatementTable.xhtml"/>
