@@ -40,6 +40,7 @@ service/MonthlyFeeService.class
 model/StatusMessageModel.class
 views/ViewRoomsBean$1.class
 daoImp/BaseDAOImp.class
+views/IndexImageBean.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
 views/AdminDashboardBean.class

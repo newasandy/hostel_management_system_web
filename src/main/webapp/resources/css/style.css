@@ -1,9 +1,13 @@
-body {
-    background-color: #f4f4f4;
+body, html {
+    background-color: #ffffff;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+
 }
 
 .login-form {
@@ -48,3 +52,83 @@ margin: 0 auto;
     margin: 0 auto;
 }
 
+.full-width-form {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.full-width-galleria {
+    width: 100% !important;
+    height: 450px !important;
+    position: relative !important;
+    left: 0 !important;
+    overflow: hidden !important;
+}
+
+.full-width-galleria .ui-galleria-content {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.full-width-galleria .ui-galleria-panel-wrapper {
+    width: 100% !important;
+    height: 450px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.full-width-galleria .ui-galleria-panel {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.full-width-galleria .ui-galleria-panel .ui-galleria-panel-content {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+
+.slider-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+.about-container {
+            width: 95%;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .about-text {
+            flex: 2;
+            line-height: 1.6;
+            color: #555;
+        }
+        .about-image {
+            flex: 1;
+            text-align: center;
+        }
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }

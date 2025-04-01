@@ -13,7 +13,6 @@
         <h:form>
             <p:menubar orientation="horizontal" autoDisplay="false">
                 <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest()}" url="index.xhtml"/>
-                <p:menuitem value="About" outcome="about" rendered="#{userBean.isGuest()}" url="about.xhtml"/>
 
                 <p:menuitem value="Dashboard" url="userDashboard.xhtml"  rendered="#{userBean.isUser()}"/>
                 <p:submenu label="Service" rendered="#{userBean.isUser()}">

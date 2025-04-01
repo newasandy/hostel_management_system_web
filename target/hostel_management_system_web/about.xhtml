@@ -12,11 +12,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-top: 20px;
         }
-        .about-header {
-            text-align: center;
-            color: #333;
-            margin-bottom: 5px;
-        }
         .about-content {
             display: flex;
             align-items: center;
@@ -39,20 +34,11 @@
     </style>
 </h:head>
 <h:body>
-
-    <header>
-        <ui:include src="/includePage/navigationBar.xhtml"/>
-    </header>
     <div class="about-container">
         <h:form>
-            <p:panel styleClass="about-header">
-                <h3>Hostel Management System</h3>
-                <p:separator />
-            </p:panel>
-
             <div class="about-content">
                 <div class="about-text">
-                    <p:panel header="About">
+                    <p:panel>
                         <p>Our Hostel Management System is a comprehensive digital solution designed to streamline and optimize the administrative processes of hostel operations. Developed using cutting-edge PrimeFaces technology, this system provides an intuitive and efficient platform for managing hostel resources, student accommodations, and administrative tasks.</p>
 
                         <p>Key features of our system include:</p>
@@ -77,7 +63,6 @@
                     </p:panel>
                 </div>
             </div>
-
         </h:form>
     </div>
 </h:body>

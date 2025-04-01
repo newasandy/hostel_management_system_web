@@ -5,13 +5,52 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Demo</title>
-    <h:outputStylesheet name="/resources/css/style.css" />
+    <title>Home</title>
+    <h:outputStylesheet name="/css/style.css" />
 </h:head>
 <h:body>
     <header>
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
-    <ui:include src="/includePage/statusChart.xhtml"/>
+
+    <h:form styleClass="full-width-form">
+        <p:galleria value="#{indexImageBean.images}" var="image"
+                    styleClass="full-width-galleria">
+            <p:graphicImage name="#{image}" styleClass="slider-image" />
+        </p:galleria>
+    </h:form>
+
+    <div class="about-container">
+        <h:form>
+            <div class="about-content">
+                <div class="about-text">
+                    <p:panel>
+                        <p>Our Hostel Management System is a comprehensive digital solution designed to streamline and optimize the administrative processes of hostel operations. Developed using cutting-edge PrimeFaces technology, this system provides an intuitive and efficient platform for managing hostel resources, student accommodations, and administrative tasks.</p>
+
+                        <p>Key features of our system include:</p>
+                        <ul>
+                            <li>Seamless student registration and room allocation</li>
+                            <li>Real-time occupancy tracking</li>
+                            <li>Automated fee management</li>
+                            <li>Visitor and security log maintenance</li>
+                            <li>Comprehensive reporting and analytics</li>
+                        </ul>
+
+                        <p>Our goal is to provide an innovative technological solution that simplifies hostel management, enhances security, and improves overall operational efficiency.</p>
+                    </p:panel>
+                </div>
+
+                <div class="about-image">
+                    <p:panel>
+                        <p:graphicImage name="image/hostelpic.png" alt="Hostel Management System" />
+                        <h:panelGroup layout="block" style="margin-top: 15px; text-align: center; color: #777;">
+                            Transforming Hostel Management through Technology
+                        </h:panelGroup>
+                    </p:panel>
+                </div>
+            </div>
+        </h:form>
+    </div>
+
 </h:body>
 </html>

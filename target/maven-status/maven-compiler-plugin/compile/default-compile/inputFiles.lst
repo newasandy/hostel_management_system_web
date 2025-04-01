@@ -26,6 +26,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/TransactionStatementDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UserTypeDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/IndexImageBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/VisitorsDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/StatusMessageModel.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/GetCookiesValues.java
