@@ -3,10 +3,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:form style="display: flex; justify-content: center; margin-top:20px;">
-        <p:panelGrid columns="2" styleClass="chart-panelGrid" >
-            <p:chart type="donut" model="#{adminDashboardBean.roomOccupancyChart}" style="width:400px;height:300px"/>
-            <p:chart type="donut" model="#{adminDashboardBean.userStatusChart}" style="width:400px;height:300px"/>
+    <h:form style="margin-top:20px;">
+        <p:panelGrid columns="2" styleClass="chart-panelGrid" cellpadding="5" >
+            <p:chart type="donut" model="#{adminDashboardBean.roomOccupancyChart}" style="width:100%; height:350px; display:block;"/>
+            <p:chart type="donut" model="#{adminDashboardBean.userStatusChart}" style="width:100%; height:350px; display:block;"/>
         </p:panelGrid>
     </h:form>
 </ui:composition>

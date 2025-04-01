@@ -61,13 +61,7 @@
                 <h3 style="margin-left:20px;">Assign Fee</h3>
 
             </div>
-            <p:toolbar>
-                <p:toolbarGroup>
-                    <p:commandButton value="Export to Excel" icon="pi pi-file-excel" ajax="false">
-                        <p:dataExporter type="xls" target="statementTable" fileName="fee_statement" />
-                    </p:commandButton>
-                </p:toolbarGroup>
-            </p:toolbar>
+
             <ui:include src="/includePage/studentTable.xhtml" />
         </h:form>
 
@@ -119,6 +113,13 @@
                 <h:outputLabel value="#{monthlyFeeBean.selectStudent.fullName}" />
                 <h:outputLabel value="Total Due Amount: #{monthlyFeeBean.selectStudentDueAmount}" />
             </div>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Export to Excel" icon="pi pi-file-excel" ajax="false">
+                        <p:dataExporter type="xls" target="statementTable" fileName="fee_statement" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
             <ui:include src="/includePage/transactionStatementTable.xhtml"/>
         </h:form>
     </p:dialog>

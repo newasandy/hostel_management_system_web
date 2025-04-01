@@ -5,50 +5,28 @@
       xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
     <h:outputStylesheet>
-        .custom-card{
+        .panelContainer {
+        height:150px;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 150px;
-        width: 200px;
-        text-align: center;
-        border: none;
-        border-radius: 20px;
-        color: #000000;
-        font-size: 18px;
         font-weight: bold;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease-in-out;
-        background: #FFFFFF;
+        font-size: 24px;
         }
-        .custom-card:hover {
-        transform: scale(1.05);
+        .ui-panel {
+        width: 250px;
         }
 
-        @media screen and (max-width: 1000px) {
-        .custom-card {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100px;
-        width: 150px;
-        text-align: center;
-        border-radius: 10px;
-        color: #000000;
-        font-size: 18px;
-        font-weight: bold;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease-in-out;
-        background: #E3E3E3;
-        }
-        }
     </h:outputStylesheet>
 </h:head>
 <h:body>
-        <div class="custom-card">
-            <h:outputText value="#{card.value}" style="font-size:20px; font-weight: bold; margin-right:5px;"/>
-            <h:outputText value="#{card.title}" style="font-weight: bold;" />
+    <p:panel>
+        <f:facet name="header">
+            <h:outputText value="#{card.title}" />
+        </f:facet>
+        <div class="panelContainer">
+            <h:outputText value="#{card.value}" />
         </div>
+    </p:panel>
 </h:body>
 </html>

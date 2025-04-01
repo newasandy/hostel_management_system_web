@@ -6,48 +6,34 @@
 
 <h:head>
     <title>Demo</title>
-    <h:outputStylesheet library="primefaces" name="primefaces.css" />
-    <h:outputStylesheet library="primefaces-saga" name="theme.css" />
-    <h:outputScript library="primefaces" name="primefaces.js" />
     <h:outputStylesheet name="css/style.css"/>
-    <h:outputStylesheet library="primefaces-saga" name="theme.css" />
 </h:head>
 <h:body>
-    <div class="card">
+    <div class="menu-bar">
         <h:form>
-            <p:megaMenu orientation="horizontal" autoDisplay="false">
+            <p:menubar orientation="horizontal" autoDisplay="false">
                 <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest()}" url="index.xhtml"/>
                 <p:menuitem value="About" outcome="about" rendered="#{userBean.isGuest()}" url="about.xhtml"/>
 
                 <p:menuitem value="Dashboard" url="userDashboard.xhtml"  rendered="#{userBean.isUser()}"/>
                 <p:submenu label="Service" rendered="#{userBean.isUser()}">
-                    <p:column>
-                        <p:submenu label="Service">
-                            <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
-                            <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
-                            <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
-                        </p:submenu>
-                    </p:column>
+                    <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
+                    <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
+                    <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
                 </p:submenu>
+
                 <p:submenu label="Fee" rendered="#{userBean.isUser()}">
-                    <p:column>
-                        <p:submenu label="Service">
                             <p:menuitem value="View Monthly Fee" url="viewFee.xhtml"/>
                             <p:menuitem value="Statement" url="viewTransactionStatement.xhtml"/>
-                        </p:submenu>
-                    </p:column>
                 </p:submenu>
 
                 <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
                 <p:menuitem value="Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
 
                 <p:submenu label="Room" rendered="#{userBean.isAdmin()}">
-                    <p:column>
-                        <p:submenu label="Service">
+
                             <p:menuitem value="Rooms" url="viewRooms.xhtml" />
                             <p:menuitem value="Room Allocation" url="viewRoomAllocation.xhtml"/>
-                        </p:submenu>
-                    </p:column>
                 </p:submenu>
 
                 <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
@@ -55,17 +41,20 @@
                 <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.isUser()}"/>
 
                 <p:submenu label="Monthly Fee"  rendered="#{userBean.isAdmin()}">
-                    <p:column>
-                        <p:submenu label="Fee Service">
+
                             <p:menuitem value="Assign Fee" url="assignMonthlyFee.xhtml" />
                             <p:menuitem value="Fee Pay" url="payMonthlyFee.xhtml" />
-                        </p:submenu>
-                    </p:column>
                 </p:submenu>
-                <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}"/>
-                <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}"/>
 
-            </p:megaMenu>
+                <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}" style="position:absolute; width: 60px; right:1rem; top:0px;"/>
+
+
+                <p:submenu label="#{userDashboardBean.loginUser.fullName}" icon="pi pi-user" rendered="#{userBean.isAdmin() or userBean.isUser()}" style="position:absolute; right:1rem;">
+                    <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.isUser()}"/>
+                    <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}" />
+                </p:submenu>
+
+            </p:menubar>
         </h:form>
     </div>
 

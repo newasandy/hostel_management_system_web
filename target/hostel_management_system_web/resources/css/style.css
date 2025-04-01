@@ -44,10 +44,7 @@ margin: 0 auto;
     cursor: pointer;
 }
 .chart-panelGrid {
-        margin: 0 auto;
-        }
-
-        .chart-panelGrid > *:first-child {
-        margin-right: 20px;
-        }
+    width: 98% !important;
+    margin: 0 auto;
+}
 
