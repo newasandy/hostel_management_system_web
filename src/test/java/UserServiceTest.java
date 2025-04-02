@@ -1,9 +1,7 @@
 import daoImp.AddressDAOImp;
+import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
-import model.Address;
-import model.StatusMessageModel;
-import model.UserType;
-import model.Users;
+import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +23,14 @@ public class UserServiceTest {
     @Mock
     private AddressDAOImp addressDAOImp;
 
+    @Mock
+    private RoomAllocationDAO roomAllocationDAO;
+
     @InjectMocks
     private UserService userService;
 
     private UserType userType;
+    private Rooms selectRoom;
     private String name ;
     private String email ;
     private String password ;
@@ -40,6 +42,7 @@ public class UserServiceTest {
     @BeforeEach
     void setup(){
         userType = new UserType();
+        selectRoom = new Rooms();
         userType.setUserTypes("USER");
         name = "test case";
         email = "testcase@gmmail.com";
@@ -49,43 +52,44 @@ public class UserServiceTest {
         rmcMc = "test case";
         wardNo = 2;
     }
-//
-//    @Test
-//    void create_newUser_Test(){
-//
-//        when(usersDAO.getByEmail(email)).thenReturn(null);
-//
-//        when(usersDAO.add(any(Users.class))).thenReturn(true);
-//        when(addressDAOImp.add(any(Address.class))).thenReturn(true);
-//
-//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo);
-//
-//        assertTrue(result.isStatus());
-//        assertEquals("User Register Successfully", result.getMessage());
-//
-//    }
-//
-//    @Test
-//    void create_newUser_alreadyExist(){
-//        Users existUser = new Users();
-//        when(usersDAO.getByEmail(email)).thenReturn(existUser);
-//
-//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo);
-//
-//        assertFalse(result.isStatus());
-//        assertEquals("User Already Exist", result.getMessage());
-//    }
-//
-//    @Test
-//    void create_newUser_failed(){
-//        when(usersDAO.getByEmail(email)).thenReturn(null);
-//
-//        when(usersDAO.add(any(Users.class))).thenReturn(false);
-//
-//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo);
-//
-//        assertFalse(result.isStatus());
-//        assertEquals("User Register Unsuccessful", result.getMessage());
-//    }
+
+    @Test
+    void create_newUser_Test(){
+
+        when(usersDAO.getByEmail(email)).thenReturn(null);
+
+        when(usersDAO.add(any(Users.class))).thenReturn(true);
+        when(addressDAOImp.add(any(Address.class))).thenReturn(true);
+        when(roomAllocationDAO.add(any(RoomAllocation.class))).thenReturn(true);
+
+        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+
+        assertTrue(result.isStatus());
+        assertEquals("User Register Successfully", result.getMessage());
+
+    }
+
+    @Test
+    void create_newUser_alreadyExist(){
+        Users existUser = new Users();
+        when(usersDAO.getByEmail(email)).thenReturn(existUser);
+
+        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+
+        assertFalse(result.isStatus());
+        assertEquals("User Already Exist", result.getMessage());
+    }
+
+    @Test
+    void create_newUser_failed(){
+        when(usersDAO.getByEmail(email)).thenReturn(null);
+
+        when(usersDAO.add(any(Users.class))).thenReturn(false);
+
+        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+
+        assertFalse(result.isStatus());
+        assertEquals("User Register Unsuccessful", result.getMessage());
+    }
 
 }

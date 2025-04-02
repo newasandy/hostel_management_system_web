@@ -72,6 +72,136 @@ public class UserBean implements Serializable{
         }
     }
 
+    public void registrationUser(){
+        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
+        resetFields();
+        try {
+            if (statusMessageModel.isStatus()){
+                viewStudentBean.refreshStudentList();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to register user."));
+        }
+
+    }
+
+    public String login(){
+        Users user = authenticationService.loginService(email,password);
+        if (user != null){
+            if(user.isStatus()){
+                resetFields();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+
+                Cookie userCookie = new Cookie("email", user.getEmail());
+                userCookie.setMaxAge(60*60*60);
+                userCookie.setPath("/");
+                response.addCookie(userCookie);
+
+                // Create cookie for user role
+                Cookie userRoleCookie = new Cookie("userRole", user.getRoles().getUserTypes());
+                userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
+                userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
+                response.addCookie(userRoleCookie);
+
+
+                userRole= user.getRoles().getUserTypes();
+                if ("USER".equals(user.getRoles().getUserTypes())) {
+                    return "/users/userDashboard.xhtml?faces-redirect=true";
+                } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
+                    return "/admin/adminDashboard.xhtml?faces-redirect=true";
+                }
+            }
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User is Deactivated"));
+
+            return null;
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
+            return null;
+        }
+    }
+
+    public void deactivateStudent(Users student) {
+        student.setStatus(false);
+
+        try {
+            if (usersDAO.update(student)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Deactivated"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user."));
+        }
+    }
+    public void activateStudent(Users student) {
+        student.setStatus(true);
+        try {
+            if (usersDAO.update(student)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Activated"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Activated user."));
+        }
+    }
+
+    public void prepareUpdateStudent(Users student) {
+        this.selectUser = student;
+    }
+    public void updateUser(){
+        try {
+            if (usersDAO.update(selectUser)){
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user."));
+        }
+    }
+
+    public String logout(){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("email".equals(cookie.getName()) || "userRole".equals(cookie.getName())) {
+                    cookie.setValue(null);
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
+            }
+        }
+        facesContext.getExternalContext().invalidateSession();
+        userRole = "GUEST";
+        return "/index.xhtml?faces-redirect=true";
+    }
+
     public Rooms getSelectRoom() {
         return selectRoom;
     }
@@ -79,8 +209,6 @@ public class UserBean implements Serializable{
     public void setSelectRoom(Rooms selectRoom) {
         this.selectRoom = selectRoom;
     }
-
-
 
     public boolean isSelectRoomForNewUser() {
         return selectRoomForNewUser;
@@ -212,136 +340,6 @@ public class UserBean implements Serializable{
         } else {
             userRole = "GUEST";
         }
-    }
-
-    public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
-        resetFields();
-        try {
-            if (statusMessageModel.isStatus()){
-                viewStudentBean.refreshStudentList();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to register user."));
-        }
-
-    }
-
-    public String login(){
-        Users user = authenticationService.loginService(email,password);
-        if (user != null){
-            if(user.isStatus()){
-                resetFields();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-
-                Cookie userCookie = new Cookie("email", user.getEmail());
-                userCookie.setMaxAge(60*60*60);
-                userCookie.setPath("/");
-                response.addCookie(userCookie);
-
-                // Create cookie for user role
-                Cookie userRoleCookie = new Cookie("userRole", user.getRoles().getUserTypes());
-                userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
-                userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
-                response.addCookie(userRoleCookie);
-
-
-                userRole= user.getRoles().getUserTypes();
-                if ("USER".equals(user.getRoles().getUserTypes())) {
-                    return "/users/userDashboard.xhtml?faces-redirect=true";
-                } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
-                    return "/admin/adminDashboard.xhtml?faces-redirect=true";
-                }
-            }
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User is Deactivated"));
-
-            return null;
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
-            return null;
-        }
-    }
-
-    public void deactivateStudent(Users student) {
-        student.setStatus(false);
-
-        try {
-            if (usersDAO.update(student)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!"));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Deactivated"));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user."));
-        }
-    }
-    public void activateStudent(Users student) {
-        student.setStatus(true);
-        try {
-            if (usersDAO.update(student)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!"));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Activated"));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Activated user."));
-        }
-    }
-
-    public void prepareUpdateStudent(Users student) {
-        this.selectUser = student;
-    }
-    public void updateUser(){
-        try {
-            if (usersDAO.update(selectUser)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update"));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user."));
-        }
-    }
-
-    public String logout(){
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("email".equals(cookie.getName()) || "userRole".equals(cookie.getName())) {
-                    cookie.setValue(null);
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                }
-            }
-        }
-        facesContext.getExternalContext().invalidateSession();
-        userRole = "GUEST";
-        return "/index.xhtml?faces-redirect=true";
     }
 
     public void cancelBtn(){

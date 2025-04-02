@@ -76,6 +76,78 @@ public class MonthlyFeeBean implements Serializable {
         }
     }
 
+    public void assignMonthlyFee(){
+
+        try{
+            statusMessageModel = monthlyFeeService.assignStudentMonthlyFee(selectStudent,assignFeeAmount);
+            if (statusMessageModel.isStatus()){
+                resetField();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Assign Monthly Fee."));
+        }
+    }
+
+    public void monthlyFeePay(){
+        Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+        if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
+            if (paidAmount<= selectForPayFee.getDue() && paidAmount > 0){
+                if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
+                    String payStatus = "COMPLETED";
+                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
+                } else if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())) {
+                    String payStatus = "PENDING";
+                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
+                }
+                if (statusMessageModel.isStatus()){
+                    resetField();
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                }else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                }
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paid Amount is Invalid"));
+            }
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
+        }
+    }
+
+    public void responsePayRequest(){
+        Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+        if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
+            statusMessageModel = monthlyFeeService.responsePaymentRequest(selectTransaction);
+            if (statusMessageModel.isStatus()){
+                resetField();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
+        }
+    }
+
+    public void viewStatementForStudent(Users student){
+        selectStudent = student;
+        selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(student.getId());
+        statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(student.getId());
+    }
+
     public TransactionStatement getSelectTransaction() {
         return selectTransaction;
     }
@@ -161,77 +233,6 @@ public class MonthlyFeeBean implements Serializable {
         this.selectStudent = selectStudent;
     }
 
-    public void assignMonthlyFee(){
-
-        try{
-            statusMessageModel = monthlyFeeService.assignStudentMonthlyFee(selectStudent,assignFeeAmount);
-            if (statusMessageModel.isStatus()){
-                resetField();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            }
-        }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Assign Monthly Fee."));
-        }
-    }
-
-    public void monthlyFeePay(){
-        Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-        if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
-            if (paidAmount<= selectForPayFee.getDue() && paidAmount > 0){
-                if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
-                    String payStatus = "COMPLETED";
-                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
-                } else if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())) {
-                    String payStatus = "PENDING";
-                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
-                }
-                if (statusMessageModel.isStatus()){
-                    resetField();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-                }else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-                }
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paid Amount is Invalid"));
-            }
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
-        }
-    }
-
-    public void responsePayRequest(){
-        Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-        if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
-            statusMessageModel = monthlyFeeService.responsePaymentRequest(selectTransaction);
-            if (statusMessageModel.isStatus()){
-                resetField();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
-            }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
-            }
-        }
-        else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
-        }
-    }
-
-    public void viewStatementForStudent(Users student){
-        selectStudent = student;
-        selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(student.getId());
-        statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(student.getId());
-    }
 
     public void resetField(){
         this.assignFeeAmount = 1;

@@ -43,7 +43,6 @@ public class ViewRoomsBean implements Serializable {
 
     private Rooms selectRoom;
     private Users selectStudent;
-    private boolean isEditMode;
 
     @PostConstruct
     public void init(){
@@ -247,14 +246,6 @@ public class ViewRoomsBean implements Serializable {
         this.selectRoom = selectRoom;
     }
 
-    public boolean getIsEditMode() {
-        return isEditMode;
-    }
-
-    public void setEditMode(boolean editMode) {
-        isEditMode = editMode;
-    }
-
     public List<Rooms> getViewRoomsList() {
         return viewRoomsList;
     }
@@ -282,17 +273,8 @@ public class ViewRoomsBean implements Serializable {
 
     public void prepareAddRoom() {
         resetFields();
-        this.isEditMode = false;
     }
 
-    public void saveOrUpdateRoom() {
-        if (isEditMode) {
-            updateRoom();
-        } else {
-            addNewRoom();
-        }
-        resetFields();
-    }
 
     public void resetSelected(){
         this.selectStudent = null;

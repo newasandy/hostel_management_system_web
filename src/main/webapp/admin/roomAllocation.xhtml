@@ -8,11 +8,8 @@
 
 <h:head>
     <title>View Rooms</title>
-
 </h:head>
 <h:body>
-
-
     <header>
         <ui:include src="/includePage/navigationBar.xhtml"/>
     </header>
@@ -24,7 +21,6 @@
 
     <h:form id="main-form">
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
-
 
         <div style="display:flex;">
             <p:dataTable id="userTable" value="#{viewRoomsBean.unallocatedUser}" rowIndexVar="rowIndex" var="users" paginator="true" paginatorPosition="bottom" rows="10">
