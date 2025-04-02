@@ -54,10 +54,10 @@ public class RoomDAOImp extends BaseDAOImp<Rooms> implements RoomDAO {
         if (entityManager == null) {
             return 0L;
         }
-
         try{
-            return entityManager.createQuery("SELECT SUM(r.capacity) FROM Rooms r WHERE r.status = true",Long.class)
+            Long result = entityManager.createQuery("SELECT SUM(r.capacity) FROM Rooms r WHERE r.status = true",Long.class)
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
             return 0L;
         }

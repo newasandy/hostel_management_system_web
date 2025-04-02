@@ -167,6 +167,7 @@
             <p:commandButton value="Add" icon="pi pi-plus"
                              style="margin-left: 15px; width:100px; margin-top:10px;"
                              action="#{userBean.registrationUser}"
+                             disabled="#{userBean.selectRoom eq null}"
                              update=":main-form:message :registrationForm :main-form:userTable"
                              oncomplete="PF('selectRoom').hide(); PF('regDialog').hide();" />
             <p:commandButton value="Cancel"

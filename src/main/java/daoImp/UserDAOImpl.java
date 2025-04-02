@@ -72,11 +72,11 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
         if (entityManager == null) {
             return 0L;
         }
-
         try{
-            return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles", Long.class)
+            Long result = entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles", Long.class)
                     .setParameter("roles","USER")
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
             return 0L;
         }
@@ -88,9 +88,10 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
         }
 
         try{
-            return entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles AND u.status = true", Long.class)
+            Long result = entityManager.createQuery("SELECT COUNT(u) FROM Users u WHERE u.roles.userTypes = :roles AND u.status = true", Long.class)
                     .setParameter("roles","USER")
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
             return 0L;
         }

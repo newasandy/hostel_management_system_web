@@ -121,11 +121,12 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
             return 0L;
         }
         try{
-            return entityManager.createQuery("SELECT COUNT(*) FROM "+ entityClass.getName() +" e",Long.class)
+            Long result = entityManager.createQuery("SELECT COUNT(*) FROM "+ entityClass.getName() +" e",Long.class)
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
-            // Log the exception if needed
-            return 0L; // or throw a custom exception
+
+            return 0L;
         }
     }
 }

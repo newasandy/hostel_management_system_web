@@ -29,10 +29,11 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
         }
 
         try{
-            return entityManager.createQuery(
+            Long result = entityManager.createQuery(
                             "SELECT COUNT(ra) FROM RoomAllocation ra WHERE ra.roomId = :roomId AND ra.unallocationDate IS NULL", Long.class)
                     .setParameter("roomId", roomId)
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
             return 0L;
         }
@@ -83,8 +84,9 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
         }
 
         try{
-            return entityManager.createQuery("SELECT COUNT(ra) FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL",Long.class)
+            Long result = entityManager.createQuery("SELECT COUNT(ra) FROM RoomAllocation ra WHERE ra.unallocationDate IS NULL",Long.class)
                     .getSingleResult();
+            return result != null ? result : 0L;
         } catch (Exception e) {
             return 0L;
         }
