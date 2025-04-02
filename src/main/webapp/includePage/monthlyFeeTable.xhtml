@@ -37,7 +37,7 @@
             <h:outputText value="#{monthlyFee.due}" />
         </p:column>
 
-        <p:column headerText="Actions" rendered="#{monthlyFeeBean.userRole == 'ADMIN'}">
+        <p:column headerText="Actions">
             <p:commandButton id="pay-btn" icon="pi pi-money-bill"
                              style="margin-right: 5px; color:#FFFFFF; background-color:#009688;"
                              rendered="#{monthlyFee.due > 0 }"

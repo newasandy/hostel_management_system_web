@@ -3,7 +3,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="statementTable" value="#{monthlyFeeBean.statementListEachStudent}" rowIndexVar="rowIndex" var="transaction" paginator="true" paginatorPosition="bottom" rows="5">
+    <p:dataTable id="statementTable" value="#{monthlyFeeBean.statementListEachStudent}" rowIndexVar="rowIndex"
+                 var="transaction" paginator="true"
+                 rowStyleClass="#{transaction.status eq 'COMPLETED' ? 'pay-complete' : 'pay-pending'}"
+                 paginatorPosition="bottom" rows="5">
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />
         </p:column>
@@ -21,6 +24,9 @@
         </p:column>
         <p:column headerText="Due Amount" >
             <h:outputText value="#{transaction.statementDue}" />
+        </p:column>
+        <p:column headerText="Status" >
+            <h:outputText value="#{transaction.status}" style="font-weight: bold; " />
         </p:column>
     </p:dataTable>
 </ui:composition>

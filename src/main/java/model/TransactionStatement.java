@@ -24,15 +24,27 @@ public class TransactionStatement extends BaseEntity {
     @Column(name = "statement_due", nullable = false)
     private double statementDue;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
     public TransactionStatement() {
     }
 
-    public TransactionStatement(double statementDue, double payAmount, Timestamp paymentDate, MonthlyFee feeId, Users studentId) {
-        this.statementDue = statementDue;
-        this.payAmount = payAmount;
-        this.paymentDate = paymentDate;
-        this.feeId = feeId;
+    public TransactionStatement(Users studentId, MonthlyFee feeId, Timestamp paymentDate, double payAmount, double statementDue, String status) {
         this.studentId = studentId;
+        this.feeId = feeId;
+        this.paymentDate = paymentDate;
+        this.payAmount = payAmount;
+        this.statementDue = statementDue;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Users getStudentId() {

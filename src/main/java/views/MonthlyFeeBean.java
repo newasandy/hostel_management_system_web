@@ -4,6 +4,7 @@ import daoImp.MonthlyFeeDAOImpl;
 import daoImp.TransactionStatementDAOImp;
 import daoImp.UserDAOImpl;
 import daoInterface.MonthlyFeeDAO;
+import daoInterface.TransactionStatementDAO;
 import daoInterface.UsersDAO;
 import model.MonthlyFee;
 import model.StatusMessageModel;
@@ -28,7 +29,7 @@ import java.util.List;
 public class MonthlyFeeBean implements Serializable {
 
     private MonthlyFeeDAO monthlyFeeDAO = new MonthlyFeeDAOImpl();
-    private TransactionStatementDAOImp transactionStatementDAOImp = new TransactionStatementDAOImp();
+    private TransactionStatementDAO transactionStatementDAOImp = new TransactionStatementDAOImp();
     private UsersDAO usersDAO = new UserDAOImpl();
     private MonthlyFeeService monthlyFeeService = new MonthlyFeeService(monthlyFeeDAO, transactionStatementDAOImp);
 
@@ -39,9 +40,11 @@ public class MonthlyFeeBean implements Serializable {
     private double assignFeeAmount;
     private double paidAmount;
     private MonthlyFee selectForPayFee;
+    private TransactionStatement selectTransaction;
     private String verifyPassword;
     private List<MonthlyFee> monthlyFeeList;
     private List<TransactionStatement> statementListEachStudent;
+    private List<TransactionStatement> pendingPaymentRequest;
     private String userRole = GetCookiesValues.getUserRoleFromCookie();
     private double selectStudentDueAmount;
     private Users loginUser;
@@ -66,10 +69,27 @@ public class MonthlyFeeBean implements Serializable {
                     return v2.getIssueDate().compareTo(v1.getIssueDate());
                 }
             });
+            pendingPaymentRequest = transactionStatementDAOImp.getPendingPaymentRequest();
         }
         if (selectStudent != null){
             statementListEachStudent = transactionStatementDAOImp.getStatementByEachUser(selectStudent.getId());
         }
+    }
+
+    public TransactionStatement getSelectTransaction() {
+        return selectTransaction;
+    }
+
+    public void setSelectTransaction(TransactionStatement selectTransaction) {
+        this.selectTransaction = selectTransaction;
+    }
+
+    public List<TransactionStatement> getPendingPaymentRequest() {
+        return pendingPaymentRequest;
+    }
+
+    public void setPendingPaymentRequest(List<TransactionStatement> pendingPaymentRequest) {
+        this.pendingPaymentRequest = pendingPaymentRequest;
     }
 
     public List<TransactionStatement> getStatementListEachStudent() {
@@ -163,7 +183,13 @@ public class MonthlyFeeBean implements Serializable {
         Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
         if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
             if (paidAmount<= selectForPayFee.getDue() && paidAmount > 0){
-                statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount);
+                if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
+                    String payStatus = "COMPLETED";
+                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
+                } else if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())) {
+                    String payStatus = "PENDING";
+                    statusMessageModel = monthlyFeeService.payFee(selectForPayFee,paidAmount, payStatus);
+                }
                 if (statusMessageModel.isStatus()){
                     resetField();
                     FacesContext.getCurrentInstance().addMessage(null,
@@ -182,6 +208,25 @@ public class MonthlyFeeBean implements Serializable {
         }
     }
 
+    public void responsePayRequest(){
+        Users loginAdmin = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
+        if (PasswordUtils.verifyPassword(verifyPassword , loginAdmin.getPasswords())){
+            statusMessageModel = monthlyFeeService.responsePaymentRequest(selectTransaction);
+            if (statusMessageModel.isStatus()){
+                resetField();
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            }else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
+        }
+    }
+
     public void viewStatementForStudent(Users student){
         selectStudent = student;
         selectStudentDueAmount = monthlyFeeDAO.getTotalDueAmount(student.getId());
@@ -192,5 +237,7 @@ public class MonthlyFeeBean implements Serializable {
         this.assignFeeAmount = 1;
         this.paidAmount = 0;
         this.selectStudent = null;
+        this.selectTransaction = null;
+        this.verifyPassword = "";
     }
 }

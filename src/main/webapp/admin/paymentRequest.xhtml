@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Payment Request</title>
+    <h:outputStylesheet>
+        .top-bar{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        height: 45px;
+        }
+
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div class="top-bar">
+            <h3 style="margin-right: 150px;">Payment Request</h3>
+        </div>
+
+        <p:dataTable id="statementTable" value="#{monthlyFeeBean.pendingPaymentRequest}"
+                     rowIndexVar="rowIndex" var="transaction" paginator="true"
+                     rowStyleClass="#{transaction.status eq 'COMPLETED' ? 'pay-complete' : 'pay-pending'}"
+                     paginatorPosition="bottom" rows="5">
+            <p:column headerText="SN" style="width: 30px;">
+                <h:outputText value="#{rowIndex + 1}" />
+            </p:column>
+            <p:column headerText="Payment Date" >
+                <h:outputText value="#{transaction.paymentDate}" />
+            </p:column>
+            <p:column headerText="Year" >
+                <h:outputText value="#{transaction.feeId.year}" />
+            </p:column>
+            <p:column headerText="Month" >
+                <h:outputText value="#{transaction.feeId.month}" />
+            </p:column>
+            <p:column headerText="Paid Amount" sortBy="#{transaction.payAmount}">
+                <h:outputText value="#{transaction.payAmount}" />
+            </p:column>
+            <p:column headerText="Due Amount" >
+                <h:outputText value="#{transaction.statementDue}" />
+            </p:column>
+            <p:column headerText="Status" >
+                <h:outputText value="#{transaction.status}" style="font-weight: bold; " />
+            </p:column>
+            <p:column headerText="Action" >
+                <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
+                                 rendered="#{transaction.feeId.due > 0}"
+                                 action="#{monthlyFeeBean.setSelectTransaction(transaction)}"
+                                 partialSubmit="true"
+                                 update=":confirmForm"
+                                 oncomplete="PF('confirmationDialog').show()"
+                />
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <p:dialog header="Confirmation" widgetVar="confirmationDialog" modal="true" resizable="false">
+        <h:form id="confirmForm">
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup styleClass="input-group">
+                    <p:password id="password" placeholder="Enter Password" value="#{monthlyFeeBean.verifyPassword}" required="true" requiredMessage="Password is required." style="width:100%" />
+                </h:panelGroup>
+
+                <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
+                    <p:commandButton value="Pay"
+                                     action="#{monthlyFeeBean.responsePayRequest}"
+                                     validateClient="true"
+                                     update=":main-form:message :confirmForm :main-form:statementTable"
+                                     oncomplete="PF('confirmationDialog').hide();"
+                                     style="margin-top:10px; margin-left:10px; width:100px;"/>
+                    <p:commandButton value="Cancel" onclick="PF('confirmationDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</h:body>
+</html>

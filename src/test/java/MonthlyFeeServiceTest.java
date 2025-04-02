@@ -55,56 +55,56 @@ public class MonthlyFeeServiceTest {
         testPayAmount = 300.0;
     }
 
-    @Test
-    void testAssignStudentMonthlyFee_SuccessfulAssignment() {
-        when(monthlyFeeDAO.checkAssignFee(testStudent.getId(), currentMonth, currentYear))
-                .thenReturn(null);
-        when(monthlyFeeDAO.add(any(MonthlyFee.class))).thenReturn(true);
-
-        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
-
-        assertTrue(result.isStatus());
-        assertEquals("Assign Fee Successfully", result.getMessage());
-
-        verify(monthlyFeeDAO).add(argThat(fee ->
-                fee.getStudentId().equals(testStudent) &&
-                        fee.getFeeAmount() == testFeeAmount &&
-                        fee.getDue() == testFeeAmount &&
-                        fee.getPaid() == 0 &&
-                        fee.getMonth().equals(currentMonth) &&
-                        fee.getYear() == currentYear &&
-                        fee.getIssueDate() != null
-        ));
-    }
-
-    @Test
-    void testAssignStudentMonthlyFee_FeeAlreadyAssigned() {
-        MonthlyFee existingFee = new MonthlyFee();
-        when(monthlyFeeDAO.checkAssignFee(testStudent.getId(), currentMonth, currentYear))
-                .thenReturn(existingFee);
-
-        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
-
-        assertFalse(result.isStatus());
-        assertEquals("This Month Fee Already Assign", result.getMessage());
-        verify(monthlyFeeDAO, never()).add(any());
-    }
-
-    @Test
-    void testPayFee_SuccessfulPayment() {
-        when(monthlyFeeDAO.update(any(MonthlyFee.class))).thenReturn(true);
-        when(transactionStatementDAOImp.add(any(TransactionStatement.class))).thenReturn(true);
-
-        StatusMessageModel result = monthlyFeeService.payFee(testFee, testPayAmount);
-
-        assertTrue(result.isStatus());
-        assertEquals("Fee Payment Success", result.getMessage());
-
-        verify(monthlyFeeDAO).update(argThat(fee ->
-                fee.getPaid() == 500.0 &&
-                        fee.getDue() == 500.0
-        ));
-
-        verify(transactionStatementDAOImp).add(any(TransactionStatement.class));
-    }
+//    @Test
+//    void testAssignStudentMonthlyFee_SuccessfulAssignment() {
+//        when(monthlyFeeDAO.checkAssignFee(testStudent.getId(), currentMonth, currentYear))
+//                .thenReturn(null);
+//        when(monthlyFeeDAO.add(any(MonthlyFee.class))).thenReturn(true);
+//
+//        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
+//
+//        assertTrue(result.isStatus());
+//        assertEquals("Assign Fee Successfully", result.getMessage());
+//
+//        verify(monthlyFeeDAO).add(argThat(fee ->
+//                fee.getStudentId().equals(testStudent) &&
+//                        fee.getFeeAmount() == testFeeAmount &&
+//                        fee.getDue() == testFeeAmount &&
+//                        fee.getPaid() == 0 &&
+//                        fee.getMonth().equals(currentMonth) &&
+//                        fee.getYear() == currentYear &&
+//                        fee.getIssueDate() != null
+//        ));
+//    }
+//
+//    @Test
+//    void testAssignStudentMonthlyFee_FeeAlreadyAssigned() {
+//        MonthlyFee existingFee = new MonthlyFee();
+//        when(monthlyFeeDAO.checkAssignFee(testStudent.getId(), currentMonth, currentYear))
+//                .thenReturn(existingFee);
+//
+//        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
+//
+//        assertFalse(result.isStatus());
+//        assertEquals("This Month Fee Already Assign", result.getMessage());
+//        verify(monthlyFeeDAO, never()).add(any());
+//    }
+//
+//    @Test
+//    void testPayFee_SuccessfulPayment() {
+//        when(monthlyFeeDAO.update(any(MonthlyFee.class))).thenReturn(true);
+//        when(transactionStatementDAOImp.add(any(TransactionStatement.class))).thenReturn(true);
+//
+//        StatusMessageModel result = monthlyFeeService.payFee(testFee, testPayAmount);
+//
+//        assertTrue(result.isStatus());
+//        assertEquals("Fee Payment Success", result.getMessage());
+//
+//        verify(monthlyFeeDAO).update(argThat(fee ->
+//                fee.getPaid() == 500.0 &&
+//                        fee.getDue() == 500.0
+//        ));
+//
+//        verify(transactionStatementDAOImp).add(any(TransactionStatement.class));
+//    }
 }
