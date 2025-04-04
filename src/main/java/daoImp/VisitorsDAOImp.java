@@ -1,18 +1,21 @@
 package daoImp;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import daoInterface.VisitorsDAO;
 import model.Visitors;
-import utils.EntityManageUtils;
 
 import java.util.Collections;
 import java.util.List;
 
+@ApplicationScoped
 public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO {
 
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
 
     public VisitorsDAOImp(){

@@ -1,11 +1,9 @@
 package views;
 
-import daoImp.LeaveRequestDAOImp;
-import daoImp.UserDAOImpl;
 import daoInterface.LeaveRequestDAO;
 import daoInterface.UsersDAO;
 import model.LeaveRequest;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 import service.LeaveRequestService;
 import utils.GetCookiesValues;
@@ -14,7 +12,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -24,9 +24,16 @@ import java.util.List;
 @Named("leaveRequestBean")
 @ViewScoped
 public class LeaveRequestBean implements Serializable {
-    private LeaveRequestDAO leaveRequestDAO = new LeaveRequestDAOImp();
-    private UsersDAO usersDAO = new UserDAOImpl();
-    private LeaveRequestService leaveRequestService = new LeaveRequestService(leaveRequestDAO);
+
+    @Inject
+    private LeaveRequestDAO leaveRequestDAO;
+
+    @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
+    private LeaveRequestService leaveRequestService;
+
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
     private List<LeaveRequest> leaveRequestList;
@@ -35,20 +42,25 @@ public class LeaveRequestBean implements Serializable {
     private String reason;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-    private String userRoles;
+    private Users loginUser;
+
 
     @PostConstruct
     public void init(){
+        String email = GetCookiesValues.getEmailFromCookie();
+        if (email != null) {
+            loginUser = usersDAO.getByEmail(email);
+        } else {
+            System.out.println("Error: No email found in cookie.");
+        }
         refreshLeaveRequestList();
     }
 
     public void refreshLeaveRequestList(){
-        userRoles = GetCookiesValues.getUserRoleFromCookie();
         if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
             leaveRequestList = leaveRequestDAO.getUserLeaveRequestByUserId(loginUser.getId());
         }
-        if ("ADMIN".equals(userRoles)){
+        if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
             leaveRequestList = leaveRequestDAO.getAll();
             Collections.sort(leaveRequestList, new Comparator<LeaveRequest>() {
                 @Override
@@ -83,6 +95,7 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
+    @Transactional
     public void updateByAdmin(LeaveRequest.Status status){
         selectLeaveRequest.setStatus(status);
         if (leaveRequestDAO.update(selectLeaveRequest)){
@@ -96,6 +109,7 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
+    @Transactional
     public void updatePendingLeaveRequestByUser(){
         if (leaveRequestDAO.update(selectLeaveRequest)){
             refreshLeaveRequestList();
@@ -110,11 +124,6 @@ public class LeaveRequestBean implements Serializable {
 
     public List<LeaveRequest> getLeaveRequestList() {
         return leaveRequestList;
-    }
-
-
-    public String getUserRoles() {
-        return userRoles;
     }
 
     public String getReason() {

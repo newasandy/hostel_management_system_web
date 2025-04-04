@@ -1,7 +1,7 @@
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import model.Rooms;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,19 +1,21 @@
 package daoImp;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import daoInterface.LeaveRequestDAO;
 import model.LeaveRequest;
-import utils.EntityManageUtils;
 
 import java.util.Collections;
 import java.util.List;
 
-
+@ApplicationScoped
 public class LeaveRequestDAOImp extends BaseDAOImp<LeaveRequest> implements LeaveRequestDAO {
 
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
 
     public LeaveRequestDAOImp(){

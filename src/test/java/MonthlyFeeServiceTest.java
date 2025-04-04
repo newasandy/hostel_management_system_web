@@ -1,7 +1,7 @@
 import daoImp.TransactionStatementDAOImp;
 import daoInterface.MonthlyFeeDAO;
 import model.MonthlyFee;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.TransactionStatement;
 import model.Users;
 import org.junit.jupiter.api.BeforeEach;

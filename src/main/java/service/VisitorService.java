@@ -1,24 +1,25 @@
 package service;
 
 import daoInterface.VisitorsDAO;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
 @ApplicationScoped
 public class VisitorService {
+
+    @Inject
     private VisitorsDAO visitorsDAO;
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
-    public VisitorService(VisitorsDAO visitorsDAO) {
-        this.visitorsDAO = visitorsDAO;
-    }
-
+    @Transactional
     public StatusMessageModel addVisitor(String fullName, String reason, Users student, String relation){
         Visitors newVisitor = new Visitors();
         newVisitor.setFullName(fullName);

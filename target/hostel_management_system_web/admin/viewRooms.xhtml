@@ -20,13 +20,13 @@
             <h3 >Room</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
                              style="right: 5px; margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
-                             action="#{viewRoomsBean.prepareAddRoom}"
+                             action="#{viewRoomsBean.roomState.resetFields}"
                              partialSubmit="true"
-                             update=":main-form:message :main-form:roomTable"
+                             update=":main-form:message :main-form:roomTable :roomForm"
                              oncomplete="PF('addRoom').show()" />
         </div>
 
-        <p:dataTable id="roomTable" value="#{viewRoomsBean.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>
@@ -72,16 +72,16 @@
         <h:form id="roomForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="roomNumber" value="Room Number:" />
-                <p:inputNumber id="roomNumber" minValue="1" value="#{viewRoomsBean.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
+                <p:inputNumber id="roomNumber" minValue="0" value="#{viewRoomsBean.roomState.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
 
                 <h:outputLabel for="capacity" value="Capacity:"/>
-                <p:inputNumber id="capacity" minValue="1" value="#{viewRoomsBean.capacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
+                <p:inputNumber id="capacity" minValue="0" value="#{viewRoomsBean.roomState.capacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
 
                 <p:commandButton value="Add"
                                  action="#{viewRoomsBean.addNewRoom()}"
                                  validateClient="true"
                                  update=":main-form:message :roomForm :main-form:roomTable"
-                                 oncomplete="if (!args.validationFailed) { PF('addRoom').hide(); #{viewRoomsBean.resetFields()}; }"
+                                 oncomplete="if (!args.validationFailed) { PF('addRoom').hide(); }"
                                  style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
                                  actionListener="#{viewRoomsBean.resetFields()}"
@@ -96,10 +96,10 @@
         <h:form id="updateRoomForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="roomNumber" value="Room Number:" />
-                <p:inputNumber id="roomNumber" disabled="true"  minValue="1" value="#{viewRoomsBean.selectRoom.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
+                <p:inputNumber id="roomNumber" disabled="true"  minValue="1" value="#{viewRoomsBean.roomState.selectRoom.roomNumber}" required="true" requiredMessage="Room Number is required." style="width:100%" />
 
                 <h:outputLabel for="capacity"  value="Capacity:"/>
-                <p:inputNumber id="capacity"  minValue="1" value="#{viewRoomsBean.updatedCapacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
+                <p:inputNumber id="capacity"  minValue="1" value="#{viewRoomsBean.roomState.updatedCapacity}" required="true" requiredMessage="Capacity is requires." style="width:100%"/>
 
                 <p:commandButton value="Update"
                                  action="#{viewRoomsBean.updateRoom()}"

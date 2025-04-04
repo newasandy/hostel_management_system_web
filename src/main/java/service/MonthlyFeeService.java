@@ -1,28 +1,33 @@
 package service;
 
-import daoImp.TransactionStatementDAOImp;
 import daoInterface.MonthlyFeeDAO;
 import daoInterface.TransactionStatementDAO;
 import model.MonthlyFee;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.TransactionStatement;
 import model.Users;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.Date;
 
+
+@ApplicationScoped
 public class MonthlyFeeService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
+
+    @Inject
     private MonthlyFeeDAO monthlyFeeDAO;
+
+    @Inject
     private TransactionStatementDAO transactionStatementDAOImp;
 
-    public MonthlyFeeService(MonthlyFeeDAO monthlyFeeDAO, TransactionStatementDAO transactionStatementDAOImp) {
-        this.monthlyFeeDAO = monthlyFeeDAO;
-        this.transactionStatementDAOImp = transactionStatementDAOImp;
-    }
 
+    @Transactional
     public StatusMessageModel assignStudentMonthlyFee(Users student, double assignFeeAmount){
         String currentMonthUpper = LocalDate.now()
                 .getMonth()
@@ -55,6 +60,7 @@ public class MonthlyFeeService {
         return statusMessageModel;
     }
 
+    @Transactional
     public StatusMessageModel payFee(MonthlyFee selectFee, double payAmount, String payStatus){
         double totalPayAmount = selectFee.getPaid() + payAmount;
         double totalDueAmount = selectFee.getDue() - payAmount;
@@ -91,6 +97,7 @@ public class MonthlyFeeService {
         return statusMessageModel;
     }
 
+    @Transactional
     public boolean addPayTransactionStatement(Users selectUser, MonthlyFee selectAssignFee, double payAmount, double newDue , String payStatus){
         Date date = new Date();
         Timestamp payDate = new Timestamp(date.getTime());
@@ -108,6 +115,7 @@ public class MonthlyFeeService {
         }
     }
 
+    @Transactional
     public StatusMessageModel responsePaymentRequest(TransactionStatement selectTransaction){
         selectTransaction.setStatus("COMPLETED");
         if (transactionStatementDAOImp.update(selectTransaction)){

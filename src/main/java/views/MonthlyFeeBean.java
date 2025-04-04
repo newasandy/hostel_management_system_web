@@ -1,13 +1,10 @@
 package views;
 
-import daoImp.MonthlyFeeDAOImpl;
-import daoImp.TransactionStatementDAOImp;
-import daoImp.UserDAOImpl;
 import daoInterface.MonthlyFeeDAO;
 import daoInterface.TransactionStatementDAO;
 import daoInterface.UsersDAO;
 import model.MonthlyFee;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.TransactionStatement;
 import model.Users;
 import service.MonthlyFeeService;
@@ -18,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Collections;
@@ -28,10 +26,17 @@ import java.util.List;
 @ViewScoped
 public class MonthlyFeeBean implements Serializable {
 
-    private MonthlyFeeDAO monthlyFeeDAO = new MonthlyFeeDAOImpl();
-    private TransactionStatementDAO transactionStatementDAOImp = new TransactionStatementDAOImp();
-    private UsersDAO usersDAO = new UserDAOImpl();
-    private MonthlyFeeService monthlyFeeService = new MonthlyFeeService(monthlyFeeDAO, transactionStatementDAOImp);
+    @Inject
+    private MonthlyFeeDAO monthlyFeeDAO;
+
+    @Inject
+    private TransactionStatementDAO transactionStatementDAOImp;
+
+    @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
+    private MonthlyFeeService monthlyFeeService;
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
@@ -45,7 +50,7 @@ public class MonthlyFeeBean implements Serializable {
     private List<MonthlyFee> monthlyFeeList;
     private List<TransactionStatement> statementListEachStudent;
     private List<TransactionStatement> pendingPaymentRequest;
-    private String userRole = GetCookiesValues.getUserRoleFromCookie();
+    private String userRole;
     private double selectStudentDueAmount;
     private Users loginUser;
 
@@ -55,6 +60,7 @@ public class MonthlyFeeBean implements Serializable {
     }
 
     public void refreshMonthlyFeeList(){
+        userRole = GetCookiesValues.getUserRoleFromCookie();
         if ("USER".equals(userRole)){
             loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             monthlyFeeList = monthlyFeeDAO.getUserFeeDetails(loginUser.getId());
@@ -77,7 +83,6 @@ public class MonthlyFeeBean implements Serializable {
     }
 
     public void assignMonthlyFee(){
-
         try{
             statusMessageModel = monthlyFeeService.assignStudentMonthlyFee(selectStudent,assignFeeAmount);
             if (statusMessageModel.isStatus()){

@@ -1,18 +1,15 @@
 package views;
 
-import daoImp.RoomAllocationDAOImp;
-import daoImp.RoomDAOImp;
-import daoImp.UserDAOImpl;
-import daoImp.VisitorsDAOImp;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
-import model.Cards;
+import views.stateModel.Cards;
 import org.primefaces.model.chart.DonutChartModel;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,10 +20,17 @@ import java.util.Map;
 @Named
 @RequestScoped
 public class AdminDashboardBean implements Serializable {
-    private UsersDAO usersDAO = new UserDAOImpl();
-    private RoomDAO roomDAO = new RoomDAOImp();
-    private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
-    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
+    @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
+    private RoomDAO roomDAO;
+
+    @Inject
+    private VisitorsDAO visitorsDAO;
+
+    @Inject
+    private RoomAllocationDAO roomAllocationDAO;
 
     private List<Cards> cards;
     private Long countOnlyAllocated;

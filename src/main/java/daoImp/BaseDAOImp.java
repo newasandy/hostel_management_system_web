@@ -1,17 +1,14 @@
 package daoImp;
 
 import daoInterface.BaseDAO;
-import utils.EntityManageUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import java.util.Collections;
 import java.util.List;
 
-@Named
 @ApplicationScoped
 public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
     private final Class<T> entityClass;
@@ -20,8 +17,8 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
         this.entityClass=entity;
     }
 
-
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
 
     @Override
@@ -30,21 +27,15 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
         if (entityManager == null) {
             return status;
         }
-
-        EntityTransaction transaction = entityManager.getTransaction();
         try{
-            transaction.begin();
             entityManager.persist(entity);
-            entityManager.flush();
-            entityManager.clear();
-            transaction.commit();
             status = true;
         }catch (Exception e){
-            transaction.rollback();
             e.printStackTrace();
         }
         return status;
     }
+
     @Override
     public boolean update(T entity){
         boolean status = false;
@@ -52,42 +43,34 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
             return status;
         }
 
-        EntityTransaction transaction = entityManager.getTransaction();
         try{
-            transaction.begin();
             entityManager.merge(entity);
-            entityManager.flush();
-            entityManager.clear();
-            transaction.commit();
             status = true;
         }catch (Exception e){
-            transaction.rollback();
             e.printStackTrace();
         }
         return status;
     }
+
     @Override
     public boolean delete(Long id){
-        EntityTransaction transaction = entityManager.getTransaction();
         boolean status = false;
         if (entityManager == null) {
             return status;
         }
 
         try{
-            transaction.begin();
             T entity = entityManager.find(entityClass , id);
             if (entity != null){
                 entityManager.remove(entity);
             }
-            transaction.commit();
             status = true;
         }catch (Exception e){
-            transaction.rollback();
             e.printStackTrace();
         }
         return status;
     }
+
     @Override
     public T getById(Long id){
         if (entityManager == null) {

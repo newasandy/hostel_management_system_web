@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.UserService;
+import views.stateModel.StatusMessageModel;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

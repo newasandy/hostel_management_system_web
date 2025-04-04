@@ -1,79 +1,75 @@
 package views;
 
-import daoImp.RoomAllocationDAOImp;
-import daoImp.RoomDAOImp;
-import daoImp.UserDAOImpl;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import model.*;
 import service.RoomsService;
 import utils.GetCookiesValues;
+import views.stateModel.RoomState;
+import views.stateModel.StatusMessageModel;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
-@Named
+@Named("viewRoomsBean")
 @ViewScoped
 public class ViewRoomsBean implements Serializable {
 
-    private RoomDAO roomDAO = new RoomDAOImp();
-    private UsersDAO usersDAO = new UserDAOImpl();
-    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
+    @Inject
+    private RoomDAO roomDAO;
+
+    @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
+    private RoomAllocationDAO roomAllocationDAO;
+
+    @Inject
+    private RoomsService roomsService;
+
+    private RoomState roomState = new RoomState();
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
-    private final RoomsService roomsService = new RoomsService(roomDAO, roomAllocationDAO);
-
-    private int roomNumber;
-    private int capacity;
-    private int updatedCapacity;
-
-    private List<Rooms> orginalRoomsList;
-    private List<Rooms> viewRoomsList;
-    private List<RoomAllocation> roomAllocationList;
-
-    private List<Users> unallocatedUser;
-    private List<Rooms> availableRoom;
-    private String userRoles;
-
-    private Rooms selectRoom;
-    private Users selectStudent;
 
     @PostConstruct
     public void init(){
         refreshRoomList();
     }
+
     public void refreshRoomList(){
-        userRoles = GetCookiesValues.getUserRoleFromCookie();
-        orginalRoomsList = roomDAO.getAll();
-        viewRoomsList = new ArrayList<>(orginalRoomsList);
-        unallocatedUser = usersDAO.getUnallocatedUsers();
-        availableRoom = roomDAO.getAvailableRoom();
-        if ("USER".equals(userRoles)){
+        roomState.setViewRoomsList(roomDAO.getAll());
+        roomState.setUnallocatedUser(usersDAO.getUnallocatedUsers());
+        roomState.setAvailableRoom(roomDAO.getAvailableRoom());
+        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
             Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-            roomAllocationList = roomAllocationDAO.getUserAllocated(loginUser.getId());
+            roomState.setRoomAllocationList(roomAllocationDAO.getUserAllocated(loginUser.getId()));
         }
-        if ("ADMIN".equals(userRoles)){
-            roomAllocationList = roomAllocationDAO.getAll();
-            Collections.sort(roomAllocationList, new Comparator<RoomAllocation>() {
+        if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
+            List<RoomAllocation> orginalRoomAllocationList = roomAllocationDAO.getAll();
+            Collections.sort(orginalRoomAllocationList, new Comparator<RoomAllocation>() {
                 @Override
                 public int compare(RoomAllocation v1, RoomAllocation v2) {
                     return v2.getAllocationDate().compareTo(v1.getAllocationDate());
                 }
             });
+            roomState.setRoomAllocationList(orginalRoomAllocationList);
         }
     }
 
     public void addNewRoom(){
-        statusMessageModel = roomsService.addNewRoom(roomNumber,capacity);
+        statusMessageModel = roomsService.addNewRoom(roomState.getRoomNumber(),roomState.getCapacity());
         try{
             if (statusMessageModel.isStatus()){
                 refreshRoomList();
+                roomState.resetFields();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
             }else {
@@ -86,11 +82,12 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    @Transactional
     public void updateRoom(){
         try{
-            if (updatedCapacity >= roomAllocationDAO.getRoomOccupancy(selectRoom)){
-                selectRoom.setCapacity(updatedCapacity);
-                if (roomDAO.update(selectRoom)){
+            if (roomState.getUpdatedCapacity() >= roomAllocationDAO.getRoomOccupancy(roomState.getSelectRoom())){
+                roomState.getSelectRoom().setCapacity(roomState.getUpdatedCapacity());
+                if (roomDAO.update(roomState.getSelectRoom())){
                     refreshRoomList();
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
@@ -111,6 +108,7 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    @Transactional
     public void disableRoom(Rooms room){
         room.setStatus(false);
         try{
@@ -128,6 +126,7 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    @Transactional
     public void enableRoom(Rooms room){
         room.setStatus(true);
         try{
@@ -149,11 +148,10 @@ public class ViewRoomsBean implements Serializable {
     }
 
     public String allocateStudentInARoom(){
-        statusMessageModel = roomsService.allocateStudentInRoom(selectStudent,selectRoom);
+        statusMessageModel = roomsService.allocateStudentInRoom(roomState.getSelectStudent(),roomState.getSelectRoom());
         try{
             if (statusMessageModel.isStatus()){
-                resetSelected();
-                resetFields();
+                roomState.resetFields();
                 refreshRoomList();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
@@ -169,6 +167,7 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
+    @Transactional
     public void unAllocatedStudent(RoomAllocation unallocated){
         Date date = new Date();
         Timestamp unAllocatedDate = new Timestamp(date.getTime());
@@ -186,6 +185,8 @@ public class ViewRoomsBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated"));
         }
     }
+
+    @Transactional
     public void disableRoomUnallocatedStudent(Rooms disableRoom){
         Date date = new Date();
         Timestamp unAllocatedDate = new Timestamp(date.getTime());
@@ -206,84 +207,20 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
-    public int getUpdatedCapacity() {
-        return updatedCapacity;
+    public RoomState getRoomState() {
+        return roomState;
     }
 
-    public void setUpdatedCapacity(int updatedCapacity) {
-        this.updatedCapacity = updatedCapacity;
+    public void prepareSelectStudent(Users selectStudent){
+        this.roomState.setSelectStudent(selectStudent);
     }
-
-    public List<RoomAllocation> getRoomAllocationList() {
-        return roomAllocationList;
-    }
-
-    public String getUserRoles() {
-        return userRoles;
-    }
-
-    public List<Rooms> getAvailableRoom() {
-        return availableRoom;
-    }
-
-    public List<Users> getUnallocatedUser() {
-        return unallocatedUser;
-    }
-
-    public Users getSelectStudent() {
-        return selectStudent;
-    }
-
-    public void setSelectStudent(Users selectStudent) {
-        this.selectStudent = selectStudent;
-    }
-
-    public Rooms getSelectRoom() {
-        return selectRoom;
-    }
-
-    public void setSelectRoom(Rooms selectRoom) {
-        this.selectRoom = selectRoom;
-    }
-
-    public List<Rooms> getViewRoomsList() {
-        return viewRoomsList;
-    }
-
-    public int getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void prepareSelectRoom(Rooms selectRoom){
+        this.roomState.setSelectRoom(selectRoom);
     }
 
     public void prepareEditRoom(Rooms room) {
-        this.selectRoom = room;
-        this.updatedCapacity = room.getCapacity();
+        roomState.setSelectRoom(room);
+        roomState.setUpdatedCapacity(room.getCapacity());
     }
 
-    public void prepareAddRoom() {
-        resetFields();
-    }
-
-
-    public void resetSelected(){
-        this.selectStudent = null;
-        this.selectRoom = null;
-    }
-
-    public void resetFields(){
-        this.roomNumber = 1;
-        this.capacity = 1;
-
-    }
 }

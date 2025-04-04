@@ -1,13 +1,12 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="roomTable" value="#{viewRoomsBean.availableRoom}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.availableRoom}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
         <p:column headerText="Select Room" style="width: 50px;">
             <p:commandButton id="selectRoom-btn" icon="pi pi-check-circle" style="margin-right: 5px; background-color: #3498DB;"
-                             rendered="#{viewRoomsBean.selectStudent != null}"
-                             action="#{viewRoomsBean.setSelectRoom(room)}"
+                             rendered="#{viewRoomsBean.roomState.selectStudent != null}"
+                             action="#{viewRoomsBean.roomState.prepareSelectRoom(room)}"
                              partialSubmit="true"
                              update=":main-form:userTable :main-form:roomTable :confirmationForm"
                              oncomplete="PF('allocateDialog').show()"
@@ -15,7 +14,7 @@
             <p:commandButton id="newUserSelectRoom-btn" icon="pi pi-check-circle" style="margin-right: 5px; background-color: #{userBean.selectRoom eq room ? '#E74C3C' : '#3498DB'}"
                              rendered="#{userBean.selectRoomForNewUser}"
                              action="#{userBean.setSelectRoom(room)}"
-                             update=":selectRoom:roomTable"
+                             update=":selectRoom:roomTable :selectRoom"
                              partialSubmit="true"
             />
             <p:tooltip for="selectRoom-btn" value="Select Room" position="top"/>

@@ -5,8 +5,11 @@ import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
 import model.*;
 import utils.PasswordUtils;
+import views.stateModel.StatusMessageModel;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -15,18 +18,16 @@ public class UserService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
 
+    @Inject
     private UsersDAO usersDAO;
 
+    @Inject
     private AddressDAOImp addressDAOImp;
 
+    @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    public UserService(UsersDAO usersDAO, AddressDAOImp addressDAOImp, RoomAllocationDAO roomAllocationDAO) {
-        this.usersDAO = usersDAO;
-        this.addressDAOImp = addressDAOImp;
-        this.roomAllocationDAO = roomAllocationDAO;
-    }
-
+    @Transactional
     public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
         Users checkUser = usersDAO.getByEmail(email);
         if (checkUser == null){

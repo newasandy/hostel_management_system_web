@@ -1,20 +1,21 @@
 package daoImp;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import daoInterface.RoomDAO;
 import model.Rooms;
-import utils.EntityManageUtils;
 
 import java.util.Collections;
 import java.util.List;
 
-
+@ApplicationScoped
 public class RoomDAOImp extends BaseDAOImp<Rooms> implements RoomDAO {
 
-
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
     public RoomDAOImp (){
         super(Rooms.class);

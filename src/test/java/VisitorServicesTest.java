@@ -1,5 +1,5 @@
 import daoInterface.VisitorsDAO;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 import org.junit.jupiter.api.BeforeEach;

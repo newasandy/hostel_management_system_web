@@ -1,13 +1,12 @@
 package views;
 import daoImp.AddressDAOImp;
-import daoImp.RoomAllocationDAOImp;
-import daoImp.UserDAOImpl;
 import daoImp.UserTypeDAOImp;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
 import model.*;
 import service.AuthenticationService;
 import service.UserService;
+import views.stateModel.StatusMessageModel;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -18,6 +17,7 @@ import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,17 +28,23 @@ public class UserBean implements Serializable{
     @Inject
     private ViewStudentBean viewStudentBean;
 
-    private UsersDAO usersDAO = new UserDAOImpl();
+    @Inject
+    private UsersDAO usersDAO;
 
-    private AddressDAOImp addressDAOImp = new AddressDAOImp();
+    @Inject
+    private AddressDAOImp addressDAOImp;
 
-    private UserTypeDAOImp userTypeDAOImp = new UserTypeDAOImp();
+    @Inject
+    private UserTypeDAOImp userTypeDAOImp;
 
-    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
+    @Inject
+    private RoomAllocationDAO roomAllocationDAO;
 
-    private UserService userService = new UserService(usersDAO,addressDAOImp, roomAllocationDAO);
+    @Inject
+    private UserService userService;
 
-    private AuthenticationService authenticationService = new AuthenticationService(usersDAO);
+    @Inject
+    private AuthenticationService authenticationService;
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
     private String userRole = "GUEST";
@@ -72,7 +78,12 @@ public class UserBean implements Serializable{
         }
     }
 
+    public void loadUserTypes() {
+        userTypes = userTypeDAOImp.getAll();
+    }
+
     public void registrationUser(){
+        System.out.println("==============================="+name+" / "+email +" / "+password+" / "+selectUserType.getUserTypes()+ " / "+ " ++++++++++++++++++++++++++++");
         statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
         resetFields();
         try {
@@ -106,10 +117,9 @@ public class UserBean implements Serializable{
                 userCookie.setPath("/");
                 response.addCookie(userCookie);
 
-                // Create cookie for user role
                 Cookie userRoleCookie = new Cookie("userRole", user.getRoles().getUserTypes());
-                userRoleCookie.setMaxAge(60 * 60 * 60); // Set cookie to expire in 60 hours
-                userRoleCookie.setPath("/"); // Set the path for which this cookie is valid
+                userRoleCookie.setMaxAge(60 * 60 * 60);
+                userRoleCookie.setPath("/");
                 response.addCookie(userRoleCookie);
 
 
@@ -131,9 +141,9 @@ public class UserBean implements Serializable{
         }
     }
 
+    @Transactional
     public void deactivateStudent(Users student) {
         student.setStatus(false);
-
         try {
             if (usersDAO.update(student)){
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -147,6 +157,8 @@ public class UserBean implements Serializable{
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user."));
         }
     }
+
+    @Transactional
     public void activateStudent(Users student) {
         student.setStatus(true);
         try {
@@ -166,6 +178,8 @@ public class UserBean implements Serializable{
     public void prepareUpdateStudent(Users student) {
         this.selectUser = student;
     }
+
+    @Transactional
     public void updateUser(){
         try {
             if (usersDAO.update(selectUser)){
@@ -218,9 +232,7 @@ public class UserBean implements Serializable{
         this.selectRoomForNewUser = selectRoomForNewUser;
     }
 
-    public void loadUserTypes() {
-        userTypes = userTypeDAOImp.getAll();
-    }
+
 
     public String getUserRole() {
         return userRole;

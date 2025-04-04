@@ -1,23 +1,25 @@
 package daoImp;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 
 import daoInterface.RoomAllocationDAO;
 import model.RoomAllocation;
 import model.Rooms;
-import utils.EntityManageUtils;
 
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
+@ApplicationScoped
 public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO {
 
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
-    private EntityTransaction entityTransaction = entityManager.getTransaction();
     public RoomAllocationDAOImp(){
         super(RoomAllocation.class);
     }
@@ -56,20 +58,19 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
     }
 
     @Override
+    @Transactional
     public boolean disableRoomUnallocatedStudent(Long roomId, Timestamp unallocationDate){
         if (entityManager == null) {
             return false;
         }
 
         try{
-            entityTransaction.begin();
             int updateRow = entityManager.createQuery("UPDATE RoomAllocation ra SET ra.unallocationDate = :unallocationDate WHERE ra.roomId.id = :roomId AND ra.unallocationDate IS NULL")
                     .setParameter("unallocationDate", unallocationDate)
                     .setParameter("roomId",roomId)
                     .executeUpdate();
             entityManager.flush();
             entityManager.clear();
-            entityTransaction.commit();
             return updateRow >0;
         }catch (Exception e){
             e.printStackTrace();

@@ -4,22 +4,26 @@ import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import model.RoomAllocation;
 import model.Rooms;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
+@RequestScoped
 public class RoomsService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
+
+    @Inject
     private RoomDAO roomDAO;
+
+    @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    public RoomsService(RoomDAO roomDAO, RoomAllocationDAO roomAllocationDAO){
-        this.roomDAO = roomDAO;
-        this.roomAllocationDAO = roomAllocationDAO;
-    }
-
+    @Transactional
     public StatusMessageModel addNewRoom(int roomNumber , int capacity){
         Rooms addRoom = new Rooms();
         addRoom.setRoomNumber(roomNumber);
@@ -41,6 +45,7 @@ public class RoomsService {
         return statusMessageModel;
     }
 
+    @Transactional
     public StatusMessageModel allocateStudentInRoom(Users selectStudent, Rooms selectRoom){
         RoomAllocation roomAllocation = new RoomAllocation();
         roomAllocation.setStudentId(selectStudent);

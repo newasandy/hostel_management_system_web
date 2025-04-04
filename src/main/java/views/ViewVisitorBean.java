@@ -3,11 +3,9 @@ package views;
 import java.util.Collections;
 import java.util.Comparator;
 
-import daoImp.UserDAOImpl;
-import daoImp.VisitorsDAOImp;
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 import service.VisitorService;
@@ -17,7 +15,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,10 +28,17 @@ import java.util.stream.Collectors;
 @Named("viewVisitorBean")
 @ViewScoped
 public class ViewVisitorBean implements Serializable {
-    private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
-    private UsersDAO usersDAO = new UserDAOImpl();
+
+    @Inject
+    private VisitorsDAO visitorsDAO;
+
+    @Inject
+    private UsersDAO usersDAO;
+
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
-    private VisitorService visitorService = new VisitorService(visitorsDAO);
+
+    @Inject
+    private VisitorService visitorService;
 
     private List<Visitors> orginalVisitorList;
     private List<Visitors> visitorList;
@@ -43,7 +50,6 @@ public class ViewVisitorBean implements Serializable {
     private Users selectStudent;
     private String relation;
 
-    private String userRole = GetCookiesValues.getUserRoleFromCookie();
 
     @PostConstruct
     public void init(){
@@ -68,7 +74,7 @@ public class ViewVisitorBean implements Serializable {
             }
         });
         visitorList = new ArrayList<>(orginalVisitorList);
-        if ("USER".equals(userRole)){
+        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
             Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
             viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(loginUser.getId());
         }
@@ -90,6 +96,7 @@ public class ViewVisitorBean implements Serializable {
         }
     }
 
+    @Transactional
     public void exitVisitor(Visitors exitVisitor){
         Date date = new Date();
         Timestamp exitDate = new Timestamp(date.getTime());

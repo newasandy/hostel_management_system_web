@@ -1,11 +1,11 @@
 package views;
 
-import daoImp.UserDAOImpl;
 import daoInterface.UsersDAO;
 import model.Users;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @ViewScoped
 public class ViewStudentBean implements Serializable {
 
-    private UsersDAO usersDAO = new UserDAOImpl();
+    @Inject
+    private UsersDAO usersDAO;
 
     private List<Users> onlyStudent;
     private List<Users> originalStudentList;

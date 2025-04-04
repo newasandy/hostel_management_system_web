@@ -2,17 +2,15 @@ package daoImp;
 
 import daoInterface.UsersDAO;
 import model.Users;
-import utils.EntityManageUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Named
 @ApplicationScoped
 public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
 
@@ -20,7 +18,8 @@ public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO {
         super(Users.class);
     }
 
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
+    @Inject
+    private EntityManager entityManager;
 
     @Override
     public Users getByEmail(String email){

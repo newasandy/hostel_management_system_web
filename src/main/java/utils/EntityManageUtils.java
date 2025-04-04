@@ -1,31 +1,26 @@
 package utils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Disposes;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 
+@ApplicationScoped
 public class EntityManageUtils {
 
-    private static final EntityManagerFactory entityManagerFactory;
-    private static EntityManager entityManager;
+    @PersistenceContext(unitName = "hostelmanagement")
+    private EntityManager entityManager;
 
-    static {
-        try {
-            entityManagerFactory = Persistence.createEntityManagerFactory("hostelmanagement");
-            entityManager = entityManagerFactory.createEntityManager();
-        } catch (Throwable ex) {
-            System.err.println("Initial EntityManagerFactory creation failed: " + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static EntityManager getEntityManager() {
+    @Produces
+    @ApplicationScoped
+    public EntityManager produceEntityManager(){
         return entityManager;
     }
-    public static void closeEntityManagerFactory() {
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
-            System.out.println("EntityManagerFactory closed.");
+
+    public void closeEntityManagerFactory(@Disposes EntityManager entityManager) {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

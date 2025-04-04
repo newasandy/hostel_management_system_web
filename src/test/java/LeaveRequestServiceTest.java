@@ -1,6 +1,6 @@
 import daoInterface.LeaveRequestDAO;
 import model.LeaveRequest;
-import model.StatusMessageModel;
+import views.stateModel.StatusMessageModel;
 import model.Users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.LeaveRequestService;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;

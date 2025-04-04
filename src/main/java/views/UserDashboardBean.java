@@ -1,9 +1,5 @@
 package views;
 
-import daoImp.LeaveRequestDAOImp;
-import daoImp.RoomAllocationDAOImp;
-import daoImp.UserDAOImpl;
-import daoImp.VisitorsDAOImp;
 import daoInterface.LeaveRequestDAO;
 import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
@@ -16,16 +12,24 @@ import utils.GetCookiesValues;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
 @RequestScoped
 public class UserDashboardBean {
 
-    private UsersDAO usersDAO = new UserDAOImpl();
-    private LeaveRequestDAO leaveRequestDAO = new LeaveRequestDAOImp();
-    private VisitorsDAO visitorsDAO = new VisitorsDAOImp();
-    private RoomAllocationDAO roomAllocationDAO = new RoomAllocationDAOImp();
+    @Inject
+    private UsersDAO usersDAO;
+
+    @Inject
+    private LeaveRequestDAO leaveRequestDAO;
+
+    @Inject
+    private VisitorsDAO visitorsDAO;
+
+    @Inject
+    private RoomAllocationDAO roomAllocationDAO;
 
     private Users loginUser ;
 

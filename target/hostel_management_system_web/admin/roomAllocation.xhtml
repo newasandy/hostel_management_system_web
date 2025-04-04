@@ -23,7 +23,7 @@
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
 
         <div style="display:flex;">
-            <p:dataTable id="userTable" value="#{viewRoomsBean.unallocatedUser}" rowIndexVar="rowIndex" var="users" paginator="true" paginatorPosition="bottom" rows="10">
+            <p:dataTable id="userTable" value="#{viewRoomsBean.roomState.unallocatedUser}" rowIndexVar="rowIndex" var="users" paginator="true" paginatorPosition="bottom" rows="10">
                 <p:column headerText="SN" style="width: 30px;">
                     <h:outputText value="#{rowIndex + 1}" />
                 </p:column>
@@ -32,9 +32,9 @@
                 </p:column>
 
                 <p:column headerText="Select Student" style="width: 50px;" >
-                    <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.selectStudent eq users ? 'pi-check-circle' : 'pi-plus-circle'}"
+                    <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.roomState.selectStudent eq users ? 'pi-check-circle' : 'pi-plus-circle'}"
                                      style="margin-right: 5px; background-color: #{viewRoomsBean.selectStudent eq users ? '#E74C3C' : '#3498DB'}"
-                                     action="#{viewRoomsBean.setSelectStudent(users)}"
+                                     action="#{viewRoomsBean.roomState.prepareSelectStudent(users)}"
                                      partialSubmit="true"
                                      update=":main-form:userTable :main-form:roomTable :confirmationForm"
                     />

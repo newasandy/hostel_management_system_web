@@ -1,4 +1,4 @@
-package model;
+package views.stateModel;
 
 public class StatusMessageModel {
     private boolean status;

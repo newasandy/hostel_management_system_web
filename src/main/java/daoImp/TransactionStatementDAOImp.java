@@ -3,21 +3,24 @@ package daoImp;
 import daoInterface.TransactionStatementDAO;
 import model.MonthlyFee;
 import model.TransactionStatement;
-import utils.EntityManageUtils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+@ApplicationScoped
 public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement> implements TransactionStatementDAO {
     public TransactionStatementDAOImp(){
         super(TransactionStatement.class);
     }
 
-    private EntityManager entityManager = EntityManageUtils.getEntityManager();
-    private EntityTransaction entityTransaction  =entityManager.getTransaction();
+    @Inject
+    private EntityManager entityManager;
+
 
     @Override
     public List<TransactionStatement> getStatementByEachUser(Long userId) {
@@ -49,19 +52,18 @@ public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement>
     }
 
     @Override
+    @Transactional
     public boolean paymentCompletedByAdmin(MonthlyFee selectedFee) {
         if (entityManager == null) {
             return false;
         }
 
         try{
-            entityTransaction.begin();
             int updateRow = entityManager.createQuery("UPDATE TransactionStatement ts SET ts.status = 'FAILED' WHERE ts.feeId = :feeId AND ts.status = 'PENDING'")
                     .setParameter("feeId",selectedFee)
                     .executeUpdate();
             entityManager.flush();
             entityManager.clear();
-            entityTransaction.commit();
             return updateRow >0;
         }catch (Exception e){
             e.printStackTrace();

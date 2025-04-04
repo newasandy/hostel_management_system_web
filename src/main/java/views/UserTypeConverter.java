@@ -3,42 +3,40 @@ package views;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
-
-import daoImp.UserTypeDAOImp;
-import daoInterface.UserTypeDAO;
 import model.UserType;
 
 @FacesConverter("userTypeConverter")
 public class UserTypeConverter implements Converter {
-    private UserTypeDAO userTypeDAO = new UserTypeDAOImp();
+
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
-        try {
-            Long id = Long.valueOf(value);
-            UserType type = userTypeDAO.getById(id);
-            if (type == null) {
-                throw new ConverterException("UserType not found with ID: " + value);
-            }
-            return type;
-        } catch (NumberFormatException e) {
-            throw new ConverterException("Invalid UserType ID format: " + value, e);
-        }
+
+        // Get the userBean from the view
+        UserBean userBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{userBean}", UserBean.class);
+
+        // Find the UserType with matching ID in the userBean's list
+        return userBean.getUserTypes().stream()
+                .filter(type -> type.getId().toString().equals(value))
+                .findFirst()
+                .orElse(null);
     }
+
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         if (value == null) {
             return "";
         }
+
         if (value instanceof UserType) {
             return ((UserType) value).getId().toString();
         } else {
-            throw new ConverterException("Value is not a valid UserType: " + value);
+            throw new IllegalArgumentException("Value is not a valid UserType: " + value);
         }
     }
 }

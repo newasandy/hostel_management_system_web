@@ -5,15 +5,13 @@ import model.Users;
 import utils.PasswordUtils;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class AuthenticationService {
 
+    @Inject
     private UsersDAO usersDAO;
-
-    public AuthenticationService(UsersDAO usersDAO) {
-        this.usersDAO = usersDAO;
-    }
 
     public Users loginService(String email, String password) {
         Users user = usersDAO.getByEmail(email);
