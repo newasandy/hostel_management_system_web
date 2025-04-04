@@ -5,13 +5,14 @@ import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@ApplicationScoped
+@RequestScoped
+@Transactional
 public class VisitorService {
 
     @Inject
@@ -19,7 +20,6 @@ public class VisitorService {
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
-    @Transactional
     public StatusMessageModel addVisitor(String fullName, String reason, Users student, String relation){
         Visitors newVisitor = new Visitors();
         newVisitor.setFullName(fullName);

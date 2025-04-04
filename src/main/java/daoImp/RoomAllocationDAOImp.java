@@ -1,6 +1,6 @@
 package daoImp;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -10,12 +10,13 @@ import daoInterface.RoomAllocationDAO;
 import model.RoomAllocation;
 import model.Rooms;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
-@ApplicationScoped
-public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO {
+@Dependent
+public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO, Serializable {
 
     @Inject
     private EntityManager entityManager;
@@ -58,7 +59,6 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
     }
 
     @Override
-    @Transactional
     public boolean disableRoomUnallocatedStudent(Long roomId, Timestamp unallocationDate){
         if (entityManager == null) {
             return false;

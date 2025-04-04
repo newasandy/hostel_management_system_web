@@ -9,11 +9,13 @@ import model.Users;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
 @RequestScoped
+@Transactional
 public class RoomsService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
@@ -23,7 +25,6 @@ public class RoomsService {
     @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    @Transactional
     public StatusMessageModel addNewRoom(int roomNumber , int capacity){
         Rooms addRoom = new Rooms();
         addRoom.setRoomNumber(roomNumber);
@@ -45,7 +46,6 @@ public class RoomsService {
         return statusMessageModel;
     }
 
-    @Transactional
     public StatusMessageModel allocateStudentInRoom(Users selectStudent, Rooms selectRoom){
         RoomAllocation roomAllocation = new RoomAllocation();
         roomAllocation.setStudentId(selectStudent);
@@ -62,5 +62,63 @@ public class RoomsService {
             statusMessageModel.setMessage("Allocation Unsuccessful");
         }
         return statusMessageModel;
+    }
+
+    public boolean updateRoom(Rooms selectRoom, int updatedCapacity){
+        selectRoom.setCapacity(updatedCapacity);
+        return roomDAO.update(selectRoom);
+    }
+
+    public StatusMessageModel disableRoom(Rooms selectRoom){
+        try{
+            selectRoom.setStatus(false);
+            if (roomDAO.update(selectRoom)){
+                if (unallocatedStudentFromDisableRoom(selectRoom)){
+                    statusMessageModel.setStatus(true);
+                    statusMessageModel.setMessage("Room disable and Unallocated student from room.");
+                }else {
+                    statusMessageModel.setStatus(false);
+                    statusMessageModel.setMessage("Room disable and but Failed to unallocated student.");
+                }
+            }else {
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("Failed to disable room.");
+            }
+        }catch (PersistenceException e){
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("A database error occurred while disabling the room.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
+        }
+        return statusMessageModel;
+    }
+
+    public boolean unallocatedStudentFromDisableRoom(Rooms disableRoom){
+        Date date = new Date();
+        Timestamp unAllocatedDate = new Timestamp(date.getTime());
+        try{
+            if (roomAllocationDAO.getRoomOccupancy(disableRoom) > 0){
+                return roomAllocationDAO.disableRoomUnallocatedStudent(disableRoom.getId(), unAllocatedDate);
+            }
+            return true;
+        }catch (PersistenceException e){
+            return false;
+        }catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean unallocatedStudent(RoomAllocation selectUnallocated){
+        Date date = new Date();
+        Timestamp unAllocatedDate = new Timestamp(date.getTime());
+        selectUnallocated.setUnallocationDate(unAllocatedDate);
+        try{
+            return roomAllocationDAO.update(selectUnallocated);
+        } catch (PersistenceException e) {
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

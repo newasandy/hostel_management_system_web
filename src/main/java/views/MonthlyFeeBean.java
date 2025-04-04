@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Named("monthlyFeeBean")
+@Named
 @ViewScoped
 public class MonthlyFeeBean implements Serializable {
 

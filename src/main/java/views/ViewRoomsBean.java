@@ -17,10 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.*;
 
-@Named("viewRoomsBean")
+@Named
 @ViewScoped
 public class ViewRoomsBean implements Serializable {
 
@@ -36,11 +35,13 @@ public class ViewRoomsBean implements Serializable {
     @Inject
     private RoomsService roomsService;
 
-    private RoomState roomState = new RoomState();
-    private StatusMessageModel statusMessageModel = new StatusMessageModel();
+    private RoomState roomState;
+    private StatusMessageModel statusMessageModel;
 
     @PostConstruct
     public void init(){
+        roomState = new RoomState();
+        statusMessageModel = new StatusMessageModel();
         refreshRoomList();
     }
 
@@ -70,59 +71,44 @@ public class ViewRoomsBean implements Serializable {
             if (statusMessageModel.isStatus()){
                 refreshRoomList();
                 roomState.resetFields();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
         }
     }
 
-    @Transactional
     public void updateRoom(){
         try{
             if (roomState.getUpdatedCapacity() >= roomAllocationDAO.getRoomOccupancy(roomState.getSelectRoom())){
-                roomState.getSelectRoom().setCapacity(roomState.getUpdatedCapacity());
-                if (roomDAO.update(roomState.getSelectRoom())){
+                if (roomsService.updateRoom(roomState.getSelectRoom(),roomState.getUpdatedCapacity())){
                     refreshRoomList();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+                    showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully");
                 }else {
                     refreshRoomList();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Room Not Update"));
+                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Room Not Update");
                 }
             }else {
                 refreshRoomList();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Capacity is less then Room Occupancy"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Capacity is less then Room Occupancy");
             }
         }catch (Exception e){
-            refreshRoomList();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
         }
     }
 
-    @Transactional
     public void disableRoom(Rooms room){
-        room.setStatus(false);
         try{
-            if (roomDAO.update(room)){
-                disableRoomUnallocatedStudent(room);
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+            statusMessageModel = roomsService.disableRoom(room);
+            if (statusMessageModel.isStatus()){
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
         }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
         }
     }
 
@@ -131,15 +117,12 @@ public class ViewRoomsBean implements Serializable {
         room.setStatus(true);
         try{
             if (roomDAO.update(room)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully"));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully");
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
             }
         }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
         }
     }
 
@@ -153,58 +136,32 @@ public class ViewRoomsBean implements Serializable {
             if (statusMessageModel.isStatus()){
                 roomState.resetFields();
                 refreshRoomList();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
             return "/admin/viewRoomAllocation.xhtml?faces-redirect=true";
         }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
             return null;
         }
     }
 
-    @Transactional
     public void unAllocatedStudent(RoomAllocation unallocated){
-        Date date = new Date();
-        Timestamp unAllocatedDate = new Timestamp(date.getTime());
-        unallocated.setUnallocationDate(unAllocatedDate);
         try{
-            if (roomAllocationDAO.update(unallocated)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Unallocated Successfully"));
+            if (roomsService.unallocatedStudent(unallocated)){
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", "Unallocated Successfully");
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated");
             }
         }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated");
         }
     }
 
-    @Transactional
-    public void disableRoomUnallocatedStudent(Rooms disableRoom){
-        Date date = new Date();
-        Timestamp unAllocatedDate = new Timestamp(date.getTime());
-        try{
-            if (roomAllocationDAO.getRoomOccupancy(disableRoom) > 0){
-                if (roomAllocationDAO.disableRoomUnallocatedStudent(disableRoom.getId(), unAllocatedDate)){
-                    refreshRoomList();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Unallocated All Student from Disable Room"));
-                }else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated all Student"));
-                }
-            }
-        }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Unallocated  all Student"));
-        }
+
+    private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public RoomState getRoomState() {

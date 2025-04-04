@@ -5,14 +5,15 @@ import model.LeaveRequest;
 import views.stateModel.StatusMessageModel;
 import model.Users;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
-@ApplicationScoped
+@RequestScoped
+@Transactional
 public class LeaveRequestService {
 
     @Inject
@@ -20,7 +21,6 @@ public class LeaveRequestService {
 
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
-    @Transactional
     public StatusMessageModel applyLeaveRequest(Users student , String reason, LocalDate startFrom, LocalDate endOn){
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setStudentId(student);

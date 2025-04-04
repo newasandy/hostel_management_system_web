@@ -4,16 +4,17 @@ import daoInterface.TransactionStatementDAO;
 import model.MonthlyFee;
 import model.TransactionStatement;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@ApplicationScoped
-public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement> implements TransactionStatementDAO {
+@Dependent
+public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement> implements TransactionStatementDAO, Serializable {
     public TransactionStatementDAOImp(){
         super(TransactionStatement.class);
     }
@@ -52,7 +53,6 @@ public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement>
     }
 
     @Override
-    @Transactional
     public boolean paymentCompletedByAdmin(MonthlyFee selectedFee) {
         if (entityManager == null) {
             return false;

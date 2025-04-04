@@ -1,14 +1,14 @@
 package views;
 
 import javax.annotation.PostConstruct;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Named
-@ViewScoped
+@RequestScoped
 public class IndexImageBean implements Serializable {
     private List<String> images;
 

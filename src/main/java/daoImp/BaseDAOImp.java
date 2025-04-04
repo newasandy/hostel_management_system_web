@@ -6,11 +6,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@ApplicationScoped
-public abstract class BaseDAOImp <T> implements BaseDAO<T>  {
+
+public abstract class BaseDAOImp <T> implements BaseDAO<T>, Serializable {
     private final Class<T> entityClass;
 
     public BaseDAOImp(Class<T> entity){

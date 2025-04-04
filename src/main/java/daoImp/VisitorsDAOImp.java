@@ -1,6 +1,6 @@
 package daoImp;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -8,11 +8,12 @@ import javax.persistence.NoResultException;
 import daoInterface.VisitorsDAO;
 import model.Visitors;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@ApplicationScoped
-public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO {
+@Dependent
+public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO, Serializable {
 
     @Inject
     private EntityManager entityManager;

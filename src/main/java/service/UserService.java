@@ -7,16 +7,16 @@ import model.*;
 import utils.PasswordUtils;
 import views.stateModel.StatusMessageModel;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@ApplicationScoped
+@RequestScoped
+@Transactional
 public class UserService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
-
 
     @Inject
     private UsersDAO usersDAO;
@@ -27,7 +27,6 @@ public class UserService {
     @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    @Transactional
     public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
         Users checkUser = usersDAO.getByEmail(email);
         if (checkUser == null){

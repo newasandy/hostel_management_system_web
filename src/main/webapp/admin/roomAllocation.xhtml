@@ -33,8 +33,8 @@
 
                 <p:column headerText="Select Student" style="width: 50px;" >
                     <p:commandButton id="select-btn" icon="pi #{viewRoomsBean.roomState.selectStudent eq users ? 'pi-check-circle' : 'pi-plus-circle'}"
-                                     style="margin-right: 5px; background-color: #{viewRoomsBean.selectStudent eq users ? '#E74C3C' : '#3498DB'}"
-                                     action="#{viewRoomsBean.roomState.prepareSelectStudent(users)}"
+                                     style="margin-right: 5px; background-color: #{viewRoomsBean.roomState.selectStudent eq users ? '#E74C3C' : '#3498DB'}"
+                                     action="#{viewRoomsBean.prepareSelectStudent(users)}"
                                      partialSubmit="true"
                                      update=":main-form:userTable :main-form:roomTable :confirmationForm"
                     />
@@ -51,17 +51,16 @@
 
         <h:form id="confirmationForm">
             <h:panelGrid columns="1" cellpadding="5">
-                <h:outputLabel value="Are you sure the #{viewRoomsBean.selectStudent.fullName} is allocated to room #{viewRoomsBean.selectRoom.roomNumber}?" />
+                <h:outputLabel value="Are you sure the #{viewRoomsBean.roomState.selectStudent.fullName} is allocated to room #{viewRoomsBean.roomState.selectRoom.roomNumber}?" />
 
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:commandButton value="Allocate"
                                      action="#{viewRoomsBean.allocateStudentInARoom}"
                                      validateClient="true"
                                      update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
-                                     oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); #{viewRoomsBean.resetFields()}; }"
+                                     oncomplete="if (!args.validationFailed) { PF('allocateDialog').hide(); }"
                                      style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                     <p:commandButton value="Cancel"
-                                     action="#{viewRoomsBean.resetFields}"
                                      update=":main-form:message :confirmationForm :main-form:userTable :main-form:roomTable"
                                      onclick="PF('allocateDialog').hide();"
                                      style="margin-top:10px; width:100px; background-color:red;" />

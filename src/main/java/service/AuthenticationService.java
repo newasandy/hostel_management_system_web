@@ -4,26 +4,30 @@ import daoInterface.UsersDAO;
 import model.Users;
 import utils.PasswordUtils;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
-@ApplicationScoped
+@RequestScoped
 public class AuthenticationService {
 
     @Inject
     private UsersDAO usersDAO;
 
     public Users loginService(String email, String password) {
-        Users user = usersDAO.getByEmail(email);
-        if (user != null) {
-            if (PasswordUtils.verifyPassword(password, user.getPasswords())) {
-                return user;
-
-            } else {
+        try{
+            Users user = usersDAO.getByEmail(email);
+            if (user == null) {
                 return null;
             }
-        } else {
-            return null;
+            if (!PasswordUtils.verifyPassword(password, user.getPasswords())) {
+                return null;
+            }
+            return user;
+        }catch (PersistenceException e){
+            throw new RuntimeException("Database error occurred while logging in.",e);
+        } catch (Exception e) {
+            throw new RuntimeException("An unexpected error occurred during login.",e);
         }
     }
 }

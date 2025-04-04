@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Named("leaveRequestBean")
+@Named
 @ViewScoped
 public class LeaveRequestBean implements Serializable {
 

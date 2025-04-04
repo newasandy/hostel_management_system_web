@@ -1,7 +1,6 @@
 package views;
-import daoImp.AddressDAOImp;
+
 import daoImp.UserTypeDAOImp;
-import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
 import model.*;
 import service.AuthenticationService;
@@ -21,7 +20,7 @@ import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-@Named("userBean")
+@Named
 @SessionScoped
 public class UserBean implements Serializable{
 
@@ -32,13 +31,7 @@ public class UserBean implements Serializable{
     private UsersDAO usersDAO;
 
     @Inject
-    private AddressDAOImp addressDAOImp;
-
-    @Inject
     private UserTypeDAOImp userTypeDAOImp;
-
-    @Inject
-    private RoomAllocationDAO roomAllocationDAO;
 
     @Inject
     private UserService userService;
@@ -83,7 +76,6 @@ public class UserBean implements Serializable{
     }
 
     public void registrationUser(){
-        System.out.println("==============================="+name+" / "+email +" / "+password+" / "+selectUserType.getUserTypes()+ " / "+ " ++++++++++++++++++++++++++++");
         statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
         resetFields();
         try {

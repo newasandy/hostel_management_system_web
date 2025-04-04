@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Named("viewStudentBean")
+@Named
 @ViewScoped
 public class ViewStudentBean implements Serializable {
 

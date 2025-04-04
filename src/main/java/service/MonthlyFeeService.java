@@ -7,7 +7,7 @@ import views.stateModel.StatusMessageModel;
 import model.TransactionStatement;
 import model.Users;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -16,7 +16,8 @@ import java.time.Year;
 import java.util.Date;
 
 
-@ApplicationScoped
+@RequestScoped
+@Transactional
 public class MonthlyFeeService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
@@ -26,8 +27,6 @@ public class MonthlyFeeService {
     @Inject
     private TransactionStatementDAO transactionStatementDAOImp;
 
-
-    @Transactional
     public StatusMessageModel assignStudentMonthlyFee(Users student, double assignFeeAmount){
         String currentMonthUpper = LocalDate.now()
                 .getMonth()
@@ -60,7 +59,6 @@ public class MonthlyFeeService {
         return statusMessageModel;
     }
 
-    @Transactional
     public StatusMessageModel payFee(MonthlyFee selectFee, double payAmount, String payStatus){
         double totalPayAmount = selectFee.getPaid() + payAmount;
         double totalDueAmount = selectFee.getDue() - payAmount;
@@ -97,7 +95,6 @@ public class MonthlyFeeService {
         return statusMessageModel;
     }
 
-    @Transactional
     public boolean addPayTransactionStatement(Users selectUser, MonthlyFee selectAssignFee, double payAmount, double newDue , String payStatus){
         Date date = new Date();
         Timestamp payDate = new Timestamp(date.getTime());
@@ -115,7 +112,6 @@ public class MonthlyFeeService {
         }
     }
 
-    @Transactional
     public StatusMessageModel responsePaymentRequest(TransactionStatement selectTransaction){
         selectTransaction.setStatus("COMPLETED");
         if (transactionStatementDAOImp.update(selectTransaction)){

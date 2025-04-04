@@ -16,11 +16,10 @@ public class UserTypeConverter implements Converter {
             return null;
         }
 
-        // Get the userBean from the view
         UserBean userBean = context.getApplication()
                 .evaluateExpressionGet(context, "#{userBean}", UserBean.class);
 
-        // Find the UserType with matching ID in the userBean's list
+
         return userBean.getUserTypes().stream()
                 .filter(type -> type.getId().toString().equals(value))
                 .findFirst()
