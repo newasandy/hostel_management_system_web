@@ -7,6 +7,7 @@ import model.Users;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -39,5 +40,16 @@ public class LeaveRequestService {
             statusMessageModel.setMessage("!! Leave Application is not Submit");
         }
         return statusMessageModel;
+    }
+
+    public boolean updateLeaveRequest(LeaveRequest selectedLeaveRequest){
+        try{
+            leaveRequestDAO.update(selectedLeaveRequest);
+            return true;
+        }catch (PersistenceException e){
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -75,4 +75,10 @@ public class LeaveRequestState {
     public void setLoginUser(Users loginUser) {
         this.loginUser = loginUser;
     }
+
+    public void resetFields(){
+        this.reason ="";
+        this.startDate = null;
+        this.endDate = null;
+    }
 }

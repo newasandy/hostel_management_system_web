@@ -3,8 +3,8 @@ package views;
 import daoInterface.LeaveRequestDAO;
 import daoInterface.UsersDAO;
 import model.LeaveRequest;
+import views.stateModel.LeaveRequestState;
 import views.stateModel.StatusMessageModel;
-import model.Users;
 import service.LeaveRequestService;
 import utils.GetCookiesValues;
 
@@ -14,7 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -34,22 +33,18 @@ public class LeaveRequestBean implements Serializable {
     @Inject
     private LeaveRequestService leaveRequestService;
 
-    private StatusMessageModel statusMessageModel = new StatusMessageModel();
+    private StatusMessageModel statusMessageModel;
+    private LeaveRequestState leaveRequestState;
 
-    private List<LeaveRequest> leaveRequestList;
-    private LeaveRequest selectLeaveRequest;
-
-    private String reason;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Users loginUser;
 
 
     @PostConstruct
     public void init(){
+        statusMessageModel = new StatusMessageModel();
+        leaveRequestState = new LeaveRequestState();
         String email = GetCookiesValues.getEmailFromCookie();
         if (email != null) {
-            loginUser = usersDAO.getByEmail(email);
+            leaveRequestState.setLoginUser(usersDAO.getByEmail(email));
         } else {
             System.out.println("Error: No email found in cookie.");
         }
@@ -58,27 +53,28 @@ public class LeaveRequestBean implements Serializable {
 
     public void refreshLeaveRequestList(){
         if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
-            leaveRequestList = leaveRequestDAO.getUserLeaveRequestByUserId(loginUser.getId());
+            leaveRequestState.setLeaveRequestList(leaveRequestDAO.getUserLeaveRequestByUserId(leaveRequestState.getLoginUser().getId()));
         }
         if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
-            leaveRequestList = leaveRequestDAO.getAll();
-            Collections.sort(leaveRequestList, new Comparator<LeaveRequest>() {
+            List<LeaveRequest> allLeaveRequest = leaveRequestDAO.getAll();
+            Collections.sort(allLeaveRequest, new Comparator<LeaveRequest>() {
                 @Override
                 public int compare(LeaveRequest v1, LeaveRequest v2) {
                     return v2.getApplyDate().compareTo(v1.getApplyDate());
                 }
             });
+            leaveRequestState.setLeaveRequestList(allLeaveRequest);
         }
     }
 
     public void applyLeaveRequest(){
-        LeaveRequest checkLeaveRequest = leaveRequestDAO.checkLeaveRequest(loginUser.getId());
+        LeaveRequest checkLeaveRequest = leaveRequestDAO.checkLeaveRequest(leaveRequestState.getLoginUser().getId());
         try{
             if (checkLeaveRequest == null){
-                statusMessageModel = leaveRequestService.applyLeaveRequest(loginUser,reason,startDate,endDate);
+                statusMessageModel = leaveRequestService.applyLeaveRequest(leaveRequestState.getLoginUser(),leaveRequestState.getReason(),leaveRequestState.getStartDate(),leaveRequestState.getEndDate());
                 if (statusMessageModel.isStatus()){
                     refreshLeaveRequestList();
-                    resetFields();
+                    leaveRequestState.resetFields();
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
                 }else {
@@ -95,12 +91,11 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
-    @Transactional
     public void updateByAdmin(LeaveRequest.Status status){
-        selectLeaveRequest.setStatus(status);
-        if (leaveRequestDAO.update(selectLeaveRequest)){
+        leaveRequestState.getSelectLeaveRequest().setStatus(status);
+        if (leaveRequestService.updateLeaveRequest(leaveRequestState.getSelectLeaveRequest())){
             refreshLeaveRequestList();
-            resetFields();
+            leaveRequestState.resetFields();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", status+" Leave Request"));
         }else {
@@ -109,11 +104,10 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
-    @Transactional
     public void updatePendingLeaveRequestByUser(){
-        if (leaveRequestDAO.update(selectLeaveRequest)){
+        if (leaveRequestService.updateLeaveRequest(leaveRequestState.getSelectLeaveRequest())){
             refreshLeaveRequestList();
-            resetFields();
+            leaveRequestState.resetFields();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Leave Request"));
         }else {
@@ -122,40 +116,8 @@ public class LeaveRequestBean implements Serializable {
         }
     }
 
-    public List<LeaveRequest> getLeaveRequestList() {
-        return leaveRequestList;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public LeaveRequest getSelectLeaveRequest() {
-        return selectLeaveRequest;
-    }
-
-    public void setSelectLeaveRequest(LeaveRequest selectLeaveRequest) {
-        this.selectLeaveRequest = selectLeaveRequest;
+    public LeaveRequestState getLeaveRequestState() {
+        return leaveRequestState;
     }
 
     public LocalDate getMinDate() {
@@ -166,7 +128,6 @@ public class LeaveRequestBean implements Serializable {
         if (leave == null || leave.getStatus() == null) {
             return "";
         }
-
         switch (leave.getStatus().toString()) {
             case "PENDING":
                 return "pending-row";
@@ -177,11 +138,5 @@ public class LeaveRequestBean implements Serializable {
             default:
                 return "";
         }
-    }
-
-    public void resetFields(){
-        this.reason ="";
-        this.startDate = null;
-        this.endDate = null;
     }
 }

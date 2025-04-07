@@ -20,7 +20,6 @@
             <h3>Leave Request</h3>
             <p:commandButton value=" Add" icon="pi pi-plus"
                              style="right: 5px; margin-left: 15px"
-                             action="#{viewRoomsBean.prepareAddRoom}"
                              partialSubmit="true"
                              update=":main-form:message :main-form:leaveTable"
                              oncomplete="PF('applyLeaveRequest').show()" />
@@ -33,19 +32,19 @@
         <h:form id="leaveForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="reason" value="Reason:" />
-                <p:inputText id="reason" value="#{leaveRequestBean.reason}" required="true" />
+                <p:inputText id="reason" value="#{leaveRequestBean.leaveRequestState.reason}" required="true" />
 
 
                 <h:outputLabel for="startDate" value="Start Date:" />
                 <p:datePicker id="startDate"
-                              value="#{leaveRequestBean.startDate}"
+                              value="#{leaveRequestBean.leaveRequestState.startDate}"
                               pattern="yyyy-MM-dd"
                               mindate="#{leaveRequestBean.minDate}"
                               required="true" />
 
                 <h:outputLabel for="endDate" value="End Date:" />
                 <p:datePicker id="endDate"
-                              value="#{leaveRequestBean.endDate}"
+                              value="#{leaveRequestBean.leaveRequestState.endDate}"
                               pattern="yyyy-MM-dd"
                               mindate="#{leaveRequestBean.minDate}"
                               required="true" />
@@ -54,10 +53,10 @@
                                  action="#{leaveRequestBean.applyLeaveRequest()}"
                                  validateClient="true"
                                  update=":main-form:message :leaveForm :main-form:leaveTable"
-                                 oncomplete="if (!args.validationFailed) { PF('applyLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
+                                 oncomplete="if (!args.validationFailed) { PF('applyLeaveRequest').hide(); }"
                                  style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel"
-                                 actionListener="#{leaveRequestBean.resetFields()}"
+                                 action="#{leaveRequestBean.leaveRequestState.resetFields()}"
                                  onclick="PF('applyLeaveRequest').hide();"
                                  style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF" />
             </h:panelGrid>
@@ -65,22 +64,22 @@
     </p:dialog>
 
 
-    <p:dialog header="Apply Leave Request" widgetVar="updateLeaveRequest" modal="true" resizable="false">
+    <p:dialog header="Update Leave Request" widgetVar="updateLeaveRequest" modal="true" resizable="false">
 
         <h:form id="updateForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="reason" value="Reason:" />
-                <p:inputText id="reason" value="#{leaveRequestBean.selectLeaveRequest.reason}" required="true" />
+                <p:inputText id="reason" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.reason}" required="true" />
 
 
                 <h:outputLabel for="startDate" value="Start From:" />
-                <p:datePicker id="startDate" value="#{leaveRequestBean.selectLeaveRequest.startFrom}"
+                <p:datePicker id="startDate" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.startFrom}"
                               pattern="yyyy-MM-dd"
                               mindate="#{leaveRequestBean.minDate}"
                               required="true" />
 
                 <h:outputLabel for="endDate" value="End On:" />
-                <p:datePicker id="endDate" value="#{leaveRequestBean.selectLeaveRequest.endOn}"
+                <p:datePicker id="endDate" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.endOn}"
                               pattern="yyyy-MM-dd"
                               mindate="#{leaveRequestBean.minDate}"
                               required="true" />
@@ -89,7 +88,7 @@
                                  action="#{leaveRequestBean.updatePendingLeaveRequestByUser}"
                                  validateClient="true"
                                  update=":main-form:message :updateForm :main-form:leaveTable"
-                                 oncomplete="if (!args.validationFailed) { PF('updateLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
+                                 oncomplete="if (!args.validationFailed) { PF('updateLeaveRequest').hide(); }"
                                  style="margin-top:10px; width:100px;"/>
                 <p:commandButton value="Cancel"
                                  update=":main-form:message :updateForm :main-form:leaveTable"

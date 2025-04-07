@@ -28,20 +28,19 @@
         <h:form id="updateForm">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="reason" value="Reason:" />
-                <p:inputText id="reason" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.reason}" required="true" />
+                <p:inputText id="reason" disabled="true" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.reason}" required="true" />
 
 
                 <h:outputLabel for="startDate" value="Start From:" />
-                <p:datePicker id="startDate" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="startDate" disabled="true" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.startFrom}" pattern="yyyy-MM-dd" required="true" />
 
                 <h:outputLabel for="endDate" value="End On:" />
-                <p:datePicker id="endDate" disabled="true" value="#{leaveRequestBean.selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
+                <p:datePicker id="endDate" disabled="true" value="#{leaveRequestBean.leaveRequestState.selectLeaveRequest.endOn}" pattern="yyyy-MM-dd" required="true" />
 
                 <p:commandButton value="Accept"
                                  action="#{leaveRequestBean.updateByAdmin('ACCEPTED')}"
-                                 validateClient="true"
                                  update=":main-form:message :updateForm :main-form:leaveTable"
-                                 oncomplete="if (!args.validationFailed) { PF('updateLeaveRequest').hide(); #{leaveRequestBean.resetFields()}; }"
+                                 oncomplete="PF('updateLeaveRequest').hide();"
                                  style="margin-top:10px; width:100px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Reject"
                                  action="#{leaveRequestBean.updateByAdmin('REJECTED')}"

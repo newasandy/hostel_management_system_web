@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestList}"
+    <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestState.leaveRequestList}"
                  rowIndexVar="rowIndex"
                  var="leave"
                  rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
@@ -34,7 +34,7 @@
         <p:column headerText="Actions">
             <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              rendered="#{leave.status eq 'PENDING' and userBean.userState.userRole.equals('ADMIN')}"
-                             action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
+                             action="#{leaveRequestBean.leaveRequestState.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"
                              update=":updateForm"
                              oncomplete="PF('updateLeaveRequest').show()"
@@ -42,7 +42,7 @@
 
             <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              rendered="#{leave.status eq 'PENDING' and userBean.userState.userRole.equals('USER')}"
-                             action="#{leaveRequestBean.setSelectLeaveRequest(leave)}"
+                             action="#{leaveRequestBean.leaveRequestState.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"
                              update=":updateForm"
                              oncomplete="PF('updateLeaveRequest').show()"
