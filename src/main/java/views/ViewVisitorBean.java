@@ -10,6 +10,7 @@ import model.Users;
 import model.Visitors;
 import service.VisitorService;
 import utils.GetCookiesValues;
+import views.stateModel.VisitorState;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -20,7 +21,6 @@ import javax.inject.Named;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,59 +35,54 @@ public class ViewVisitorBean implements Serializable {
     @Inject
     private UsersDAO usersDAO;
 
-    private StatusMessageModel statusMessageModel = new StatusMessageModel();
-
     @Inject
     private VisitorService visitorService;
 
-    private List<Visitors> orginalVisitorList;
-    private List<Visitors> visitorList;
-    private String searchItem;
-    private List<Visitors> viewVisitorByEachStudent;
-
-    private String fullName;
-    private String reason;
-    private Users selectStudent;
-    private String relation;
-
+    private StatusMessageModel statusMessageModel;
+    private VisitorState visitorState;
 
     @PostConstruct
     public void init(){
+        statusMessageModel = new StatusMessageModel();
+        visitorState = new VisitorState();
         refreshVisitorList();
     }
 
     public void searchList(){
-        if (searchItem == null || searchItem.isEmpty()){
+        if (visitorState.getSearchItem() == null || visitorState.getSearchItem().isEmpty()){
             refreshVisitorList();
         }else {
-            String lowerSearch = searchItem.toLowerCase();
-            visitorList = orginalVisitorList.stream().filter(visitors -> visitors.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList());
+            List<Visitors> orginalVisitorList = visitorsDAO.getAll();
+            String lowerSearch = visitorState.getSearchItem().toLowerCase();
+            visitorState.setVisitorList(orginalVisitorList.stream().filter(visitors -> visitors.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList()));
         }
     }
 
     public void refreshVisitorList(){
-        orginalVisitorList = visitorsDAO.getAll();
-        Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
-            @Override
-            public int compare(Visitors v1, Visitors v2) {
-                return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
-            }
-        });
-        visitorList = new ArrayList<>(orginalVisitorList);
-        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
-            Users loginUser = usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-            viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(loginUser.getId());
+        visitorState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
+        if ("ADMIN".equals(visitorState.getLoginUser().getRoles().getUserTypes())){
+            List<Visitors> orginalVisitorList = visitorsDAO.getAll();
+            Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
+                @Override
+                public int compare(Visitors v1, Visitors v2) {
+                    return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
+                }
+            });
+            visitorState.setVisitorList(orginalVisitorList);
         }
-        if (selectStudent != null){
-            viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(selectStudent.getId());
+        if ("USER".equals(visitorState.getLoginUser().getRoles().getUserTypes())){
+            visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(visitorState.getLoginUser().getId()));
+        }
+        if (visitorState.getSelectStudent() != null){
+            visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(visitorState.getSelectStudent().getId()));
         }
     }
 
     public void addVisitor(){
-        statusMessageModel = visitorService.addVisitor(fullName,reason,selectStudent,relation);
+        statusMessageModel = visitorService.addVisitor(visitorState.getFullName(),visitorState.getReason(), visitorState.getSelectStudent(), visitorState.getRelation());
         if (statusMessageModel.isStatus()){
             refreshVisitorList();
-            resetFields();
+            visitorState.resetFields();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
         }else {
@@ -110,72 +105,8 @@ public class ViewVisitorBean implements Serializable {
         }
     }
 
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
-    }
-
-    public Users getSelectStudent() {
-        return selectStudent;
-    }
-
-    public void setSelectStudent(Users selectStudent) {
-        this.selectStudent = selectStudent;
-    }
-
-    public List<Visitors> getViewVisitorByEachStudent() {
-        return viewVisitorByEachStudent;
-    }
-
-    public void setViewVisitorByEachStudent(List<Visitors> viewVisitorByEachStudent) {
-        this.viewVisitorByEachStudent = viewVisitorByEachStudent;
-    }
-
-    public List<Visitors> getVisitorList() {
-        return visitorList;
-    }
-
-    public String getSearchItem() {
-        return searchItem;
-    }
-
-    public void setSearchItem(String searchItem) {
-        this.searchItem = searchItem;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-
     public void viewStudentVisitor(Users student){
-        selectStudent = student;
-        viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(student.getId());
-    }
-
-    public void refreshVisitorByEachStudent(){
-        viewVisitorByEachStudent = visitorsDAO.getUserVisitedBy(selectStudent.getId());
-    }
-
-    public void resetFields(){
-        this.fullName = "";
-        this.reason = "";
-        this.selectStudent = null;
-        this.relation = "";
+        visitorState.setSelectStudent(student);
+        visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(student.getId()));
     }
 }

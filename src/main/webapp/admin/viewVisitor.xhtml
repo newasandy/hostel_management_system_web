@@ -17,7 +17,7 @@
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
 
         <div class="top-bar">
-            <p:inputText id="searchItem" value="#{viewVisitorBean.searchItem}" placeholder="Search By Name" style="width:250px;">
+            <p:inputText id="searchItem" value="#{viewVisitorBean.visitorState.searchItem}" placeholder="Search By Name" style="width:250px;">
                 <p:ajax event="keyup" listener="#{viewVisitorBean.searchList}" update="visitorTable" />
             </p:inputText>
 
@@ -30,7 +30,7 @@
                              oncomplete="PF('addVisitor').show()" />
         </div>
 
-        <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorList}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.visitorList}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="10">
 
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
@@ -67,17 +67,17 @@
         <h:form id="visitor-form">
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="fullName" value="Full Name:" />
-                <p:inputText id="fullName" value="#{viewVisitorBean.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                <p:inputText id="fullName" value="#{viewVisitorBean.visitorState.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
                 <h:outputLabel for="Reason" value="Reason:"/>
-                <p:inputText id="Reason" value="#{viewVisitorBean.reason}" required="true" requiredMessage="Reason is requires." style="width:100%"/>
+                <p:inputText id="Reason" value="#{viewVisitorBean.visitorState.reason}" required="true" requiredMessage="Reason is requires." style="width:100%"/>
                 <p:commandButton value="Add"
                                  action="#{viewVisitorBean.addVisitor}"
                                  validateClient="true"
                                  update=":main-form:message :visitor-form :main-form:visitorTable"
-                                 oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); #{viewVisitorBean.resetFields()}; }"
+                                 oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); }"
                                  style="margin-top:10px; width:50px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
-                                 actionListener="#{userBean.resetFields}"
+                                 action="#{userBean.visitorState.resetFields}"
                                  onclick="PF('addVisitor').hide();"
                                  style="margin-top:10px; width:100px; color:#FFFFFF; background-color:red; " />
             </h:panelGrid>

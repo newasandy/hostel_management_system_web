@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="visitorTable" value="#{viewVisitorBean.viewVisitorByEachStudent}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="5">
+    <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.viewVisitorByEachStudent}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="5">
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />
         </p:column>
