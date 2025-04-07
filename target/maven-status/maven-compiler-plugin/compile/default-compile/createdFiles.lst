@@ -37,6 +37,7 @@ model/UserType.class
 utils/GetCookiesValues.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
+views/stateModel/MonthlyFeeState.class
 views/ViewStudentBean.class
 views/MonthlyFeeBean$1.class
 views/MonthlyFeeBean.class

@@ -43,6 +43,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/Address.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/LeaveRequest.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/Users.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/MonthlyFeeState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/RoomAllocationDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/UserService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/RoomDAO.java

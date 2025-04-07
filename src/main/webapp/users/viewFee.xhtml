@@ -18,7 +18,7 @@
         <p:growl id="message" showDetail="true" life="3000" sticky="false" />
         <div class="top-bar">
             <h3 style="margin-right: 150px;"><h:outputText value="Fee Details" /></h3>
-            <h4><h:outputLabel style="margin-right:20px;" value="Total Due Amount: #{monthlyFeeBean.selectStudentDueAmount}" /></h4>
+            <h4><h:outputLabel style="margin-right:20px;" value="Total Due Amount: #{monthlyFeeBean.monthlyFeeState.selectStudentDueAmount}" /></h4>
         </div>
 
         <ui:include src="/includePage/monthlyFeeTable.xhtml"/>
@@ -30,23 +30,23 @@
 
                 <h:outputLabel for="fullName" value="First Name:" />
                 <h:panelGroup styleClass="input-group">
-                    <p:inputText id="fullName" disabled="true" value="#{monthlyFeeBean.selectForPayFee.studentId.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                    <p:inputText id="fullName" disabled="true" value="#{monthlyFeeBean.monthlyFeeState.selectForPayFee.studentId.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
 
                 </h:panelGroup>
 
                 <h:outputLabel for="email" value="Email:"/>
                 <h:panelGroup styleClass="input-group">
-                    <p:inputText id="email" disabled="true" value="#{monthlyFeeBean.selectForPayFee.studentId.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                    <p:inputText id="email" disabled="true" value="#{monthlyFeeBean.monthlyFeeState.selectForPayFee.studentId.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
 
                 </h:panelGroup>
                 <h:outputLabel for="dueAmount" value="Due Amount:"/>
                 <h:panelGroup styleClass="input-group">
-                    <p:inputText id="dueAmount" disabled="true" value="#{monthlyFeeBean.selectForPayFee.due}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                    <p:inputText id="dueAmount" disabled="true" value="#{monthlyFeeBean.monthlyFeeState.selectForPayFee.due}" required="true" requiredMessage="Email is requires." style="width:100%"/>
                 </h:panelGroup>
 
                 <h:outputLabel for="payAmount" value="Pay Amount:"/>
                 <h:panelGroup styleClass="input-group">
-                    <p:inputNumber id="payAmount" minValue="0" value="#{monthlyFeeBean.paidAmount}" required="true" requiredMessage="Amount is required." style="width:100%"/>
+                    <p:inputNumber id="payAmount" minValue="0" value="#{monthlyFeeBean.monthlyFeeState.paidAmount}" required="true" requiredMessage="Amount is required." style="width:100%"/>
                     <h:message for="payAmount" styleClass="error-message"/>
                 </h:panelGroup>
 
@@ -66,7 +66,7 @@
             <h:panelGrid columns="1" cellpadding="5">
 
                 <h:panelGroup styleClass="input-group">
-                    <p:password id="password" placeholder="Enter Password" value="#{monthlyFeeBean.verifyPassword}" required="true" requiredMessage="Password is required." style="width:100%" />
+                    <p:password id="password" placeholder="Enter Password" value="#{monthlyFeeBean.monthlyFeeState.verifyPassword}" required="true" requiredMessage="Password is required." style="width:100%" />
                 </h:panelGroup>
 
                 <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">

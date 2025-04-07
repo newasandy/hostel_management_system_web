@@ -41,7 +41,7 @@
 
         <p:column headerText="Actions">
             <p:commandButton id="update-btn" icon="pi pi-pencil"
-                             rendered="#{student.status and not monthlyFeeBean.feeContext}"
+                             rendered="#{student.status and not monthlyFeeBean.monthlyFeeState.feeContext}"
                              action="#{userBean.prepareUpdateStudent(student)}"
                              style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
                              partialSubmit="true"
@@ -52,33 +52,33 @@
 
 
             <p:commandButton id="deactivate-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
-                             rendered="#{student.status and not monthlyFeeBean.feeContext}"
+                             rendered="#{student.status and not monthlyFeeBean.monthlyFeeState.feeContext}"
                              action="#{userBean.deactivateStudent(student)}"
                              update=":main-form:message :main-form:userTable" />
             <p:tooltip for="deactivate-btn" value="Deactivate" position="top"/>
 
             <p:commandButton id="activate-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#2ECC71;"
-                             rendered="#{not student.status and not monthlyFeeBean.feeContext}"
+                             rendered="#{not student.status and not monthlyFeeBean.monthlyFeeState.feeContext}"
                              action="#{userBean.activateStudent(student)}"
                              update=":main-form:message :main-form:userTable" />
             <p:tooltip for="activate-btn" value="Activate" position="top"/>
 
             <p:commandButton id="view-btn" icon="pi pi-eye" style="margin-right: 5px; color:#000000; background-color:#00FFFF;"
-                             rendered="#{not monthlyFeeBean.feeContext}"
+                             rendered="#{not monthlyFeeBean.monthlyFeeState.feeContext}"
                              action="#{viewVisitorBean.viewStudentVisitor(student)}"
                              oncomplete="PF('visitorDialog').show()"
                              update=":visitorDataTable:visitorTable :visitorDataTable" />
             <p:tooltip for="view-btn" value="View Visitor" position="top"/>
 
             <p:commandButton id="assign-fee-btn" icon="pi pi-dollar"
-                             rendered="#{student.status and monthlyFeeBean.feeContext}"
-                             action="#{monthlyFeeBean.setSelectStudent(student)}"
+                             rendered="#{student.status and monthlyFeeBean.monthlyFeeState.feeContext}"
+                             action="#{monthlyFeeBean.monthlyFeeState.setSelectStudent(student)}"
                              style="margin-right: 5px; color:#FFFFFF; background-color:#FFC107;"
                              update=":feeAssignForm"
                              oncomplete="PF('assignFeeDialog').show()" />
 
             <p:commandButton id="viewStatement-btn" icon="pi pi-file"
-                             rendered="#{student.status and monthlyFeeBean.feeContext}"
+                             rendered="#{student.status and monthlyFeeBean.monthlyFeeState.feeContext}"
                              action="#{monthlyFeeBean.viewStatementForStudent(student)}"
                              style="margin-right: 5px; color:#FFFFFF; background-color:#2980B9;"
                              update=":statementDataTable:statementTable :statementDataTable "

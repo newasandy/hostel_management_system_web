@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeList}"
+    <p:dataTable id="monthlyFeeTable" value="#{monthlyFeeBean.monthlyFeeState.monthlyFeeList}"
                  rowIndexVar="rowIndex"
                  var="monthlyFee"
                  paginator="true"
@@ -41,7 +41,7 @@
             <p:commandButton id="pay-btn" icon="pi pi-money-bill"
                              style="margin-right: 5px; color:#FFFFFF; background-color:#009688;"
                              rendered="#{monthlyFee.due > 0 }"
-                             action="#{monthlyFeeBean.setSelectForPayFee(monthlyFee)}"
+                             action="#{monthlyFeeBean.monthlyFeeState.setSelectForPayFee(monthlyFee)}"
                              oncomplete="PF('payFeeDialog').show()"
                              update=":main-form:message :payFeeForm :main-form:monthlyFeeTable" />
             <p:tooltip for="pay-btn" value="Fee Pay" position="top"/>

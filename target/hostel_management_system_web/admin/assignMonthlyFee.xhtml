@@ -16,7 +16,7 @@
     <f:view>
 
         <f:metadata>
-            <f:viewAction action="#{monthlyFeeBean.setFeeContext(true)}" />
+            <f:viewAction action="#{monthlyFeeBean.monthlyFeeState.setFeeContext(true)}" />
         </f:metadata>
 
         <h:form id="main-form">
@@ -41,19 +41,19 @@
 
                     <h:outputLabel for="fullName" value="First Name:" />
                     <h:panelGroup styleClass="input-group">
-                        <p:inputText id="fullName" disabled="true" value="#{monthlyFeeBean.selectStudent.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                        <p:inputText id="fullName" disabled="true" value="#{monthlyFeeBean.monthlyFeeState.selectStudent.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
                         <h:message for="fullName" styleClass="error-message"/>
                     </h:panelGroup>
 
                     <h:outputLabel for="email" value="Email:"/>
                     <h:panelGroup styleClass="input-group">
-                        <p:inputText id="email" disabled="true" value="#{monthlyFeeBean.selectStudent.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
+                        <p:inputText id="email" disabled="true" value="#{monthlyFeeBean.monthlyFeeState.selectStudent.email}" required="true" requiredMessage="Email is requires." style="width:100%"/>
                         <h:message for="email" styleClass="error-message"/>
                     </h:panelGroup>
 
                     <h:outputLabel for="assignAmount" value="Assign Fee Amount:"/>
                     <h:panelGroup styleClass="input-group">
-                        <p:inputNumber id="assignAmount" minValue="1" value="#{monthlyFeeBean.assignFeeAmount}" required="true" requiredMessage="Amount is required." style="width:100%"/>
+                        <p:inputNumber id="assignAmount" minValue="1" value="#{monthlyFeeBean.monthlyFeeState.assignFeeAmount}" required="true" requiredMessage="Amount is required." style="width:100%"/>
                         <h:message for="assignAmount" styleClass="error-message"/>
                     </h:panelGroup>
 
@@ -78,8 +78,8 @@
               width="95%">
         <h:form id="statementDataTable">
             <div style="width:95%; display:flex; align-items:center; justify-content:space-between; font-size:20px; font-weight:bold; text-align:center;">
-                <h:outputLabel value="#{monthlyFeeBean.selectStudent.fullName}" />
-                <h:outputLabel value="Total Due Amount: #{monthlyFeeBean.selectStudentDueAmount}" />
+                <h:outputLabel value="#{monthlyFeeBean.monthlyFeeState.selectStudent.fullName}" />
+                <h:outputLabel value="Total Due Amount: #{monthlyFeeBean.monthlyFeeState.selectStudentDueAmount}" />
             </div>
             <p:toolbar>
                 <p:toolbarGroup>
