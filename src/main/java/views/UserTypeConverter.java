@@ -20,7 +20,7 @@ public class UserTypeConverter implements Converter {
                 .evaluateExpressionGet(context, "#{userBean}", UserBean.class);
 
 
-        return userBean.getUserTypes().stream()
+        return userBean.getUserState().getUserTypes().stream()
                 .filter(type -> type.getId().toString().equals(value))
                 .findFirst()
                 .orElse(null);

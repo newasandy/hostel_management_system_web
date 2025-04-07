@@ -11,9 +11,9 @@
                              update=":main-form:userTable :main-form:roomTable :confirmationForm"
                              oncomplete="PF('allocateDialog').show()"
             />
-            <p:commandButton id="newUserSelectRoom-btn" icon="pi pi-check-circle" style="margin-right: 5px; background-color: #{userBean.selectRoom eq room ? '#E74C3C' : '#3498DB'}"
-                             rendered="#{userBean.selectRoomForNewUser}"
-                             action="#{userBean.setSelectRoom(room)}"
+            <p:commandButton id="newUserSelectRoom-btn" icon="pi pi-check-circle" style="margin-right: 5px; background-color: #{userBean.userState.selectRoom eq room ? '#E74C3C' : '#3498DB'}"
+                             rendered="#{userBean.userState.selectRoomForNewUser}"
+                             action="#{userBean.userState.setSelectRoom(room)}"
                              update=":selectRoom:roomTable :selectRoom"
                              partialSubmit="true"
             />

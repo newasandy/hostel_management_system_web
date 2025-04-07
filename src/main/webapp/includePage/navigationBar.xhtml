@@ -12,52 +12,50 @@
     <div class="menu-bar">
         <h:form>
             <p:menubar orientation="horizontal" autoDisplay="false">
-                <p:menuitem value="Home" outcome="home" rendered="#{userBean.isGuest()}" url="index.xhtml"/>
+                <p:menuitem value="Home" outcome="home" rendered="#{userBean.userState.isGuest()}" url="index.xhtml"/>
 
-                <p:menuitem value="Dashboard" url="userDashboard.xhtml"  rendered="#{userBean.isUser()}"/>
-                <p:submenu label="Service" rendered="#{userBean.isUser()}">
+                <p:menuitem value="Dashboard" url="userDashboard.xhtml"  rendered="#{userBean.userState.isUser()}"/>
+                <p:submenu label="Service" rendered="#{userBean.userState.isUser()}">
                     <p:menuitem value="Leave Application" url="viewLeaveRequest.xhtml" />
                     <p:menuitem value="View Allocated Room" url="viewRoomAllocated.xhtml"/>
                     <p:menuitem value="View Visitor" url="viewStudentVisitor.xhtml"/>
                 </p:submenu>
 
-                <p:submenu label="Fee" rendered="#{userBean.isUser()}">
+                <p:submenu label="Fee" rendered="#{userBean.userState.isUser()}">
                             <p:menuitem value="View Monthly Fee" url="viewFee.xhtml"/>
                             <p:menuitem value="Statement" url="viewTransactionStatement.xhtml"/>
                 </p:submenu>
 
-                <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="Student" rendered="#{userBean.isAdmin()}" url="viewStudent.xhtml"/>
+                <p:menuitem value="Dashboard" url="adminDashboard.xhtml"  rendered="#{userBean.userState.isAdmin()}"/>
+                <p:menuitem value="Student" rendered="#{userBean.userState.isAdmin()}" url="viewStudent.xhtml"/>
 
-                <p:submenu label="Room" rendered="#{userBean.isAdmin()}">
-
+                <p:submenu label="Room" rendered="#{userBean.userState.isAdmin()}">
                             <p:menuitem value="Rooms" url="viewRooms.xhtml" />
                             <p:menuitem value="Room Allocation" url="viewRoomAllocation.xhtml"/>
                 </p:submenu>
 
-                <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.isAdmin()}"/>
-                <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.isAdmin()}"/>
+                <p:menuitem value="Visitor" url="viewVisitor.xhtml" rendered="#{userBean.userState.isAdmin()}"/>
+                <p:menuitem value="Leave Request" url="studentLeaveRequest.xhtml" rendered="#{userBean.userState.isAdmin()}"/>
 
-                <p:submenu label="Monthly Fee"  rendered="#{userBean.isAdmin()}">
-
+                <p:submenu label="Monthly Fee"  rendered="#{userBean.userState.isAdmin()}">
                             <p:menuitem value="Assign Fee" url="assignMonthlyFee.xhtml" />
                             <p:menuitem value="Fee Pay" url="payMonthlyFee.xhtml" />
                             <p:menuitem value="Payment Request" url="paymentRequest.xhtml" />
                 </p:submenu>
 
-                <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.isAdmin() and not userBean.isUser()}" style="position:absolute; width: 60px; right:1rem; top:0px;"/>
+                <p:menuitem value="Login" url="login.xhtml" rendered="#{not userBean.userState.isAdmin() and not userBean.userState.isUser()}" style="position:absolute; width: 60px; right:1rem; top:0px;"/>
 
 
-                <p:submenu label="#{userDashboardBean.loginUser.fullName}" icon="pi pi-user" rendered="#{userBean.isAdmin() or userBean.isUser()}" style="position:absolute; right:1rem;">
-                    <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.isUser()}"/>
-                    <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.isAdmin() or userBean.isUser()}" />
+                <p:submenu label="#{userDashboardBean.loginUser.fullName}" icon="pi pi-user" rendered="#{userBean.userState.isAdmin() or userBean.userState.isUser()}" style="position:absolute; right:1rem;">
+                    <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{userBean.userState.isUser()}"/>
+                    <p:menuitem value="Logout" action="#{userBean.logout}" rendered="#{userBean.userState.isAdmin() or userBean.userState.isUser()}" />
                 </p:submenu>
 
             </p:menubar>
         </h:form>
     </div>
 
-    <p:dialog header="Info" widgetVar="userInfo" modal="true" rendered="#{userBean.isUser()}" resizable="false">
+    <p:dialog header="Info" widgetVar="userInfo" modal="true" rendered="#{userBean.userState.isUser()}" resizable="false">
 
         <h:form id="userInfoField">
             <h:panelGrid columns="2" >

@@ -8,7 +8,7 @@
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />
         </p:column>
-        <p:column headerText="Student Name" sortBy="#{allocate.studentId.fullName}" filterBy="#{allocate.studentId.fullName}" rendered="#{userBean.userRole == 'ADMIN'}">
+        <p:column headerText="Student Name" sortBy="#{allocate.studentId.fullName}" filterBy="#{allocate.studentId.fullName}" rendered="#{userBean.userState.userRole == 'ADMIN'}">
             <h:outputText value="#{allocate.studentId.fullName}" />
         </p:column>
         <p:column headerText="Room Number" sortBy="#{allocate.roomId.roomNumber}" filterBy="#{allocate.roomId.roomNumber}">
@@ -21,7 +21,7 @@
             <h:outputText value="#{allocate.unallocationDate}" />
         </p:column>
 
-        <p:column headerText="Actions" rendered="#{userBean.userRole == 'ADMIN'}">
+        <p:column headerText="Actions" rendered="#{userBean.userState.userRole == 'ADMIN'}">
             <p:commandButton id="unallocated-btn" icon="pi pi-minus-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
                              rendered="#{allocate.unallocationDate == null}"
                              action="#{viewRoomsBean.unAllocatedStudent(allocate)}"

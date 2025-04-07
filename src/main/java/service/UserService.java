@@ -9,6 +9,7 @@ import views.stateModel.StatusMessageModel;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -70,5 +71,15 @@ public class UserService {
             statusMessageModel.setMessage("User Already Exist");
         }
         return statusMessageModel;
+    }
+
+    public boolean updateStudent(Users selectStudent){
+        try{
+            return usersDAO.update(selectStudent);
+        }catch (PersistenceException e){
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

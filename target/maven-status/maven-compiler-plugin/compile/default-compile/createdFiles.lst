@@ -23,6 +23,7 @@ daoImp/LeaveRequestDAOImp.class
 views/LeaveRequestBean.class
 views/LoginFilter.class
 daoInterface/MonthlyFeeDAO.class
+views/stateModel/UserState.class
 daoImp/AddressDAOImp.class
 views/ViewVisitorBean.class
 views/ViewRoomsBean.class

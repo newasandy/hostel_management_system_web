@@ -1,11 +1,11 @@
 package views;
 
 import daoImp.UserTypeDAOImp;
-import daoInterface.UsersDAO;
 import model.*;
 import service.AuthenticationService;
 import service.UserService;
 import views.stateModel.StatusMessageModel;
+import views.stateModel.UserState;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -16,9 +16,7 @@ import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.util.List;
 
 @Named
 @SessionScoped
@@ -26,9 +24,6 @@ public class UserBean implements Serializable{
 
     @Inject
     private ViewStudentBean viewStudentBean;
-
-    @Inject
-    private UsersDAO usersDAO;
 
     @Inject
     private UserTypeDAOImp userTypeDAOImp;
@@ -39,30 +34,14 @@ public class UserBean implements Serializable{
     @Inject
     private AuthenticationService authenticationService;
 
-    private StatusMessageModel statusMessageModel = new StatusMessageModel();
-    private String userRole = "GUEST";
-
-    private String name;
-    private String email;
-    private String password;
-    private String role;
-    private String country;
-    private String district;
-    private String rmcMc;
-    private int wardNumber;
-    private UserType selectUserType;
-    private Rooms selectRoom;
-
-    private List<UserType> userTypes;
-    private Users selectUser;
-    private Address selectUserAddress;
-
-    private boolean selectRoomForNewUser = false;
-
+    private StatusMessageModel statusMessageModel;
+    private UserState userState;
 
     @PostConstruct
     public void init() {
         try {
+            statusMessageModel = new StatusMessageModel();
+            userState = new UserState();
             setUserRoleFromCookieOrSession();
             loadUserTypes();
         } catch (Exception e) {
@@ -72,12 +51,12 @@ public class UserBean implements Serializable{
     }
 
     public void loadUserTypes() {
-        userTypes = userTypeDAOImp.getAll();
+        userState.setUserTypes(userTypeDAOImp.getAll());
     }
 
     public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(name,email,password,selectUserType,country,district,rmcMc,wardNumber, selectRoom);
-        resetFields();
+        statusMessageModel = userService.registerNewStudent(userState.getName(),userState.getEmail(),userState.getPassword(),userState.getSelectUserType(),userState.getCountry(),userState.getDistrict(),userState.getRmcMc(),userState.getWardNumber(), userState.getSelectRoom());
+        userState.resetFields();
         try {
             if (statusMessageModel.isStatus()){
                 viewStudentBean.refreshStudentList();
@@ -95,10 +74,10 @@ public class UserBean implements Serializable{
     }
 
     public String login(){
-        Users user = authenticationService.loginService(email,password);
+        Users user = authenticationService.loginService(userState.getEmail(),userState.getPassword());
         if (user != null){
             if(user.isStatus()){
-                resetFields();
+                userState.resetFields();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
                 FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -115,7 +94,7 @@ public class UserBean implements Serializable{
                 response.addCookie(userRoleCookie);
 
 
-                userRole= user.getRoles().getUserTypes();
+                userState.setUserRole(user.getRoles().getUserTypes());
                 if ("USER".equals(user.getRoles().getUserTypes())) {
                     return "/users/userDashboard.xhtml?faces-redirect=true";
                 } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
@@ -133,11 +112,10 @@ public class UserBean implements Serializable{
         }
     }
 
-    @Transactional
     public void deactivateStudent(Users student) {
         student.setStatus(false);
         try {
-            if (usersDAO.update(student)){
+            if (userService.updateStudent(student)){
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!"));
             }else {
@@ -150,11 +128,10 @@ public class UserBean implements Serializable{
         }
     }
 
-    @Transactional
     public void activateStudent(Users student) {
         student.setStatus(true);
         try {
-            if (usersDAO.update(student)){
+            if (userService.updateStudent(student)){
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!"));
             }else {
@@ -168,13 +145,12 @@ public class UserBean implements Serializable{
     }
 
     public void prepareUpdateStudent(Users student) {
-        this.selectUser = student;
+        this.userState.setSelectUser(student);
     }
 
-    @Transactional
     public void updateUser(){
         try {
-            if (usersDAO.update(selectUser)){
+            if (userService.updateStudent(userState.getSelectUser())){
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
             }else {
@@ -204,135 +180,15 @@ public class UserBean implements Serializable{
             }
         }
         facesContext.getExternalContext().invalidateSession();
-        userRole = "GUEST";
+        userState.setUserRole("GUEST");
         return "/index.xhtml?faces-redirect=true";
     }
 
-    public Rooms getSelectRoom() {
-        return selectRoom;
-    }
-
-    public void setSelectRoom(Rooms selectRoom) {
-        this.selectRoom = selectRoom;
-    }
-
-    public boolean isSelectRoomForNewUser() {
-        return selectRoomForNewUser;
-    }
-
-    public void setSelectRoomForNewUser(boolean selectRoomForNewUser) {
-        this.selectRoomForNewUser = selectRoomForNewUser;
+    public UserState getUserState() {
+        return userState;
     }
 
 
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public boolean isGuest() {
-        return "GUEST".equals(userRole);
-    }
-
-    public List<UserType> getUserTypes() {
-        return userTypes;
-    }
-
-    public boolean isUser() {
-        return "USER".equals(userRole);
-    }
-
-    public boolean isAdmin() {
-        return "ADMIN".equals(userRole);
-    }
-
-    public UserType getSelectUserType() {
-        return selectUserType;
-    }
-
-    public void setSelectUserType(UserType selectUserType) {
-        this.selectUserType = selectUserType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getRmcMc() {
-        return rmcMc;
-    }
-
-    public void setRmcMc(String rmcMc) {
-        this.rmcMc = rmcMc;
-    }
-
-    public int getWardNumber() {
-        return wardNumber;
-    }
-
-    public void setWardNumber(int wardNumber) {
-        this.wardNumber = wardNumber;
-    }
-
-    public Users getSelectUser() {
-        return selectUser;
-    }
-
-    public void setSelectUser(Users selectUser) {
-        this.selectUser = selectUser;
-    }
-
-    public Address getSelectUserAddress() {
-        return selectUserAddress;
-    }
-
-    public void setSelectUserAddress(Address selectUserAddress) {
-        this.selectUserAddress = selectUserAddress;
-    }
 
     private void setUserRoleFromCookieOrSession() {
         Cookie cookie = (Cookie) FacesContext.getCurrentInstance()
@@ -340,28 +196,15 @@ public class UserBean implements Serializable{
                 .getRequestCookieMap()
                 .get("userRole");
         if (cookie != null) {
-            userRole = cookie.getValue();
+            userState.setUserRole(cookie.getValue());
         } else {
-            userRole = "GUEST";
+            userState.setUserRole("GUEST");
         }
     }
 
     public void cancelBtn(){
-        resetFields();
+        userState.resetFields();
     }
 
-    public void resetFields() {
-        this.name = "";
-        this.email = "";
-        this.password = "";
-        this.role = "";
-        this.selectUserType = null;
-        this.country = "";
-        this.district = "";
-        this.rmcMc = "";
-        this.wardNumber = 1;
-        this.selectRoom = null;
-        this.selectRoomForNewUser = false;
-        loadUserTypes();
-    }
+
 }
