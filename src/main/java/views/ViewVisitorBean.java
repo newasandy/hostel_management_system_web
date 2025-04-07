@@ -109,4 +109,8 @@ public class ViewVisitorBean implements Serializable {
         visitorState.setSelectStudent(student);
         visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(student.getId()));
     }
+
+    public VisitorState getVisitorState() {
+        return visitorState;
+    }
 }

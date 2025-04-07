@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="userTable" value="#{viewStudentBean.onlyStudent}"
+    <p:dataTable id="userTable" value="#{viewStudentBean.userState.onlyStudent}"
                  rowIndexVar="rowIndex"
                  var="student"
                  paginator="true"

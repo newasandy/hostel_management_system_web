@@ -6,6 +6,7 @@ views/ViewVisitorBean$1.class
 daoImp/RoomAllocationDAOImp.class
 service/VisitorService.class
 service/LeaveRequestService.class
+views/stateModel/VisitorState.class
 model/Address.class
 utils/EntityManageUtils.class
 model/LeaveRequest.class
@@ -49,6 +50,7 @@ daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
 views/AdminDashboardBean.class
 daoInterface/BaseDAO.class
+views/stateModel/DashboardState.class
 daoInterface/LeaveRequestDAO.class
 views/UserTypeConverter.class
 utils/PasswordUtils.class

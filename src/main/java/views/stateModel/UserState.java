@@ -27,27 +27,12 @@ public class UserState {
     private Users selectUser;
     private Address selectUserAddress;
 
+    private List<Users> onlyStudent;
+    private String searchItem;
+
     private boolean selectRoomForNewUser = false;
 
     public UserState() {
-    }
-
-    public UserState(String userRole, String name, String email, String password, String role, String country, String district, String rmcMc, int wardNumber, UserType selectUserType, Rooms selectRoom, List<UserType> userTypes, Users selectUser, Address selectUserAddress, boolean selectRoomForNewUser) {
-        this.userRole = userRole;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.country = country;
-        this.district = district;
-        this.rmcMc = rmcMc;
-        this.wardNumber = wardNumber;
-        this.selectUserType = selectUserType;
-        this.selectRoom = selectRoom;
-        this.userTypes = userTypes;
-        this.selectUser = selectUser;
-        this.selectUserAddress = selectUserAddress;
-        this.selectRoomForNewUser = selectRoomForNewUser;
     }
 
     public String getUserRole() {
@@ -180,6 +165,22 @@ public class UserState {
 
     public void setSelectRoomForNewUser(boolean selectRoomForNewUser) {
         this.selectRoomForNewUser = selectRoomForNewUser;
+    }
+
+    public List<Users> getOnlyStudent() {
+        return onlyStudent;
+    }
+
+    public void setOnlyStudent(List<Users> onlyStudent) {
+        this.onlyStudent = onlyStudent;
+    }
+
+    public String getSearchItem() {
+        return searchItem;
+    }
+
+    public void setSearchItem(String searchItem) {
+        this.searchItem = searchItem;
     }
 
     public void resetFields() {

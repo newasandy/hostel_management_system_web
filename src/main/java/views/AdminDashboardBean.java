@@ -4,8 +4,10 @@ import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
+import utils.GetCookiesValues;
 import views.stateModel.Cards;
 import org.primefaces.model.chart.DonutChartModel;
+import views.stateModel.DashboardState;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.RequestScoped;
@@ -32,27 +34,30 @@ public class AdminDashboardBean implements Serializable {
     @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    private List<Cards> cards;
-    private Long countOnlyAllocated;
-    private Long countOnlyStudent;
+    private DashboardState dashboardState;
 
+    private List<Cards> cards;
     private DonutChartModel roomOccupancyChart;
     private DonutChartModel userStatusChart;
 
     @PostConstruct
     public void init(){
-        countOnlyAllocated = roomAllocationDAO.getCountOnlyAllocated();
-        countOnlyStudent = usersDAO.getCountOnlyStudent();
-        cardModel();
-        roomOccupancyChartModel();
-        userStatusChartModel();
+        dashboardState = new DashboardState();
+        dashboardState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
+        if ("ADMIN".equals(dashboardState.getLoginUser().getRoles().getUserTypes())){
+            dashboardState.setCountOnlyAllocated(roomAllocationDAO.getCountOnlyAllocated());
+            dashboardState.setCountOnlyStudent(usersDAO.getCountOnlyStudent());
+            cardModel();
+            roomOccupancyChartModel();
+            userStatusChartModel();
+        }
     }
 
     public void cardModel(){
         cards = new ArrayList<>();
-        cards.add(new Cards("Users", countOnlyStudent));
+        cards.add(new Cards("Users", dashboardState.getCountOnlyStudent()));
         cards.add(new Cards("Rooms", roomDAO.getCount()));
-        cards.add(new Cards("Allocated", countOnlyAllocated));
+        cards.add(new Cards("Allocated", dashboardState.getCountOnlyAllocated()));
         cards.add(new Cards("Visitor", visitorsDAO.getCount()));
     }
 
@@ -60,8 +65,8 @@ public class AdminDashboardBean implements Serializable {
         roomOccupancyChart = new DonutChartModel();
         Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
 
-        circle1.put("Occupied", countOnlyAllocated);
-        circle1.put("Vacant", roomDAO.getTotalCapacity()- countOnlyAllocated);
+        circle1.put("Occupied", dashboardState.getCountOnlyAllocated());
+        circle1.put("Vacant", roomDAO.getTotalCapacity()- dashboardState.getCountOnlyAllocated());
         roomOccupancyChart.addCircle(circle1);
 
         roomOccupancyChart.setTitle("Room Occupancy Status");
@@ -72,7 +77,7 @@ public class AdminDashboardBean implements Serializable {
         Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
         Long countActiveStudent =usersDAO.getCountActiveStudent();
         circle1.put("Active", countActiveStudent);
-        circle1.put("Inactive", usersDAO.getCountOnlyStudent() - countActiveStudent);
+        circle1.put("Inactive", dashboardState.getCountOnlyStudent() - countActiveStudent);
         userStatusChart.addCircle(circle1);
 
         userStatusChart.setTitle("Student Status");

@@ -9,6 +9,7 @@ import model.RoomAllocation;
 import model.Users;
 import model.Visitors;
 import utils.GetCookiesValues;
+import views.stateModel.DashboardState;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.RequestScoped;
@@ -31,33 +32,21 @@ public class UserDashboardBean {
     @Inject
     private RoomAllocationDAO roomAllocationDAO;
 
-    private Users loginUser ;
+    private DashboardState dashboardState;
 
-    private Visitors recentUserVisitor;
-    private RoomAllocation recentRoom;
-    private LeaveRequest recentLeaveRequest ;
 
     @PostConstruct
     public void init(){
+        dashboardState = new DashboardState();
+        dashboardState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
         if (!GetCookiesValues.getEmailFromCookie().isEmpty()){
-            loginUser =usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie());
-            recentUserVisitor = visitorsDAO.getRecentUserVisitor(loginUser.getId());
-            recentRoom = roomAllocationDAO.getRecentUserRoomAllocation(loginUser.getId());
-            recentLeaveRequest = leaveRequestDAO.getRecentLeaveRequest(loginUser.getId());
+            dashboardState.setRecentUserVisitor(visitorsDAO.getRecentUserVisitor(dashboardState.getLoginUser().getId()));
+            dashboardState.setRecentRoom(roomAllocationDAO.getRecentUserRoomAllocation(dashboardState.getLoginUser().getId()));
+            dashboardState.setRecentLeaveRequest(leaveRequestDAO.getRecentLeaveRequest(dashboardState.getLoginUser().getId()));
         }
     }
 
-    public Users getLoginUser() {
-        return loginUser;
+    public DashboardState getDashboardState() {
+        return dashboardState;
     }
-    public LeaveRequest getRecentLeaveRequest() {
-        return recentLeaveRequest;
-    }
-    public Visitors getRecentUserVisitor() {
-        return recentUserVisitor;
-    }
-    public RoomAllocation getRecentRoom() {
-        return recentRoom;
-    }
-
 }

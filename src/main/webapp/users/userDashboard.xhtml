@@ -48,7 +48,7 @@
                     <h:outputText value="Visitor Number" />
                 </f:facet>
                 <div class="panelContainer">
-                    <h:outputText value="#{userDashboardBean.recentUserVisitor.fullName}" />
+                    <h:outputText value="#{userDashboardBean.dashboardState.recentUserVisitor.fullName}" />
                 </div>
             </p:panel>
             <p:panel>
@@ -56,7 +56,7 @@
                     <h:outputText value="Room Number" style="width:100%;" />
                 </f:facet>
                 <div class="panelContainer">
-                    <h:outputText value="#{userDashboardBean.recentRoom.roomId.roomNumber}" />
+                    <h:outputText value="#{userDashboardBean.dashboardState.recentRoom.roomId.roomNumber}" />
                 </div>
             </p:panel>
             <p:panel>
@@ -64,7 +64,7 @@
                     <h:outputText value="Leave Request Status" style="width:100%;" />
                 </f:facet>
                 <div class="panelContainer">
-                    <h:outputText value="#{userDashboardBean.recentLeaveRequest.status}" />
+                    <h:outputText value="#{userDashboardBean.dashboardState.recentLeaveRequest.status}" />
                 </div>
             </p:panel>
         </p:panelGrid>

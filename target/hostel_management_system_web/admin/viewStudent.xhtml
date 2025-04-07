@@ -21,7 +21,7 @@
         <h:form id="main-form">
             <p:growl id="message" showDetail="true" life="3000" sticky="false" />
             <div class="top-bar">
-                <p:inputText id="searchItem" value="#{viewStudentBean.searchItem}" placeholder="Search By Name" style="width:250px;">
+                <p:inputText id="searchItem" value="#{viewStudentBean.userState.searchItem}" placeholder="Search By Name" style="width:250px;">
                     <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
                 </p:inputText>
 
@@ -212,7 +212,7 @@
         <h:form id="visitorDataTable">
             <ui:include src="/includePage/studentVisitorTable.xhtml"/>
             <p:commandButton value="Add" icon="pi pi-plus"
-                             rendered="#{viewVisitorBean.selectStudent.status}"
+                             rendered="#{viewVisitorBean.visitorState.selectStudent.status}"
                              style="margin-left: 15px; width:100px; margin-top:10px;"
                              update=":main-form:message :visitorDataTable:visitorTable :visitor-form"
                              oncomplete="PF('addVisitor').show()" />
@@ -224,14 +224,14 @@
 
     <p:dialog header="Add Visitor" widgetVar="addVisitor" modal="true" resizable="false">
         <h:form id="visitor-form">
-            <h:outputLabel value="Student Name: #{viewVisitorBean.selectStudent.fullName}" style="font-weight:bold;" />
+            <h:outputLabel value="Student Name: #{viewVisitorBean.visitorState.selectStudent.fullName}" style="font-weight:bold;" />
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputLabel for="fullName" value="Full Name:" />
-                <p:inputText id="fullName" value="#{viewVisitorBean.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
+                <p:inputText id="fullName" value="#{viewVisitorBean.visitorState.fullName}" required="true" requiredMessage="Full Name is required." style="width:100%" />
                 <h:outputLabel for="relation" value="Relation:"/>
-                <p:inputText id="relation" value="#{viewVisitorBean.relation}" required="true" requiredMessage="Relation is required." style="width:100%"/>
+                <p:inputText id="relation" value="#{viewVisitorBean.visitorState.relation}" required="true" requiredMessage="Relation is required." style="width:100%"/>
                 <h:outputLabel for="Reason" value="Reason:"/>
-                <p:inputText id="Reason" value="#{viewVisitorBean.reason}" required="true" requiredMessage="Reason is required." style="width:100%"/>
+                <p:inputText id="Reason" value="#{viewVisitorBean.visitorState.reason}" required="true" requiredMessage="Reason is required." style="width:100%"/>
                 <p:commandButton value="Add"
                                  action="#{viewVisitorBean.addVisitor}"
                                  validateClient="true"
@@ -239,7 +239,7 @@
                                  oncomplete="if (!args.validationFailed) { PF('addVisitor').hide(); PF('visitorDialog').hide();}"
                                  style="margin-top:10px; width:50px; color:#FFFFFF; background-color:#3498DB;"/>
                 <p:commandButton value="Cancel"
-                                 action="#{viewVisitorBean.resetFields}"
+                                 action="#{viewVisitorBean.visitorState.resetFields}"
                                  oncomplete="PF('addVisitor').hide(); PF('visitorDialog').hide(); "
                                  style="margin-top:10px; width:100px; color:#FFFFFF; background-color:red; " />
             </h:panelGrid>

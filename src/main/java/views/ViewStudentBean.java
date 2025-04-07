@@ -2,6 +2,7 @@ package views;
 
 import daoInterface.UsersDAO;
 import model.Users;
+import views.stateModel.UserState;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -18,37 +19,29 @@ public class ViewStudentBean implements Serializable {
     @Inject
     private UsersDAO usersDAO;
 
-    private List<Users> onlyStudent;
-    private String searchItem;
+    private UserState userState;
 
     @PostConstruct
     public void init(){
+        userState = new UserState();
         refreshStudentList();
     }
 
     public void searchList(){
-        if (searchItem == null || searchItem.isEmpty()){
+        if (userState.getSearchItem() == null || userState.getSearchItem().isEmpty()){
             refreshStudentList();
         }else {
-            String lowerSearch = searchItem.toLowerCase();
+            String lowerSearch = userState.getSearchItem().toLowerCase();
             List<Users> originalStudentList = usersDAO.getOnlyStudent();
-            onlyStudent = originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch) || (users.getEmail() != null && users.getEmail().toLowerCase().contains(lowerSearch))).collect(Collectors.toList());
+            userState.setOnlyStudent(originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch) || (users.getEmail() != null && users.getEmail().toLowerCase().contains(lowerSearch))).collect(Collectors.toList()));
         }
     }
 
     public void refreshStudentList() {
-        onlyStudent = usersDAO.getOnlyStudent();
+        userState.setOnlyStudent(usersDAO.getOnlyStudent());
     }
 
-    public List<Users> getOnlyStudent() {
-        return onlyStudent;
-    }
-
-    public String getSearchItem() {
-        return searchItem;
-    }
-
-    public void setSearchItem(String searchItem) {
-        this.searchItem = searchItem;
+    public UserState getUserState() {
+        return userState;
     }
 }
