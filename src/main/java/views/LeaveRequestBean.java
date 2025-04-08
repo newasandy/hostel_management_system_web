@@ -3,10 +3,11 @@ package views;
 import daoInterface.LeaveRequestDAO;
 import daoInterface.UsersDAO;
 import model.LeaveRequest;
+import utils.JwtUtils;
+import utils.SessionUtils;
 import views.stateModel.LeaveRequestState;
 import views.stateModel.StatusMessageModel;
 import service.LeaveRequestService;
-import utils.GetCookiesValues;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -36,13 +38,15 @@ public class LeaveRequestBean implements Serializable {
     private StatusMessageModel statusMessageModel;
     private LeaveRequestState leaveRequestState;
 
+    private HttpServletRequest request;
 
 
     @PostConstruct
     public void init(){
         statusMessageModel = new StatusMessageModel();
         leaveRequestState = new LeaveRequestState();
-        String email = GetCookiesValues.getEmailFromCookie();
+        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String email = JwtUtils.getUserEmail(SessionUtils.getToken(request));
         if (email != null) {
             leaveRequestState.setLoginUser(usersDAO.getByEmail(email));
         } else {
@@ -52,10 +56,10 @@ public class LeaveRequestBean implements Serializable {
     }
 
     public void refreshLeaveRequestList(){
-        if ("USER".equals(GetCookiesValues.getUserRoleFromCookie())){
+        if ("USER".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
             leaveRequestState.setLeaveRequestList(leaveRequestDAO.getUserLeaveRequestByUserId(leaveRequestState.getLoginUser().getId()));
         }
-        if ("ADMIN".equals(GetCookiesValues.getUserRoleFromCookie())){
+        if ("ADMIN".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
             List<LeaveRequest> allLeaveRequest = leaveRequestDAO.getAll();
             Collections.sort(allLeaveRequest, new Comparator<LeaveRequest>() {
                 @Override

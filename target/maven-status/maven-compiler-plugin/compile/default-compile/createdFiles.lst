@@ -19,6 +19,7 @@ daoImp/TransactionStatementDAOImp.class
 utils/JwtUtils.class
 service/AuthenticationService.class
 views/LeaveRequestBean$1.class
+utils/SessionUtils.class
 daoInterface/RoomDAO.class
 views/stateModel/RoomState.class
 views/stateModel/StatusMessageModel.class

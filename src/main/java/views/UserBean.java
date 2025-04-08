@@ -5,6 +5,7 @@ import model.*;
 import service.AuthenticationService;
 import service.UserService;
 import utils.JwtUtils;
+import utils.SessionUtils;
 import views.stateModel.StatusMessageModel;
 import views.stateModel.UserState;
 
@@ -14,9 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 @Named
@@ -37,13 +36,14 @@ public class UserBean implements Serializable{
 
     private StatusMessageModel statusMessageModel;
     private UserState userState;
+    private HttpServletRequest request;
 
     @PostConstruct
     public void init() {
         try {
             statusMessageModel = new StatusMessageModel();
             userState = new UserState();
-            setUserRoleFromCookieOrSession();
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             loadUserTypes();
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,28 +81,10 @@ public class UserBean implements Serializable{
                 userState.resetFields();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-                Cookie userCookie = new Cookie("email", user.getEmail());
-                userCookie.setMaxAge(60*60*60);
-                userCookie.setPath("/");
-                response.addCookie(userCookie);
+                SessionUtils.storeToken(request,JwtUtils.generateToken(user.getEmail(), user.getRoles().getUserTypes()));
 
-                Cookie userRoleCookie = new Cookie("userRole", user.getRoles().getUserTypes());
-                userRoleCookie.setMaxAge(60 * 60 * 60);
-                userRoleCookie.setPath("/");
-                response.addCookie(userRoleCookie);
-
-                String token = JwtUtils.generateToken(user.getEmail());
-                System.out.println(token);
-                System.out.println("=============breakpoint==========");
-
-                System.out.println(JwtUtils.validateToken(token));
-
-
-
-                userState.setUserRole(user.getRoles().getUserTypes());
+                setUserRoleFromSession();
                 if ("USER".equals(user.getRoles().getUserTypes())) {
                     return "/users/userDashboard.xhtml?faces-redirect=true";
                 } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
@@ -172,23 +154,8 @@ public class UserBean implements Serializable{
     }
 
     public String logout(){
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("email".equals(cookie.getName()) || "userRole".equals(cookie.getName())) {
-                    cookie.setValue(null);
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                }
-            }
-        }
-        facesContext.getExternalContext().invalidateSession();
-        userState.setUserRole("GUEST");
+        SessionUtils.removeToken(request);
+        setUserRoleFromSession();
         return "/index.xhtml?faces-redirect=true";
     }
 
@@ -198,14 +165,11 @@ public class UserBean implements Serializable{
 
 
 
-    private void setUserRoleFromCookieOrSession() {
-        Cookie cookie = (Cookie) FacesContext.getCurrentInstance()
-                .getExternalContext()
-                .getRequestCookieMap()
-                .get("userRole");
-        if (cookie != null) {
-            userState.setUserRole(cookie.getValue());
-        } else {
+    private void setUserRoleFromSession() {
+        String token = SessionUtils.getToken(request);
+        if (token != null){
+            userState.setUserRole(JwtUtils.getUserRole(token));
+        }else {
             userState.setUserRole("GUEST");
         }
     }

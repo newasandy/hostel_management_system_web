@@ -4,11 +4,12 @@ import daoInterface.MonthlyFeeDAO;
 import daoInterface.TransactionStatementDAO;
 import daoInterface.UsersDAO;
 import model.MonthlyFee;
+import utils.JwtUtils;
+import utils.SessionUtils;
 import views.stateModel.MonthlyFeeState;
 import views.stateModel.StatusMessageModel;
 import model.Users;
 import service.MonthlyFeeService;
-import utils.GetCookiesValues;
 import utils.PasswordUtils;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,25 +52,37 @@ public class MonthlyFeeBean implements Serializable {
     }
 
     public void refreshMonthlyFeeList(){
-        monthlyFeeState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
-        if ("USER".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-            monthlyFeeState.setMonthlyFeeList(monthlyFeeDAO.getUserFeeDetails(monthlyFeeState.getLoginUser().getId()));
-            monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(monthlyFeeState.getLoginUser().getId()));
-            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getLoginUser().getId()));
-        }
-        if ("ADMIN".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-            List<MonthlyFee> allMonthlyFee = monthlyFeeDAO.getAll();
-            Collections.sort(allMonthlyFee, new Comparator<MonthlyFee>() {
-                @Override
-                public int compare(MonthlyFee v1, MonthlyFee v2) {
-                    return v2.getIssueDate().compareTo(v1.getIssueDate());
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+            monthlyFeeState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
+            if ("USER".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
+                monthlyFeeState.setMonthlyFeeList(monthlyFeeDAO.getUserFeeDetails(monthlyFeeState.getLoginUser().getId()));
+                monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(monthlyFeeState.getLoginUser().getId()));
+                monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getLoginUser().getId()));
+            }
+            if ("ADMIN".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
+                List<MonthlyFee> allMonthlyFee = monthlyFeeDAO.getAll();
+                Collections.sort(allMonthlyFee, new Comparator<MonthlyFee>() {
+                    @Override
+                    public int compare(MonthlyFee v1, MonthlyFee v2) {
+                        return v2.getIssueDate().compareTo(v1.getIssueDate());
+                    }
+                });
+                monthlyFeeState.setMonthlyFeeList(allMonthlyFee);
+                monthlyFeeState.setPendingPaymentRequest(transactionStatementDAOImp.getPendingPaymentRequest());
+            }
+            if (monthlyFeeState.getSelectStudent() != null){
+                monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
+            }
+        }else {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            if (facesContext != null) {
+                try {
+                    facesContext.getExternalContext().redirect("login.xhtml?expired=true");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-            monthlyFeeState.setMonthlyFeeList(allMonthlyFee);
-            monthlyFeeState.setPendingPaymentRequest(transactionStatementDAOImp.getPendingPaymentRequest());
-        }
-        if (monthlyFeeState.getSelectStudent() != null){
-            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
+            }
         }
     }
 

@@ -1,15 +1,17 @@
 package views;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
+import utils.JwtUtils;
+import utils.SessionUtils;
 import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
 import service.VisitorService;
-import utils.GetCookiesValues;
 import views.stateModel.VisitorState;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -40,12 +43,26 @@ public class ViewVisitorBean implements Serializable {
 
     private StatusMessageModel statusMessageModel;
     private VisitorState visitorState;
+    private HttpServletRequest request;
 
     @PostConstruct
     public void init(){
         statusMessageModel = new StatusMessageModel();
         visitorState = new VisitorState();
-        refreshVisitorList();
+
+        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+            refreshVisitorList();
+        }else {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            if (facesContext != null) {
+                try {
+                    facesContext.getExternalContext().redirect("index.xhtml?expired=true");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void searchList(){
@@ -59,7 +76,7 @@ public class ViewVisitorBean implements Serializable {
     }
 
     public void refreshVisitorList(){
-        visitorState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
+        visitorState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
         if ("ADMIN".equals(visitorState.getLoginUser().getRoles().getUserTypes())){
             List<Visitors> orginalVisitorList = visitorsDAO.getAll();
             Collections.sort(orginalVisitorList, new Comparator<Visitors>() {

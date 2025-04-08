@@ -1,5 +1,8 @@
 package views;
 
+import utils.JwtUtils;
+import utils.SessionUtils;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
@@ -21,26 +24,39 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String uri = httpRequest.getRequestURI();
-        String email = getCookieValue(httpRequest, "email");
-        String userRole = getCookieValue(httpRequest, "userRole");
 
-        if (uri.contains("/users/")) {
-            if (email == null || userRole == null){
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
-                return;
-            } else if (!"USER".equals(userRole)) {
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/adminDashboard.xhtml");
-                return;
-            }
-        }else if (uri.contains("/admin/")) {
-            if (email == null || userRole == null){
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
-                return;
-            } else if (!"ADMIN".equals(userRole)) {
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/users/userDashboard.xhtml");
-                return;
-            }
+        if (uri.endsWith("login.xhtml") ||
+                uri.endsWith("index.xhtml") ||
+                uri.contains("javax.faces.resource")) {
+            chain.doFilter(request, response);
+            return;
         }
+
+        if (SessionUtils.isSessionValid(httpRequest) && JwtUtils.isTokenValid(SessionUtils.getToken(httpRequest))){
+            String token = SessionUtils.getToken(httpRequest);
+            String userRole = JwtUtils.getUserRole(SessionUtils.getToken(httpRequest));
+            if (uri.contains("/users/")) {
+                if (token == null || userRole == null){
+                    httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
+                    return;
+                } else if (!"USER".equals(userRole)) {
+                    httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/adminDashboard.xhtml");
+                    return;
+                }
+            }else if (uri.contains("/admin/")) {
+                if (token == null || userRole == null){
+                    httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
+                    return;
+                } else if (!"ADMIN".equals(userRole)) {
+                    httpResponse.sendRedirect(httpRequest.getContextPath() + "/users/userDashboard.xhtml");
+                    return;
+                }
+            }
+        }else {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.xhtml");
+            return;
+        }
+
         chain.doFilter(request, response);
     }
 

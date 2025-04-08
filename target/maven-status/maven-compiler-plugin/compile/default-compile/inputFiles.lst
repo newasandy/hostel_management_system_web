@@ -14,6 +14,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/AddressDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/RoomAllocationDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/AdminDashboardBean.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/SessionUtils.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/MonthlyFeeDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/LeaveRequestService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/Cards.java

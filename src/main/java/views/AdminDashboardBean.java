@@ -4,15 +4,18 @@ import daoInterface.RoomAllocationDAO;
 import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
-import utils.GetCookiesValues;
+import utils.JwtUtils;
+import utils.SessionUtils;
 import views.stateModel.Cards;
 import org.primefaces.model.chart.DonutChartModel;
 import views.stateModel.DashboardState;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,13 +46,18 @@ public class AdminDashboardBean implements Serializable {
     @PostConstruct
     public void init(){
         dashboardState = new DashboardState();
-        dashboardState.setLoginUser(usersDAO.getByEmail(GetCookiesValues.getEmailFromCookie()));
-        if ("ADMIN".equals(dashboardState.getLoginUser().getRoles().getUserTypes())){
-            dashboardState.setCountOnlyAllocated(roomAllocationDAO.getCountOnlyAllocated());
-            dashboardState.setCountOnlyStudent(usersDAO.getCountOnlyStudent());
-            cardModel();
-            roomOccupancyChartModel();
-            userStatusChartModel();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+            dashboardState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
+            if ("ADMIN".equals(dashboardState.getLoginUser().getRoles().getUserTypes())){
+                dashboardState.setCountOnlyAllocated(roomAllocationDAO.getCountOnlyAllocated());
+                dashboardState.setCountOnlyStudent(usersDAO.getCountOnlyStudent());
+                cardModel();
+                roomOccupancyChartModel();
+                userStatusChartModel();
+            }
+        }else {
+            redirectToIndex();
         }
     }
 
@@ -82,6 +90,13 @@ public class AdminDashboardBean implements Serializable {
 
         userStatusChart.setTitle("Student Status");
         userStatusChart.setLegendPosition("w");
+    }
+    private void redirectToIndex() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public DonutChartModel getRoomOccupancyChart() {
