@@ -4,6 +4,7 @@ import daoImp.UserTypeDAOImp;
 import model.*;
 import service.AuthenticationService;
 import service.UserService;
+import utils.JwtUtils;
 import views.stateModel.StatusMessageModel;
 import views.stateModel.UserState;
 
@@ -92,6 +93,13 @@ public class UserBean implements Serializable{
                 userRoleCookie.setMaxAge(60 * 60 * 60);
                 userRoleCookie.setPath("/");
                 response.addCookie(userRoleCookie);
+
+                String token = JwtUtils.generateToken(user.getEmail());
+                System.out.println(token);
+                System.out.println("=============breakpoint==========");
+
+                System.out.println(JwtUtils.validateToken(token));
+
 
 
                 userState.setUserRole(user.getRoles().getUserTypes());

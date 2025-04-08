@@ -16,6 +16,7 @@ model/BaseEntity.class
 daoInterface/TransactionStatementDAO.class
 model/Rooms.class
 daoImp/TransactionStatementDAOImp.class
+utils/JwtUtils.class
 service/AuthenticationService.class
 views/LeaveRequestBean$1.class
 daoInterface/RoomDAO.class
