@@ -52,7 +52,6 @@ public class ViewRoomsBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-
             roomState.setViewRoomsList(roomDAO.getAll());
             roomState.setUnallocatedUser(usersDAO.getUnallocatedUsers());
             roomState.setAvailableRoom(roomDAO.getAvailableRoom());
@@ -71,13 +70,10 @@ public class ViewRoomsBean implements Serializable {
                 roomState.setRoomAllocationList(orginalRoomAllocationList);
             }
         }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                try {
-                    facesContext.getExternalContext().redirect("index.xhtml?expired=true");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

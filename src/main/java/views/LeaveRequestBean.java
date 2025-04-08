@@ -46,13 +46,21 @@ public class LeaveRequestBean implements Serializable {
         statusMessageModel = new StatusMessageModel();
         leaveRequestState = new LeaveRequestState();
         request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String email = JwtUtils.getUserEmail(SessionUtils.getToken(request));
-        if (email != null) {
-            leaveRequestState.setLoginUser(usersDAO.getByEmail(email));
-        } else {
-            System.out.println("Error: No email found in cookie.");
+        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+            String email = JwtUtils.getUserEmail(SessionUtils.getToken(request));
+            if (email != null) {
+                leaveRequestState.setLoginUser(usersDAO.getByEmail(email));
+            } else {
+                System.out.println("Error: No email found in cookie.");
+            }
+            refreshLeaveRequestList();
+        }else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        refreshLeaveRequestList();
     }
 
     public void refreshLeaveRequestList(){

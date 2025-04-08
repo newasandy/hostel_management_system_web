@@ -40,15 +40,25 @@ public class UserBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        try {
-            statusMessageModel = new StatusMessageModel();
-            userState = new UserState();
-            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            loadUserTypes();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to initialize UserBean", e);
+        statusMessageModel = new StatusMessageModel();
+        userState = new UserState();
+        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+            try {
+                loadUserTypes();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to initialize UserBean", e);
+            }
+        }else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     public void loadUserTypes() {

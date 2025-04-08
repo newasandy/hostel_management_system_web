@@ -21,10 +21,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,13 +51,10 @@ public class ViewVisitorBean implements Serializable {
         if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
             refreshVisitorList();
         }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                try {
-                    facesContext.getExternalContext().redirect("index.xhtml?expired=true");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -108,12 +102,8 @@ public class ViewVisitorBean implements Serializable {
         }
     }
 
-    @Transactional
     public void exitVisitor(Visitors exitVisitor){
-        Date date = new Date();
-        Timestamp exitDate = new Timestamp(date.getTime());
-        exitVisitor.setExitDatetime(exitDate);
-        if (visitorsDAO.update(exitVisitor)){
+        if (visitorService.exitVisitor(exitVisitor)){
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit."));
         }else {

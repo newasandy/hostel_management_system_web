@@ -33,13 +33,10 @@ public class ViewStudentBean implements Serializable {
         if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
             refreshStudentList();
         }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                try {
-                    facesContext.getExternalContext().redirect("index.xhtml?expired=true");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

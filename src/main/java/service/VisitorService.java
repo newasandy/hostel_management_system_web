@@ -7,6 +7,7 @@ import model.Visitors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -39,5 +40,18 @@ public class VisitorService {
             statusMessageModel.setMessage("Visitor Added Failed");
         }
         return statusMessageModel;
+    }
+
+    public boolean exitVisitor(Visitors exitVisitor){
+        Date date = new Date();
+        Timestamp exitDate = new Timestamp(date.getTime());
+        exitVisitor.setExitDatetime(exitDate);
+        try{
+            return visitorsDAO.update(exitVisitor);
+        }catch (PersistenceException e){
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

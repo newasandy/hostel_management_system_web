@@ -57,7 +57,11 @@ public class AdminDashboardBean implements Serializable {
                 userStatusChartModel();
             }
         }else {
-            redirectToIndex();
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -87,16 +91,8 @@ public class AdminDashboardBean implements Serializable {
         circle1.put("Active", countActiveStudent);
         circle1.put("Inactive", dashboardState.getCountOnlyStudent() - countActiveStudent);
         userStatusChart.addCircle(circle1);
-
         userStatusChart.setTitle("Student Status");
         userStatusChart.setLegendPosition("w");
-    }
-    private void redirectToIndex() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public DonutChartModel getRoomOccupancyChart() {

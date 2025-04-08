@@ -75,13 +75,10 @@ public class MonthlyFeeBean implements Serializable {
                 monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
             }
         }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                try {
-                    facesContext.getExternalContext().redirect("login.xhtml?expired=true");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

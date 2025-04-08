@@ -45,13 +45,10 @@ public class UserDashboardBean {
             dashboardState.setRecentRoom(roomAllocationDAO.getRecentUserRoomAllocation(dashboardState.getLoginUser().getId()));
             dashboardState.setRecentLeaveRequest(leaveRequestDAO.getRecentLeaveRequest(dashboardState.getLoginUser().getId()));
         }else {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                try {
-                    facesContext.getExternalContext().redirect("index.xhtml?expired=true");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
