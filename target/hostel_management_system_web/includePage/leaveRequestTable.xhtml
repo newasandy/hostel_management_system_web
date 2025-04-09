@@ -27,13 +27,13 @@
         <p:column headerText="End" sortBy="#{leave.endOn}">
             <h:outputText value="#{leave.endOn}" />
         </p:column>
-        <p:column headerText="Status" sortBy="#{leave.endOn}">
+        <p:column headerText="Status">
             <h:outputText value="#{leave.status}" />
         </p:column>
 
         <p:column headerText="Actions">
             <p:commandButton id="response-btn" icon="pi pi-check-circle" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
-                             rendered="#{leave.status eq 'PENDING' and userBean.userState.userRole.equals('ADMIN')}"
+                             rendered="#{leave.status eq 'PENDING' and authBean.authState.userRole.equals('ADMIN')}"
                              action="#{leaveRequestBean.leaveRequestState.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"
                              update=":updateForm"
@@ -41,7 +41,7 @@
             />
 
             <p:commandButton id="update-btn" icon="pi pi-pencil" style="margin-right: 5px; color:#FFFFFF; background-color:#3498DB;"
-                             rendered="#{leave.status eq 'PENDING' and userBean.userState.userRole.equals('USER')}"
+                             rendered="#{leave.status eq 'PENDING' and authBean.authState.userRole.equals('USER')}"
                              action="#{leaveRequestBean.leaveRequestState.setSelectLeaveRequest(leave)}"
                              partialSubmit="true"
                              update=":updateForm"

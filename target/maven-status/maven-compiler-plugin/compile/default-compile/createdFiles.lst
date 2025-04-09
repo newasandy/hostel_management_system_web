@@ -37,14 +37,13 @@ model/MonthlyFee.class
 model/LeaveRequest$Status.class
 views/UserDashboardBean.class
 model/UserType.class
-utils/GetCookiesValues.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
 views/stateModel/MonthlyFeeState.class
-views/ViewStudentBean.class
 views/MonthlyFeeBean$1.class
 views/MonthlyFeeBean.class
 service/MonthlyFeeService.class
+views/AuthBean.class
 views/ViewRoomsBean$1.class
 daoImp/BaseDAOImp.class
 views/IndexImageBean.class

@@ -19,7 +19,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,40 +45,36 @@ public class MonthlyFeeBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        statusMessageModel = new StatusMessageModel();
-        monthlyFeeState = new MonthlyFeeState();
-        refreshMonthlyFeeList();
+        try{
+            statusMessageModel = new StatusMessageModel();
+            monthlyFeeState = new MonthlyFeeState();
+            refreshMonthlyFeeList();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
+        }
     }
 
     public void refreshMonthlyFeeList(){
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            monthlyFeeState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
-            if ("USER".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-                monthlyFeeState.setMonthlyFeeList(monthlyFeeDAO.getUserFeeDetails(monthlyFeeState.getLoginUser().getId()));
-                monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(monthlyFeeState.getLoginUser().getId()));
-                monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getLoginUser().getId()));
-            }
-            if ("ADMIN".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-                List<MonthlyFee> allMonthlyFee = monthlyFeeDAO.getAll();
-                Collections.sort(allMonthlyFee, new Comparator<MonthlyFee>() {
-                    @Override
-                    public int compare(MonthlyFee v1, MonthlyFee v2) {
-                        return v2.getIssueDate().compareTo(v1.getIssueDate());
-                    }
-                });
-                monthlyFeeState.setMonthlyFeeList(allMonthlyFee);
-                monthlyFeeState.setPendingPaymentRequest(transactionStatementDAOImp.getPendingPaymentRequest());
-            }
-            if (monthlyFeeState.getSelectStudent() != null){
-                monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
-            }
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        monthlyFeeState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
+        if ("USER".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
+            monthlyFeeState.setMonthlyFeeList(monthlyFeeDAO.getUserFeeDetails(monthlyFeeState.getLoginUser().getId()));
+            monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(monthlyFeeState.getLoginUser().getId()));
+            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getLoginUser().getId()));
+        }
+        if ("ADMIN".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
+            List<MonthlyFee> allMonthlyFee = monthlyFeeDAO.getAll();
+            Collections.sort(allMonthlyFee, new Comparator<MonthlyFee>() {
+                @Override
+                public int compare(MonthlyFee v1, MonthlyFee v2) {
+                    return v2.getIssueDate().compareTo(v1.getIssueDate());
+                }
+            });
+            monthlyFeeState.setMonthlyFeeList(allMonthlyFee);
+            monthlyFeeState.setPendingPaymentRequest(transactionStatementDAOImp.getPendingPaymentRequest());
+        }
+        if (monthlyFeeState.getSelectStudent() != null){
+            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
         }
     }
 
@@ -88,15 +83,12 @@ public class MonthlyFeeBean implements Serializable {
             statusMessageModel = monthlyFeeService.assignStudentMonthlyFee(monthlyFeeState.getSelectStudent(), monthlyFeeState.getAssignFeeAmount());
             if (statusMessageModel.isStatus()){
                 monthlyFeeState.resetField();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
         }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Assign Monthly Fee."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Assign Monthly Fee.");
         }
     }
 
@@ -112,19 +104,15 @@ public class MonthlyFeeBean implements Serializable {
                 }
                 if (statusMessageModel.isStatus()){
                     monthlyFeeState.resetField();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                    showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
                 }else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
                 }
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paid Amount is Invalid"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Paid Amount is Invalid");
             }
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password.");
         }
     }
 
@@ -133,16 +121,13 @@ public class MonthlyFeeBean implements Serializable {
             statusMessageModel = monthlyFeeService.responsePaymentRequest(monthlyFeeState.getSelectTransaction());
             if (statusMessageModel.isStatus()){
                 monthlyFeeState.resetField();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
         }
         else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid Password.");
         }
     }
 
@@ -150,6 +135,10 @@ public class MonthlyFeeBean implements Serializable {
         this.monthlyFeeState.setSelectStudent(student);
         this.monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(student.getId()));
         this.monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(student.getId()));
+    }
+
+    private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public MonthlyFeeState getMonthlyFeeState() {

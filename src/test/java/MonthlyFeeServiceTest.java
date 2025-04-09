@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import service.MonthlyFeeService;
 
+import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.time.Year;
 
@@ -75,6 +76,43 @@ public class MonthlyFeeServiceTest {
                         fee.getYear() == currentYear &&
                         fee.getIssueDate() != null
         ));
+    }
+
+    @Test
+    void testAssignStudentMonthlyFee_PersistenceException() {
+        when(monthlyFeeDAO.checkAssignFee(anyLong(), anyString(), anyInt()))
+                .thenThrow(new PersistenceException("Database connection failed"));
+
+        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
+
+        assertFalse(result.isStatus());
+        assertEquals("A database error occurred while assign fee.", result.getMessage());
+    }
+
+    @Test
+    void testAssignStudentMonthly_RuntimeException(){
+        when(monthlyFeeDAO.checkAssignFee(anyLong(),anyString(),anyInt()))
+                .thenThrow(new RuntimeException("Unexpected Error"));
+
+        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent, testFeeAmount);
+
+        assertFalse(result.isStatus());
+        assertEquals("An unexpected error occurred.", result.getMessage());
+
+    }
+
+    @Test
+    void testAssignStudentFee_PersistenceExceptionWhileAdd(){
+        when(monthlyFeeDAO.checkAssignFee(testStudent.getId(),currentMonth,currentYear))
+                .thenReturn(null);
+
+        when(monthlyFeeDAO.add(any(MonthlyFee.class)))
+                .thenThrow(new PersistenceException("Insert Failed"));
+
+        StatusMessageModel result = monthlyFeeService.assignStudentMonthlyFee(testStudent,testFeeAmount);
+        assertFalse(result.isStatus());
+        assertEquals("A database error occurred while assign fee.", result.getMessage());
+
     }
 
     @Test

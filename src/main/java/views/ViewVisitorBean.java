@@ -1,6 +1,5 @@
 package views;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -44,19 +43,15 @@ public class ViewVisitorBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        statusMessageModel = new StatusMessageModel();
-        visitorState = new VisitorState();
-
-        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
+        try{
+            statusMessageModel = new StatusMessageModel();
+            visitorState = new VisitorState();
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             refreshVisitorList();
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
         }
+
     }
 
     public void searchList(){
@@ -94,22 +89,22 @@ public class ViewVisitorBean implements Serializable {
         if (statusMessageModel.isStatus()){
             refreshVisitorList();
             visitorState.resetFields();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+            showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
         }
     }
 
     public void exitVisitor(Visitors exitVisitor){
         if (visitorService.exitVisitor(exitVisitor)){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit."));
+            showMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit.");
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor.");
         }
+    }
+
+    private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public void viewStudentVisitor(Users student){

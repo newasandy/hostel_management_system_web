@@ -22,31 +22,39 @@ public class VisitorService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
     public StatusMessageModel addVisitor(String fullName, String reason, Users student, String relation){
-        Visitors newVisitor = new Visitors();
-        newVisitor.setFullName(fullName);
-        newVisitor.setReason(reason);
-        newVisitor.setStudentId(student);
-        newVisitor.setRelation(relation);
+        try{
+            Visitors newVisitor = new Visitors();
+            newVisitor.setFullName(fullName);
+            newVisitor.setReason(reason);
+            newVisitor.setStudentId(student);
+            newVisitor.setRelation(relation);
 
-        Date date = new Date();
-        Timestamp entryTime = new Timestamp(date.getTime());
+            Date date = new Date();
+            Timestamp entryTime = new Timestamp(date.getTime());
 
-        newVisitor.setEntryDatetime(entryTime);
-        if (visitorsDAO.add(newVisitor)){
-            statusMessageModel.setStatus(true);
-            statusMessageModel.setMessage("New Visitor Added Successfully");
-        }else {
+            newVisitor.setEntryDatetime(entryTime);
+            if (visitorsDAO.add(newVisitor)){
+                statusMessageModel.setStatus(true);
+                statusMessageModel.setMessage("New Visitor Added Successfully");
+            }else {
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("Visitor Added Failed");
+            }
+        } catch (PersistenceException e){
             statusMessageModel.setStatus(false);
-            statusMessageModel.setMessage("Visitor Added Failed");
+            statusMessageModel.setMessage("A database error occurred while add new visitor.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
         }
         return statusMessageModel;
     }
 
     public boolean exitVisitor(Visitors exitVisitor){
-        Date date = new Date();
-        Timestamp exitDate = new Timestamp(date.getTime());
-        exitVisitor.setExitDatetime(exitDate);
         try{
+            Date date = new Date();
+            Timestamp exitDate = new Timestamp(date.getTime());
+            exitVisitor.setExitDatetime(exitDate);
             return visitorsDAO.update(exitVisitor);
         }catch (PersistenceException e){
             return false;

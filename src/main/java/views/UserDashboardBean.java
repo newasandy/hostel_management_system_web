@@ -9,16 +9,16 @@ import utils.SessionUtils;
 import views.stateModel.DashboardState;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.io.Serializable;
 
 @Named
-@RequestScoped
-public class UserDashboardBean {
+@ViewScoped
+public class UserDashboardBean implements Serializable {
 
     @Inject
     private UsersDAO usersDAO;
@@ -37,19 +37,25 @@ public class UserDashboardBean {
 
     @PostConstruct
     public void init(){
-        dashboardState = new DashboardState();
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            dashboardState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
+        try{
+            dashboardState = new DashboardState();
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String token = SessionUtils.getToken(request);
+            if (token == null){
+                return;
+            }
+
+            String email = JwtUtils.getUserEmail(token);
+            if (email == null){
+                return;
+            }
+
+            dashboardState.setLoginUser(usersDAO.getByEmail(email));
             dashboardState.setRecentUserVisitor(visitorsDAO.getRecentUserVisitor(dashboardState.getLoginUser().getId()));
             dashboardState.setRecentRoom(roomAllocationDAO.getRecentUserRoomAllocation(dashboardState.getLoginUser().getId()));
             dashboardState.setRecentLeaveRequest(leaveRequestDAO.getRecentLeaveRequest(dashboardState.getLoginUser().getId()));
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
         }
     }
 

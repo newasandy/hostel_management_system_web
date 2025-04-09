@@ -43,31 +43,26 @@ public class LeaveRequestBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        statusMessageModel = new StatusMessageModel();
-        leaveRequestState = new LeaveRequestState();
-        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            String email = JwtUtils.getUserEmail(SessionUtils.getToken(request));
-            if (email != null) {
-                leaveRequestState.setLoginUser(usersDAO.getByEmail(email));
-            } else {
-                System.out.println("Error: No email found in cookie.");
+        try{
+            statusMessageModel = new StatusMessageModel();
+            leaveRequestState = new LeaveRequestState();
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String token = SessionUtils.getToken(request);
+            if (token == null){
+                return;
             }
+            leaveRequestState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(token)));
             refreshLeaveRequestList();
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
         }
     }
 
     public void refreshLeaveRequestList(){
-        if ("USER".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
+        if ("USER".equals(leaveRequestState.getLoginUser().getRoles().getUserTypes())){
             leaveRequestState.setLeaveRequestList(leaveRequestDAO.getUserLeaveRequestByUserId(leaveRequestState.getLoginUser().getId()));
         }
-        if ("ADMIN".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
+        if ("ADMIN".equals(leaveRequestState.getLoginUser().getRoles().getUserTypes())){
             List<LeaveRequest> allLeaveRequest = leaveRequestDAO.getAll();
             Collections.sort(allLeaveRequest, new Comparator<LeaveRequest>() {
                 @Override
@@ -87,19 +82,15 @@ public class LeaveRequestBean implements Serializable {
                 if (statusMessageModel.isStatus()){
                     refreshLeaveRequestList();
                     leaveRequestState.resetFields();
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                    showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
                 }else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
                 }
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Leave Request already Applied"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Leave Request already Applied");
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Applied Leave Request"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Applied Leave Request");
         }
     }
 
@@ -108,11 +99,9 @@ public class LeaveRequestBean implements Serializable {
         if (leaveRequestService.updateLeaveRequest(leaveRequestState.getSelectLeaveRequest())){
             refreshLeaveRequestList();
             leaveRequestState.resetFields();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", status+" Leave Request"));
+            showMessage(FacesMessage.SEVERITY_INFO, "Success", status+" Leave Request");
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request");
         }
     }
 
@@ -120,11 +109,9 @@ public class LeaveRequestBean implements Serializable {
         if (leaveRequestService.updateLeaveRequest(leaveRequestState.getSelectLeaveRequest())){
             refreshLeaveRequestList();
             leaveRequestState.resetFields();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Leave Request"));
+            showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Leave Request");
         }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request"));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Leave Request");
         }
     }
 
@@ -134,6 +121,10 @@ public class LeaveRequestBean implements Serializable {
 
     public LocalDate getMinDate() {
         return LocalDate.now();
+    }
+
+    private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public String getRowStyleClass(LeaveRequest leave) {

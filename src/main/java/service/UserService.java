@@ -29,46 +29,54 @@ public class UserService {
     private RoomAllocationDAO roomAllocationDAO;
 
     public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
-        Users checkUser = usersDAO.getByEmail(email);
-        if (checkUser == null){
-            Users regUser = new Users();
+        try{
+            Users checkUser = usersDAO.getByEmail(email);
+            if (checkUser == null){
+                Users regUser = new Users();
 
-            regUser.setFullName(name);
-            regUser.setEmail(email);
-            regUser.setPasswords(PasswordUtils.getHashPassword(password));
-            regUser.setRoles(role);
-            regUser.setStatus(true);
+                regUser.setFullName(name);
+                regUser.setEmail(email);
+                regUser.setPasswords(PasswordUtils.getHashPassword(password));
+                regUser.setRoles(role);
+                regUser.setStatus(true);
 
-            RoomAllocation roomAllocation = new RoomAllocation();
-            roomAllocation.setRoomId(selectRoom);
-            Date date = new Date();
-            Timestamp allocatedDate = new Timestamp(date.getTime());
-            roomAllocation.setAllocationDate(allocatedDate);
+                RoomAllocation roomAllocation = new RoomAllocation();
+                roomAllocation.setRoomId(selectRoom);
+                Date date = new Date();
+                Timestamp allocatedDate = new Timestamp(date.getTime());
+                roomAllocation.setAllocationDate(allocatedDate);
 
-            Address regUserAddress = new Address();
+                Address regUserAddress = new Address();
 
-            regUserAddress.setCountry(country);
-            regUserAddress.setDistrict(district);
-            regUserAddress.setRmcMc(rmcMc);
-            regUserAddress.setWardNo(wardNo);
+                regUserAddress.setCountry(country);
+                regUserAddress.setDistrict(district);
+                regUserAddress.setRmcMc(rmcMc);
+                regUserAddress.setWardNo(wardNo);
 
-            if (usersDAO.add(regUser)){
-                regUserAddress.setUser(regUser);
-                roomAllocation.setStudentId(regUser);
-                if (addressDAOImp.add(regUserAddress) && roomAllocationDAO.add(roomAllocation)){
-                    statusMessageModel.setStatus(true);
-                    statusMessageModel.setMessage("User Register Successfully");
+                if (usersDAO.add(regUser)){
+                    regUserAddress.setUser(regUser);
+                    roomAllocation.setStudentId(regUser);
+                    if (addressDAOImp.add(regUserAddress) && roomAllocationDAO.add(roomAllocation)){
+                        statusMessageModel.setStatus(true);
+                        statusMessageModel.setMessage("User Register Successfully");
+                    }else {
+                        statusMessageModel.setStatus(false);
+                        statusMessageModel.setMessage("User Register but not register address and room");
+                    }
                 }else {
                     statusMessageModel.setStatus(false);
-                    statusMessageModel.setMessage("User Register but not register address and room");
+                    statusMessageModel.setMessage("User Register Unsuccessful");
                 }
             }else {
                 statusMessageModel.setStatus(false);
-                statusMessageModel.setMessage("User Register Unsuccessful");
+                statusMessageModel.setMessage("User Already Exist");
             }
-        }else {
+        } catch (PersistenceException e){
             statusMessageModel.setStatus(false);
-            statusMessageModel.setMessage("User Already Exist");
+            statusMessageModel.setMessage("A database error occurred while register new student.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
         }
         return statusMessageModel;
     }

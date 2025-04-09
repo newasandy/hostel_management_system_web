@@ -26,47 +26,69 @@ public class RoomsService {
     private RoomAllocationDAO roomAllocationDAO;
 
     public StatusMessageModel addNewRoom(int roomNumber , int capacity){
-        Rooms addRoom = new Rooms();
-        addRoom.setRoomNumber(roomNumber);
-        addRoom.setCapacity(capacity);
-        addRoom.setStatus(true);
-        Rooms checkRoom = roomDAO.findByRoomNumber(roomNumber);
-        if (checkRoom == null){
-            if (roomDAO.add(addRoom)){
-                statusMessageModel.setStatus(true);
-                statusMessageModel.setMessage("Room Added Successfully");
+        try{
+            Rooms addRoom = new Rooms();
+            addRoom.setRoomNumber(roomNumber);
+            addRoom.setCapacity(capacity);
+            addRoom.setStatus(true);
+            Rooms checkRoom = roomDAO.findByRoomNumber(roomNumber);
+            if (checkRoom == null){
+                if (roomDAO.add(addRoom)){
+                    statusMessageModel.setStatus(true);
+                    statusMessageModel.setMessage("Room Added Successfully");
+                }else {
+                    statusMessageModel.setStatus(false);
+                    statusMessageModel.setMessage("!! Room Not Added");
+                }
             }else {
                 statusMessageModel.setStatus(false);
-                statusMessageModel.setMessage("!! Room Not Added");
+                statusMessageModel.setMessage("!! Room Already Exist");
             }
-        }else {
+        }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
-            statusMessageModel.setMessage("!! Room Already Exist");
+            statusMessageModel.setMessage("A database error occurred while Create new Room.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
         }
         return statusMessageModel;
     }
 
     public StatusMessageModel allocateStudentInRoom(Users selectStudent, Rooms selectRoom){
-        RoomAllocation roomAllocation = new RoomAllocation();
-        roomAllocation.setStudentId(selectStudent);
-        roomAllocation.setRoomId(selectRoom);
-        Date date = new Date();
-        Timestamp allocatedDate = new Timestamp(date.getTime());
-        roomAllocation.setAllocationDate(allocatedDate);
-        if (roomAllocationDAO.add(roomAllocation)){
-            statusMessageModel.setStatus(true);
-            statusMessageModel.setMessage("Allocated student Success");
-        }else {
+        try{
+            RoomAllocation roomAllocation = new RoomAllocation();
+            roomAllocation.setStudentId(selectStudent);
+            roomAllocation.setRoomId(selectRoom);
+            Date date = new Date();
+            Timestamp allocatedDate = new Timestamp(date.getTime());
+            roomAllocation.setAllocationDate(allocatedDate);
+            if (roomAllocationDAO.add(roomAllocation)){
+                statusMessageModel.setStatus(true);
+                statusMessageModel.setMessage("Allocated student Success");
+            }else {
 
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("Allocation Unsuccessful");
+            }
+        }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
-            statusMessageModel.setMessage("Allocation Unsuccessful");
+            statusMessageModel.setMessage("A database error occurred while allocate student.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
         }
         return statusMessageModel;
     }
 
     public boolean updateRoom(Rooms selectRoom, int updatedCapacity){
-        selectRoom.setCapacity(updatedCapacity);
-        return roomDAO.update(selectRoom);
+        try{
+            selectRoom.setCapacity(updatedCapacity);
+            return roomDAO.update(selectRoom);
+        }catch (PersistenceException e){
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public StatusMessageModel disableRoom(Rooms selectRoom){
@@ -95,9 +117,9 @@ public class RoomsService {
     }
 
     public boolean unallocatedStudentFromDisableRoom(Rooms disableRoom){
-        Date date = new Date();
-        Timestamp unAllocatedDate = new Timestamp(date.getTime());
         try{
+            Date date = new Date();
+            Timestamp unAllocatedDate = new Timestamp(date.getTime());
             if (roomAllocationDAO.getRoomOccupancy(disableRoom) > 0){
                 return roomAllocationDAO.disableRoomUnallocatedStudent(disableRoom.getId(), unAllocatedDate);
             }
@@ -110,10 +132,10 @@ public class RoomsService {
     }
 
     public boolean unallocatedStudent(RoomAllocation selectUnallocated){
-        Date date = new Date();
-        Timestamp unAllocatedDate = new Timestamp(date.getTime());
-        selectUnallocated.setUnallocationDate(unAllocatedDate);
         try{
+            Date date = new Date();
+            Timestamp unAllocatedDate = new Timestamp(date.getTime());
+            selectUnallocated.setUnallocationDate(unAllocatedDate);
             return roomAllocationDAO.update(selectUnallocated);
         } catch (PersistenceException e) {
             return false;

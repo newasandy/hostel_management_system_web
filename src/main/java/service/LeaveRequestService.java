@@ -23,29 +23,36 @@ public class LeaveRequestService {
     private StatusMessageModel statusMessageModel = new StatusMessageModel();
 
     public StatusMessageModel applyLeaveRequest(Users student , String reason, LocalDate startFrom, LocalDate endOn){
-        LeaveRequest leaveRequest = new LeaveRequest();
-        leaveRequest.setStudentId(student);
-        leaveRequest.setReason(reason);
-        leaveRequest.setStartFrom(startFrom);
-        leaveRequest.setEndOn(endOn);
-        Date date = new Date();
-        Timestamp applyDate = new Timestamp(date.getTime());
-        leaveRequest.setApplyDate(applyDate);
-        leaveRequest.setStatus(LeaveRequest.Status.PENDING);
-        if (leaveRequestDAO.add(leaveRequest)){
-            statusMessageModel.setStatus(true);
-            statusMessageModel.setMessage("Leave Application is Submit Successfully");
-        }else {
+        try{
+            LeaveRequest leaveRequest = new LeaveRequest();
+            leaveRequest.setStudentId(student);
+            leaveRequest.setReason(reason);
+            leaveRequest.setStartFrom(startFrom);
+            leaveRequest.setEndOn(endOn);
+            Date date = new Date();
+            Timestamp applyDate = new Timestamp(date.getTime());
+            leaveRequest.setApplyDate(applyDate);
+            leaveRequest.setStatus(LeaveRequest.Status.PENDING);
+            if (leaveRequestDAO.add(leaveRequest)){
+                statusMessageModel.setStatus(true);
+                statusMessageModel.setMessage("Leave Application is Submit Successfully");
+            }else {
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("!! Leave Application is not Submit");
+            }
+        }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
-            statusMessageModel.setMessage("!! Leave Application is not Submit");
+            statusMessageModel.setMessage("A database error occurred while apply leave request.");
+        } catch (Exception e) {
+            statusMessageModel.setStatus(false);
+            statusMessageModel.setMessage("An unexpected error occurred.");
         }
         return statusMessageModel;
     }
 
     public boolean updateLeaveRequest(LeaveRequest selectedLeaveRequest){
         try{
-            leaveRequestDAO.update(selectedLeaveRequest);
-            return true;
+            return leaveRequestDAO.update(selectedLeaveRequest);
         }catch (PersistenceException e){
             return false;
         } catch (Exception e) {

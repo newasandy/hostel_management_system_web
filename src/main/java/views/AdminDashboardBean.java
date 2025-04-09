@@ -11,8 +11,8 @@ import org.primefaces.model.chart.DonutChartModel;
 import views.stateModel.DashboardState;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class AdminDashboardBean implements Serializable {
     @Inject
     private UsersDAO usersDAO;
@@ -45,10 +45,14 @@ public class AdminDashboardBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        dashboardState = new DashboardState();
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            dashboardState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
+        try{
+            dashboardState = new DashboardState();
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String token = SessionUtils.getToken(request);
+            if (token == null){
+                return;
+            }
+            dashboardState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(token)));
             if ("ADMIN".equals(dashboardState.getLoginUser().getRoles().getUserTypes())){
                 dashboardState.setCountOnlyAllocated(roomAllocationDAO.getCountOnlyAllocated());
                 dashboardState.setCountOnlyStudent(usersDAO.getCountOnlyStudent());
@@ -56,12 +60,8 @@ public class AdminDashboardBean implements Serializable {
                 roomOccupancyChartModel();
                 userStatusChartModel();
             }
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
         }
     }
 

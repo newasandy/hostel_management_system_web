@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -43,38 +42,33 @@ public class ViewRoomsBean implements Serializable {
 
     @PostConstruct
     public void init(){
-        roomState = new RoomState();
-        statusMessageModel = new StatusMessageModel();
-        refreshRoomList();
+        try{
+            roomState = new RoomState();
+            statusMessageModel = new StatusMessageModel();
+            refreshRoomList();
+        }catch (Exception e){
+            throw new RuntimeException("Failed ti init",e);
+        }
     }
 
     public void refreshRoomList(){
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            roomState.setViewRoomsList(roomDAO.getAll());
-            roomState.setUnallocatedUser(usersDAO.getUnallocatedUsers());
-            roomState.setAvailableRoom(roomDAO.getAvailableRoom());
-            if ("USER".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
-                Users loginUser = usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request)));
-                roomState.setRoomAllocationList(roomAllocationDAO.getUserAllocated(loginUser.getId()));
-            }
-            if ("ADMIN".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
-                List<RoomAllocation> orginalRoomAllocationList = roomAllocationDAO.getAll();
-                Collections.sort(orginalRoomAllocationList, new Comparator<RoomAllocation>() {
-                    @Override
-                    public int compare(RoomAllocation v1, RoomAllocation v2) {
-                        return v2.getAllocationDate().compareTo(v1.getAllocationDate());
-                    }
-                });
-                roomState.setRoomAllocationList(orginalRoomAllocationList);
-            }
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml?expired=true");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        roomState.setViewRoomsList(roomDAO.getAll());
+        roomState.setUnallocatedUser(usersDAO.getUnallocatedUsers());
+        roomState.setAvailableRoom(roomDAO.getAvailableRoom());
+        if ("USER".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
+            Users loginUser = usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request)));
+            roomState.setRoomAllocationList(roomAllocationDAO.getUserAllocated(loginUser.getId()));
+        }
+        if ("ADMIN".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
+            List<RoomAllocation> orginalRoomAllocationList = roomAllocationDAO.getAll();
+            Collections.sort(orginalRoomAllocationList, new Comparator<RoomAllocation>() {
+                @Override
+                public int compare(RoomAllocation v1, RoomAllocation v2) {
+                    return v2.getAllocationDate().compareTo(v1.getAllocationDate());
+                }
+            });
+            roomState.setRoomAllocationList(orginalRoomAllocationList);
         }
     }
 

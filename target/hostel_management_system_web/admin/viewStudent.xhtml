@@ -21,8 +21,8 @@
         <h:form id="main-form">
             <p:growl id="message" showDetail="true" life="3000" sticky="false" />
             <div class="top-bar">
-                <p:inputText id="searchItem" value="#{viewStudentBean.userState.searchItem}" placeholder="Search By Name" style="width:250px;">
-                    <p:ajax event="keyup" listener="#{viewStudentBean.searchList}" update="userTable" />
+                <p:inputText id="searchItem" value="#{userBean.userState.searchItem}" placeholder="Search By Name" style="width:250px;">
+                    <p:ajax event="keyup" listener="#{userBean.searchList}" update="userTable" />
                 </p:inputText>
 
                 <h3 style="margin-right: 150px;">Students</h3>

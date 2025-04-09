@@ -1,6 +1,7 @@
 package views;
 
 import daoImp.UserTypeDAOImp;
+import daoInterface.UsersDAO;
 import model.*;
 import service.AuthenticationService;
 import service.UserService;
@@ -10,20 +11,22 @@ import views.stateModel.StatusMessageModel;
 import views.stateModel.UserState;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class UserBean implements Serializable{
 
     @Inject
-    private ViewStudentBean viewStudentBean;
+    private UsersDAO usersDAO;
 
     @Inject
     private UserTypeDAOImp userTypeDAOImp;
@@ -40,29 +43,35 @@ public class UserBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        statusMessageModel = new StatusMessageModel();
-        userState = new UserState();
-        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        if (SessionUtils.isSessionValid(request) && JwtUtils.isTokenValid(SessionUtils.getToken(request))){
-            try {
-                loadUserTypes();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to initialize UserBean", e);
-            }
-        }else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try{
+            statusMessageModel = new StatusMessageModel();
+            userState = new UserState();
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            setUserRoleFromSession();
+            refreshStudentList();
+            getAllUserType();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed ti init",e);
         }
 
     }
 
-    public void loadUserTypes() {
+    public void getAllUserType(){
         userState.setUserTypes(userTypeDAOImp.getAll());
+    }
+
+    public void searchList(){
+        if (userState.getSearchItem() == null || userState.getSearchItem().isEmpty()){
+            refreshStudentList();
+        }else {
+            String lowerSearch = userState.getSearchItem().toLowerCase();
+            List<Users> originalStudentList = usersDAO.getOnlyStudent();
+            userState.setOnlyStudent(originalStudentList.stream().filter(users -> users.getFullName().toLowerCase().contains(lowerSearch) || (users.getEmail() != null && users.getEmail().toLowerCase().contains(lowerSearch))).collect(Collectors.toList()));
+        }
+    }
+
+    public void refreshStudentList() {
+        userState.setOnlyStudent(usersDAO.getOnlyStudent());
     }
 
     public void registrationUser(){
@@ -70,61 +79,27 @@ public class UserBean implements Serializable{
         userState.resetFields();
         try {
             if (statusMessageModel.isStatus()){
-                viewStudentBean.refreshStudentList();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage()));
+                refreshStudentList();
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage()));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to register user."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to register user.");
         }
 
-    }
-
-    public String login(){
-        Users user = authenticationService.loginService(userState.getEmail(),userState.getPassword());
-        if (user != null){
-            if(user.isStatus()){
-                userState.resetFields();
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Welcome,"+user.getFullName()));
-
-                SessionUtils.storeToken(request,JwtUtils.generateToken(user.getEmail(), user.getRoles().getUserTypes()));
-
-                setUserRoleFromSession();
-                if ("USER".equals(user.getRoles().getUserTypes())) {
-                    return "/users/userDashboard.xhtml?faces-redirect=true";
-                } else if ("ADMIN".equals(user.getRoles().getUserTypes())) {
-                    return "/admin/adminDashboard.xhtml?faces-redirect=true";
-                }
-            }
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User is Deactivated"));
-
-            return null;
-        }else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid email or password"));
-            return null;
-        }
     }
 
     public void deactivateStudent(Users student) {
         student.setStatus(false);
         try {
             if (userService.updateStudent(student)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!"));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", "User Deactivated successfully!");
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Deactivated"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Deactivated");
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Deactivated user.");
         }
     }
 
@@ -132,15 +107,12 @@ public class UserBean implements Serializable{
         student.setStatus(true);
         try {
             if (userService.updateStudent(student)){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!"));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", "User Activated successfully!");
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Activated"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Activated");
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Activated user."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to Activated user.");
         }
     }
 
@@ -151,29 +123,22 @@ public class UserBean implements Serializable{
     public void updateUser(){
         try {
             if (userService.updateStudent(userState.getSelectUser())){
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully"));
+                showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Successfully");
             }else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update"));
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update");
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user."));
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update user.");
         }
     }
 
-    public String logout(){
-        SessionUtils.removeToken(request);
-        setUserRoleFromSession();
-        return "/index.xhtml?faces-redirect=true";
+    private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public UserState getUserState() {
         return userState;
     }
-
-
 
     private void setUserRoleFromSession() {
         String token = SessionUtils.getToken(request);

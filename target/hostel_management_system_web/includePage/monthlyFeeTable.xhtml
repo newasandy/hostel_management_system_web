@@ -17,7 +17,7 @@
             <h:outputText value="#{monthlyFee.issueDate}" />
         </p:column>
         <p:column headerText="Student Name" sortBy="#{monthlyFee.studentId.fullName}"
-                  rendered="#{userBean.userState.userRole == 'ADMIN'}"
+                  rendered="#{authBean.authState.userRole == 'ADMIN'}"
                   filterBy="#{monthlyFee.studentId.fullName}">
             <h:outputText value="#{monthlyFee.studentId.fullName}" />
         </p:column>
