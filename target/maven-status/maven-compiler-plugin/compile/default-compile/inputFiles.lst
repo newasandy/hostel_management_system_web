@@ -26,12 +26,10 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/LeaveRequestBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/VisitorState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserTypeConverter.java
-/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/EntityManageUtils.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/UserType.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/TransactionStatementDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/RoomState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserDAOImpl.java
-/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UserTypeDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/DashboardState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/IndexImageBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/VisitorsDAO.java

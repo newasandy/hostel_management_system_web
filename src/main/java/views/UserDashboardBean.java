@@ -51,7 +51,7 @@ public class UserDashboardBean implements Serializable {
             }
 
             dashboardState.setLoginUser(usersDAO.getByEmail(email));
-            dashboardState.setRecentUserVisitor(visitorsDAO.getRecentUserVisitor(dashboardState.getLoginUser().getId()));
+            dashboardState.setUserVisitorCount(visitorsDAO.userTotalVisitor(dashboardState.getLoginUser().getId()));
             dashboardState.setRecentRoom(roomAllocationDAO.getRecentUserRoomAllocation(dashboardState.getLoginUser().getId()));
             dashboardState.setRecentLeaveRequest(leaveRequestDAO.getRecentLeaveRequest(dashboardState.getLoginUser().getId()));
         } catch (Exception e) {

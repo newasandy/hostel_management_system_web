@@ -17,7 +17,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.*;
 
@@ -73,14 +72,18 @@ public class ViewRoomsBean implements Serializable {
     }
 
     public void addNewRoom(){
-        statusMessageModel = roomsService.addNewRoom(roomState.getRoomNumber(),roomState.getCapacity());
         try{
-            if (statusMessageModel.isStatus()){
-                refreshRoomList();
-                roomState.resetFields();
-                showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
+            if (roomState.getRoomNumber() > 0 && roomState.getCapacity() > 0){
+                statusMessageModel = roomsService.addNewRoom(roomState.getRoomNumber(),roomState.getCapacity());
+                if (statusMessageModel.isStatus()){
+                    refreshRoomList();
+                    roomState.resetFields();
+                    showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
+                }else {
+                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
+                }
             }else {
-                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
+                showMessage(FacesMessage.SEVERITY_ERROR,"Error","Invalid Room number and capacity");
             }
         } catch (Exception e) {
             showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
@@ -89,20 +92,21 @@ public class ViewRoomsBean implements Serializable {
 
     public void updateRoom(){
         try{
-            if (roomState.getUpdatedCapacity() >= roomAllocationDAO.getRoomOccupancy(roomState.getSelectRoom())){
-                if (roomsService.updateRoom(roomState.getSelectRoom(),roomState.getUpdatedCapacity())){
+            Rooms forUpdateRoom = roomDAO.getById(roomState.getUpdateRoomId());
+            if (roomState.getUpdatedCapacity() >= roomAllocationDAO.getRoomOccupancy(forUpdateRoom)){
+                if (roomsService.updateRoom(forUpdateRoom,roomState.getUpdatedCapacity())){
                     refreshRoomList();
                     showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully");
                 }else {
                     refreshRoomList();
-                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Room Not Update");
+                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Room Not Update 1");
                 }
             }else {
                 refreshRoomList();
                 showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Capacity is less then Room Occupancy");
             }
         }catch (Exception e){
-            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
+            showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room 2");
         }
     }
 
@@ -119,11 +123,9 @@ public class ViewRoomsBean implements Serializable {
         }
     }
 
-    @Transactional
     public void enableRoom(Rooms room){
-        room.setStatus(true);
         try{
-            if (roomDAO.update(room)){
+            if (roomsService.enableRoom(room)){
                 showMessage(FacesMessage.SEVERITY_INFO, "Success", "Update Room Successfully");
             }else {
                 showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Update Room");
@@ -184,6 +186,7 @@ public class ViewRoomsBean implements Serializable {
 
     public void prepareEditRoom(Rooms room) {
         roomState.setSelectRoom(room);
+        roomState.setUpdateRoomId(room.getId());
         roomState.setUpdatedCapacity(room.getCapacity());
     }
 

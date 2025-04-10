@@ -5,10 +5,9 @@ import model.MonthlyFee;
 import model.TransactionStatement;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement>
         super(TransactionStatement.class);
     }
 
-    @Inject
+    @PersistenceContext(unitName = "hostelmanagement")
     private EntityManager entityManager;
 
 

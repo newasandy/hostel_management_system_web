@@ -1,4 +1,3 @@
-daoInterface/UserTypeDAO.class
 daoInterface/UsersDAO.class
 views/stateModel/LeaveRequestState.class
 daoImp/RoomDAOImp.class
@@ -8,7 +7,6 @@ service/VisitorService.class
 service/LeaveRequestService.class
 views/stateModel/VisitorState.class
 model/Address.class
-utils/EntityManageUtils.class
 model/LeaveRequest.class
 model/Visitors.class
 daoInterface/VisitorsDAO.class

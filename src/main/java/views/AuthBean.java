@@ -8,7 +8,6 @@ import utils.SessionUtils;
 import views.stateModel.UserState;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -70,16 +69,17 @@ public class AuthBean implements Serializable {
         return "/index.xhtml?faces-redirect=true";
     }
 
-    @PreDestroy
-    public void destroySession(){
-        setUserRoleFromSession();
-    }
-
     private void setUserRoleFromSession() {
-        String token = SessionUtils.getToken(request);
-        if (token != null){
-            authState.setUserRole(JwtUtils.getUserRole(token));
-        }else {
+        if (SessionUtils.isSessionValid(request)){
+            String token = SessionUtils.getToken(request);
+            if (JwtUtils.isTokenValid(token)){
+                authState.setUserRole(JwtUtils.getUserRole(token));
+            }else {
+                authState.setUserRole("GUEST");
+            }
+        }
+
+        if (!SessionUtils.isSessionValid(request) || !JwtUtils.isTokenValid(SessionUtils.getToken(request))) {
             authState.setUserRole("GUEST");
         }
     }

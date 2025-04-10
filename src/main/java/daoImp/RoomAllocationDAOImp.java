@@ -1,10 +1,9 @@
 package daoImp;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
+import javax.persistence.PersistenceContext;
 
 import daoInterface.RoomAllocationDAO;
 import model.RoomAllocation;
@@ -18,7 +17,7 @@ import java.util.List;
 @Dependent
 public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO, Serializable {
 
-    @Inject
+    @PersistenceContext(unitName = "hostelmanagement")
     private EntityManager entityManager;
 
     public RoomAllocationDAOImp(){
@@ -69,8 +68,6 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
                     .setParameter("unallocationDate", unallocationDate)
                     .setParameter("roomId",roomId)
                     .executeUpdate();
-            entityManager.flush();
-            entityManager.clear();
             return updateRow >0;
         }catch (Exception e){
             e.printStackTrace();
@@ -103,8 +100,26 @@ public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements 
             return entityManager.createQuery("SELECT r FROM RoomAllocation r WHERE r.studentId.id = :studentId AND r.unallocationDate IS NULL", RoomAllocation.class)
                     .setParameter("studentId",userId)
                     .getSingleResult();
-            } catch (NoResultException e) {
-                return null;
-            }
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean unallocatedInactiveStudent(Long userId, Timestamp unallocationDate) {
+        if (entityManager == null) {
+            return false;
+        }
+
+        try{
+            int updateRow = entityManager.createQuery("UPDATE RoomAllocation ra SET ra.unallocationDate = :unallocationDate WHERE ra.studentId.id = :studentId AND ra.unallocationDate IS NULL")
+                    .setParameter("unallocationDate", unallocationDate)
+                    .setParameter("studentId", userId)
+                    .executeUpdate();
+            return updateRow >0;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

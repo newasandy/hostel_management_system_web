@@ -146,6 +146,37 @@ public class MonthlyFeeServiceTest {
 
         verify(transactionStatementDAOImp).add(any(TransactionStatement.class));
     }
+
+    @Test
+    void testFeeByAdmin_PersistenceExceptionWhilePayFeePassUpdate(){
+        when(monthlyFeeDAO.update(any(MonthlyFee.class))).thenReturn(true);
+        when(transactionStatementDAOImp.add(any(TransactionStatement.class)))
+                .thenThrow(new PersistenceException("Add Transaction Statement is failed"));
+        StatusMessageModel result = monthlyFeeService.payFee(testFee,testPayAmount,"COMPLETED");
+        assertFalse(result.isStatus());
+        assertEquals("Fee Payment Success but not Add Transaction History", result.getMessage());
+        verify(monthlyFeeDAO).update(argThat(fee->
+                fee.getPaid() == 500.0 &&
+                fee.getDue() == 500.0
+        ));
+
+        verify(transactionStatementDAOImp).add(any(TransactionStatement.class));
+    }
+
+    @Test
+    void testFeeByAdmin_PersistenceException(){
+        when(monthlyFeeDAO.update(any(MonthlyFee.class)))
+                .thenThrow(new PersistenceException("Database error occurred"));
+        StatusMessageModel result = monthlyFeeService.payFee(testFee,testPayAmount,"COMPLETED");
+        assertFalse(result.isStatus());
+        assertEquals("A database error occurred while pay fee.", result.getMessage());
+        verify(monthlyFeeDAO).update(argThat(fee ->
+            fee.getPaid() == 500.0 &&
+                    fee.getDue() == 500.0
+        ));
+
+    }
+
     @Test
     void testPayFeeByUser_SuccessfulPayment() {
         String status = "PENDING";

@@ -16,7 +16,7 @@ public class SessionUtils {
             session = request.getSession(true);
         }
         session.setAttribute(tokenKey, token);
-        session.setMaxInactiveInterval(60*2);
+        session.setMaxInactiveInterval(60*60);
     }
 
     public static String getToken(HttpServletRequest request) {

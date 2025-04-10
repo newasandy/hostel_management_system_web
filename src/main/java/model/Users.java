@@ -22,7 +22,7 @@ public class Users extends BaseEntity{
     @Column(name = "status", nullable = false)
     private boolean status;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Address address;
 
     @OneToMany(mappedBy = "studentId", cascade = CascadeType.ALL)

@@ -9,8 +9,16 @@
     <h:outputStylesheet name="/css/style.css" />
 </h:head>
 <h:body>
+
     <header>
-        <ui:include src="/includePage/navigationBar.xhtml"/>
+        <div class="menu-bar">
+            <h:form>
+                <p:menubar orientation="horizontal" autoDisplay="false">
+                    <p:menuitem value="Home" outcome="home" url="index.xhtml"/>
+                    <p:menuitem value="Login" url="login.xhtml" style="position:absolute; width: 60px; right:1rem; top:0px;"/>
+                </p:menubar>
+            </h:form>
+        </div>
     </header>
 
     <h:form styleClass="full-width-form">

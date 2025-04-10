@@ -14,6 +14,8 @@ public class RoomState {
     private Rooms selectRoom;
     private Users selectStudent;
 
+    private Long updateRoomId;
+
     private List<Rooms> orginalRoomsList;
     private List<Rooms> viewRoomsList;
     private List<RoomAllocation> roomAllocationList;
@@ -25,17 +27,12 @@ public class RoomState {
     public RoomState() {
     }
 
-    public RoomState(int roomNumber, int capacity, int updatedCapacity, List<Rooms> orginalRoomsList, List<Rooms> viewRoomsList, List<RoomAllocation> roomAllocationList, List<Users> unallocatedUser, List<Rooms> availableRoom, Rooms selectRoom, Users selectStudent) {
-        this.roomNumber = roomNumber;
-        this.capacity = capacity;
-        this.updatedCapacity = updatedCapacity;
-        this.orginalRoomsList = orginalRoomsList;
-        this.viewRoomsList = viewRoomsList;
-        this.roomAllocationList = roomAllocationList;
-        this.unallocatedUser = unallocatedUser;
-        this.availableRoom = availableRoom;
-        this.selectRoom = selectRoom;
-        this.selectStudent = selectStudent;
+    public Long getUpdateRoomId() {
+        return updateRoomId;
+    }
+
+    public void setUpdateRoomId(Long updateRoomId) {
+        this.updateRoomId = updateRoomId;
     }
 
     public int getRoomNumber() {

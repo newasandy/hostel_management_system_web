@@ -2,9 +2,9 @@ package daoImp;
 
 import daoInterface.BaseDAO;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -18,7 +18,7 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>, Serializable {
         this.entityClass=entity;
     }
 
-    @Inject
+    @PersistenceContext(unitName = "hostelmanagement")
     private EntityManager entityManager;
 
 

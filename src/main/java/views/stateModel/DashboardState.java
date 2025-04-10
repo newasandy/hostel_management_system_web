@@ -3,19 +3,26 @@ package views.stateModel;
 import model.LeaveRequest;
 import model.RoomAllocation;
 import model.Users;
-import model.Visitors;
 
 public class DashboardState {
 
     private Users loginUser ;
 
-    private Visitors recentUserVisitor;
     private RoomAllocation recentRoom;
     private LeaveRequest recentLeaveRequest ;
+    private Long userVisitorCount;
     private Long countOnlyAllocated;
     private Long countOnlyStudent;
 
     public DashboardState() {
+    }
+
+    public Long getUserVisitorCount() {
+        return userVisitorCount;
+    }
+
+    public void setUserVisitorCount(Long userVisitorCount) {
+        this.userVisitorCount = userVisitorCount;
     }
 
     public Users getLoginUser() {
@@ -24,14 +31,6 @@ public class DashboardState {
 
     public void setLoginUser(Users loginUser) {
         this.loginUser = loginUser;
-    }
-
-    public Visitors getRecentUserVisitor() {
-        return recentUserVisitor;
-    }
-
-    public void setRecentUserVisitor(Visitors recentUserVisitor) {
-        this.recentUserVisitor = recentUserVisitor;
     }
 
     public RoomAllocation getRecentRoom() {

@@ -116,6 +116,17 @@ public class RoomsService {
         return statusMessageModel;
     }
 
+    public boolean enableRoom(Rooms room){
+        try{
+            room.setStatus(true);
+            return roomDAO.update(room);
+        }catch (PersistenceException pe){
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean unallocatedStudentFromDisableRoom(Rooms disableRoom){
         try{
             Date date = new Date();
@@ -138,6 +149,18 @@ public class RoomsService {
             selectUnallocated.setUnallocationDate(unAllocatedDate);
             return roomAllocationDAO.update(selectUnallocated);
         } catch (PersistenceException e) {
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean unallocatedInactiveStudent(Users inactiveUser){
+        try{
+            Date date = new Date();
+            Timestamp unAllocatedDate = new Timestamp(date.getTime());
+            return roomAllocationDAO.unallocatedInactiveStudent(inactiveUser.getId(), unAllocatedDate);
+        } catch (PersistenceException pe){
             return false;
         } catch (Exception e) {
             return false;

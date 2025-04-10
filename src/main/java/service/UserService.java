@@ -1,7 +1,6 @@
 package service;
 
 import daoImp.AddressDAOImp;
-import daoInterface.RoomAllocationDAO;
 import daoInterface.UsersDAO;
 import model.*;
 import utils.PasswordUtils;
@@ -11,8 +10,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.util.Date;
 
 @RequestScoped
 @Transactional
@@ -26,7 +23,7 @@ public class UserService {
     private AddressDAOImp addressDAOImp;
 
     @Inject
-    private RoomAllocationDAO roomAllocationDAO;
+    private RoomsService roomsService;
 
     public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
         try{
@@ -40,28 +37,23 @@ public class UserService {
                 regUser.setRoles(role);
                 regUser.setStatus(true);
 
-                RoomAllocation roomAllocation = new RoomAllocation();
-                roomAllocation.setRoomId(selectRoom);
-                Date date = new Date();
-                Timestamp allocatedDate = new Timestamp(date.getTime());
-                roomAllocation.setAllocationDate(allocatedDate);
 
                 Address regUserAddress = new Address();
-
                 regUserAddress.setCountry(country);
                 regUserAddress.setDistrict(district);
                 regUserAddress.setRmcMc(rmcMc);
                 regUserAddress.setWardNo(wardNo);
+                regUserAddress.setUser(regUser);
+
+                regUser.setAddress(regUserAddress);
 
                 if (usersDAO.add(regUser)){
-                    regUserAddress.setUser(regUser);
-                    roomAllocation.setStudentId(regUser);
-                    if (addressDAOImp.add(regUserAddress) && roomAllocationDAO.add(roomAllocation)){
+                    if (roomsService.allocateStudentInRoom(regUser,selectRoom).isStatus()){
                         statusMessageModel.setStatus(true);
                         statusMessageModel.setMessage("User Register Successfully");
                     }else {
                         statusMessageModel.setStatus(false);
-                        statusMessageModel.setMessage("User Register but not register address and room");
+                        statusMessageModel.setMessage("User Register but not room allocated");
                     }
                 }else {
                     statusMessageModel.setStatus(false);
@@ -83,6 +75,10 @@ public class UserService {
 
     public boolean updateStudent(Users selectStudent){
         try{
+            if (!selectStudent.isStatus()){
+                roomsService.unallocatedInactiveStudent(selectStudent);
+                return usersDAO.update(selectStudent);
+            }
             return usersDAO.update(selectStudent);
         }catch (PersistenceException e){
             return false;

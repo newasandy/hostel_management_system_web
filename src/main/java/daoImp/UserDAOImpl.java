@@ -4,9 +4,9 @@ import daoInterface.UsersDAO;
 import model.Users;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +15,12 @@ import java.util.List;
 @Dependent
 public class UserDAOImpl extends BaseDAOImp<Users> implements UsersDAO, Serializable {
 
+    @PersistenceContext(unitName = "hostelmanagement")
+    private EntityManager entityManager;
+
     public UserDAOImpl(){
         super(Users.class);
     }
-
-    @Inject
-    private EntityManager entityManager;
 
     @Override
     public Users getByEmail(String email){

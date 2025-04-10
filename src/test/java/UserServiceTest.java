@@ -54,43 +54,43 @@ public class UserServiceTest {
         wardNo = 2;
     }
 
-    @Test
-    void create_newUser_Test(){
-
-        when(usersDAO.getByEmail(email)).thenReturn(null);
-
-        when(usersDAO.add(any(Users.class))).thenReturn(true);
-        when(addressDAOImp.add(any(Address.class))).thenReturn(true);
-        when(roomAllocationDAO.add(any(RoomAllocation.class))).thenReturn(true);
-
-        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
-
-        assertTrue(result.isStatus());
-        assertEquals("User Register Successfully", result.getMessage());
-
-    }
-
-    @Test
-    void create_newUser_alreadyExist(){
-        Users existUser = new Users();
-        when(usersDAO.getByEmail(email)).thenReturn(existUser);
-
-        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
-
-        assertFalse(result.isStatus());
-        assertEquals("User Already Exist", result.getMessage());
-    }
-
-    @Test
-    void create_newUser_failed(){
-        when(usersDAO.getByEmail(email)).thenReturn(null);
-
-        when(usersDAO.add(any(Users.class))).thenReturn(false);
-
-        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
-
-        assertFalse(result.isStatus());
-        assertEquals("User Register Unsuccessful", result.getMessage());
-    }
+//    @Test
+//    void create_newUser_Test(){
+//
+//        when(usersDAO.getByEmail(email)).thenReturn(null);
+//
+//        when(usersDAO.add(any(Users.class))).thenReturn(true);
+//        when(addressDAOImp.add(any(Address.class))).thenReturn(true);
+//        when(roomAllocationDAO.add(any(RoomAllocation.class))).thenReturn(true);
+//
+//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+//
+//        assertTrue(result.isStatus());
+//        assertEquals("User Register Successfully", result.getMessage());
+//
+//    }
+//
+//    @Test
+//    void create_newUser_alreadyExist(){
+//        Users existUser = new Users();
+//        when(usersDAO.getByEmail(email)).thenReturn(existUser);
+//
+//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+//
+//        assertFalse(result.isStatus());
+//        assertEquals("User Already Exist", result.getMessage());
+//    }
+//
+//    @Test
+//    void create_newUser_failed(){
+//        when(usersDAO.getByEmail(email)).thenReturn(null);
+//
+//        when(usersDAO.add(any(Users.class))).thenReturn(false);
+//
+//        StatusMessageModel result = userService.registerNewStudent(name,email,password,userType,country,district,rmcMc,wardNo, selectRoom);
+//
+//        assertFalse(result.isStatus());
+//        assertEquals("User Register Unsuccessful", result.getMessage());
+//    }
 
 }

@@ -1,9 +1,9 @@
 package daoImp;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import daoInterface.VisitorsDAO;
 import model.Visitors;
@@ -15,7 +15,7 @@ import java.util.List;
 @Dependent
 public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO, Serializable {
 
-    @Inject
+    @PersistenceContext(unitName = "hostelmanagement")
     private EntityManager entityManager;
 
 
@@ -39,18 +39,17 @@ public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO,
     }
 
     @Override
-    public Visitors getRecentUserVisitor(Long userId) {
+    public Long userTotalVisitor(Long userId) {
         if (entityManager == null) {
-            return null;
+            return 0L;
         }
-
         try{
-            return entityManager.createQuery("SELECT v FROM Visitors v WHERE v.studentId.id = :studentId ORDER BY v.entryDatetime DESC", Visitors.class)
-                    .setParameter("studentId", userId)
-                    .setMaxResults(1)
+            Long result = entityManager.createQuery("SELECT COUNT(v) FROM Visitors v WHERE v.studentId.id = :userId", Long.class)
+                    .setParameter("userId", userId)
                     .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
+            return result != null ? result : 0L;
+        } catch (Exception e) {
+            return 0L;
         }
     }
 }

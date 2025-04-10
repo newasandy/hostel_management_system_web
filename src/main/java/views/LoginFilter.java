@@ -33,7 +33,7 @@ public class LoginFilter implements Filter {
         }
 
         if (!SessionUtils.isSessionValid(httpRequest) || !JwtUtils.isTokenValid(SessionUtils.getToken(httpRequest))) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.xhtml");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.xhtml?faces-redirect=true");
             return;
         }
 
