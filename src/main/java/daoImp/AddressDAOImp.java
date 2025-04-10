@@ -2,11 +2,11 @@ package daoImp;
 
 import model.Address;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import java.io.Serializable;
 
 
-@Dependent
+@Stateless
 public class AddressDAOImp extends BaseDAOImp<Address> implements Serializable {
     public AddressDAOImp (){
         super(Address.class);

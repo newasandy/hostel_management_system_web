@@ -4,7 +4,7 @@ import daoInterface.TransactionStatementDAO;
 import model.MonthlyFee;
 import model.TransactionStatement;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@Dependent
+@Stateless
 public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement> implements TransactionStatementDAO, Serializable {
     public TransactionStatementDAOImp(){
         super(TransactionStatement.class);

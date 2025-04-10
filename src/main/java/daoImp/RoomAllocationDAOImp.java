@@ -1,6 +1,6 @@
 package daoImp;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
-@Dependent
+@Stateless
 public class RoomAllocationDAOImp extends BaseDAOImp<RoomAllocation> implements RoomAllocationDAO, Serializable {
 
     @PersistenceContext(unitName = "hostelmanagement")

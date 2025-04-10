@@ -3,10 +3,10 @@ package daoImp;
 
 import model.UserType;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import java.io.Serializable;
 
-@Dependent
+@Stateless
 public class UserTypeDAOImp extends BaseDAOImp<UserType> implements Serializable {
     public UserTypeDAOImp(){
         super(UserType.class);
