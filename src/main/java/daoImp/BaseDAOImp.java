@@ -19,7 +19,7 @@ public abstract class BaseDAOImp <T> implements BaseDAO<T>, Serializable {
     }
 
     @PersistenceContext(unitName = "hostelmanagement")
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
 
     @Override

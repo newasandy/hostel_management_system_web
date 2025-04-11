@@ -1,9 +1,7 @@
 package daoImp;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import daoInterface.MonthlyFeeDAO;
 import model.MonthlyFee;
@@ -14,9 +12,6 @@ import java.util.List;
 
 @Stateless
 public class MonthlyFeeDAOImpl extends BaseDAOImp<MonthlyFee> implements MonthlyFeeDAO, Serializable {
-
-    @PersistenceContext(unitName = "hostelmanagement")
-    private EntityManager entityManager;
 
     public MonthlyFeeDAOImpl(){
         super(MonthlyFee.class);

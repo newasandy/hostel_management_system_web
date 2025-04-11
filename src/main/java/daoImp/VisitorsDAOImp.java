@@ -1,9 +1,7 @@
 package daoImp;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import daoInterface.VisitorsDAO;
 import model.Visitors;
@@ -14,10 +12,6 @@ import java.util.List;
 
 @Stateless
 public class VisitorsDAOImp extends BaseDAOImp<Visitors> implements VisitorsDAO, Serializable {
-
-    @PersistenceContext(unitName = "hostelmanagement")
-    private EntityManager entityManager;
-
 
     public VisitorsDAOImp(){
         super(Visitors.class);

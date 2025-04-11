@@ -5,9 +5,7 @@ import model.MonthlyFee;
 import model.TransactionStatement;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -17,10 +15,6 @@ public class TransactionStatementDAOImp extends BaseDAOImp<TransactionStatement>
     public TransactionStatementDAOImp(){
         super(TransactionStatement.class);
     }
-
-    @PersistenceContext(unitName = "hostelmanagement")
-    private EntityManager entityManager;
-
 
     @Override
     public List<TransactionStatement> getStatementByEachUser(Long userId) {

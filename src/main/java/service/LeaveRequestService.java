@@ -20,9 +20,8 @@ public class LeaveRequestService {
     @Inject
     private LeaveRequestDAO leaveRequestDAO;
 
-    private StatusMessageModel statusMessageModel = new StatusMessageModel();
-
     public StatusMessageModel applyLeaveRequest(Users student , String reason, LocalDate startFrom, LocalDate endOn){
+        StatusMessageModel statusMessageModel = new StatusMessageModel();
         try{
             LeaveRequest leaveRequest = new LeaveRequest();
             leaveRequest.setStudentId(student);

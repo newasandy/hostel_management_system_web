@@ -1,9 +1,7 @@
 package daoImp;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import daoInterface.RoomDAO;
 import model.Rooms;
@@ -14,9 +12,6 @@ import java.util.List;
 
 @Stateless
 public class RoomDAOImp extends BaseDAOImp<Rooms> implements RoomDAO, Serializable {
-
-    @PersistenceContext(unitName = "hostelmanagement")
-    private EntityManager entityManager;
 
     public RoomDAOImp (){
         super(Rooms.class);
