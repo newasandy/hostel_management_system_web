@@ -8,7 +8,7 @@ public class SessionUtils {
     private static final String tokenKey = "jwtToken";
 
 
-    public static void storeToken(HttpServletRequest request ,String token) {
+    public static HttpSession storeToken(HttpServletRequest request ,String token) {
 
         HttpSession session = request.getSession(false);
 
@@ -17,6 +17,8 @@ public class SessionUtils {
         }
         session.setAttribute(tokenKey, token);
         session.setMaxInactiveInterval(60*60);
+
+        return session;
     }
 
     public static String getToken(HttpServletRequest request) {

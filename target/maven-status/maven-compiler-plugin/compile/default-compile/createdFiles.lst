@@ -33,6 +33,7 @@ daoInterface/RoomAllocationDAO.class
 views/UserBean.class
 model/MonthlyFee.class
 model/LeaveRequest$Status.class
+service/CooldownService.class
 views/UserDashboardBean.class
 model/UserType.class
 service/RoomsService.class
@@ -47,6 +48,7 @@ daoImp/BaseDAOImp.class
 views/IndexImageBean.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
+service/ActiveUserService.class
 views/AdminDashboardBean.class
 daoInterface/BaseDAO.class
 views/stateModel/DashboardState.class

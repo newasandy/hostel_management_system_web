@@ -27,12 +27,32 @@ public class UserState {
     private Users selectUser;
     private Address selectUserAddress;
 
+    private List<Users> activeUserlist;
+
     private List<Users> onlyStudent;
     private String searchItem;
+
+    private int cdTime;
 
     private boolean selectRoomForNewUser = false;
 
     public UserState() {
+    }
+
+    public int getCdTime() {
+        return cdTime;
+    }
+
+    public void setCdTime(int cdTime) {
+        this.cdTime = cdTime;
+    }
+
+    public List<Users> getActiveUserlist() {
+        return activeUserlist;
+    }
+
+    public void setActiveUserlist(List<Users> activeUserlist) {
+        this.activeUserlist = activeUserlist;
     }
 
     public String getUserRole() {

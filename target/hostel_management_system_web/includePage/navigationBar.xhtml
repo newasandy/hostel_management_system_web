@@ -40,6 +40,8 @@
                             <p:menuitem value="Payment Request" url="paymentRequest.xhtml" />
                 </p:submenu>
 
+                <p:menuitem value="Active User" rendered="#{authBean.authState.isAdmin()}" url="viewActiveUser.xhtml"/>
+
                 <p:submenu label="#{authBean.authState.isUser() or authBean.authState.isAdmin() ? userDashboardBean.dashboardState.loginUser.fullName : 'User'}" icon="pi pi-user" rendered="#{authBean.authState.isAdmin() or authBean.authState.isUser()}" style="position:absolute; right:1rem;">
                     <p:menuitem value="User Info" onclick="PF('userInfo').show();" rendered="#{authBean.authState.isUser()}"/>
                     <p:menuitem value="Logout" action="#{authBean.logout}" rendered="#{authBean.authState.isAdmin() or authBean.authState.isUser()}" />

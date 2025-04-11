@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Payment Request</title>
+</h:head>
+<h:body>
+    <header>
+        <ui:include src="/includePage/navigationBar.xhtml"/>
+    </header>
+
+    <h:form id="main-form">
+        <p:growl id="message" showDetail="true" life="3000" sticky="false" />
+        <div class="top-bar">
+            <h3 style="margin-right: 150px;">Login User</h3>
+        </div>
+
+        <p:dataTable id="userTable" value="#{userBean.userState.activeUserlist}"
+                     rowIndexVar="rowIndex"
+                     var="student"
+                     paginator="true"
+                     paginatorPosition="bottom"
+                     rowStyleClass="#{student.status ? 'active-row' : 'inactive-row'}"
+                     rows="10">
+
+            <p:column headerText="SN" style="width: 30px;">
+                <h:outputText value="#{rowIndex + 1}" />
+            </p:column>
+            <p:column headerText="Full Name" sortBy="#{student.fullName}">
+                <h:outputText value="#{student.fullName}" />
+            </p:column>
+            <p:column headerText="Email" sortBy="#{student.email}">
+                <h:outputText value="#{student.email}" />
+            </p:column>
+            <p:column headerText="Country" sortBy="#{student.address.country}">
+                <h:outputText value="#{student.address.country}" />
+            </p:column>
+            <p:column headerText="District" sortBy="#{student.address.district}">
+                <h:outputText value="#{student.address.district}" />
+            </p:column>
+            <p:column headerText="Municipality" sortBy="#{student.address.rmcMc}">
+                <h:outputText value="#{student.address.rmcMc}" />
+            </p:column>
+            <p:column headerText="Ward Number">
+                <h:outputText value="#{student.address.wardNo}" />
+            </p:column>
+
+            <p:column headerText="Actions">
+                <p:commandButton id="kill-btn" icon="pi pi-user-minus"
+                                 action="#{userBean.prepareUserSessionKill}"
+                                 style="margin-right: 5px; color:#FFFFFF; background-color:#E74C3C;"
+                                 partialSubmit="true"
+                                 update=":cooldownTime"
+                                 oncomplete="PF('cooldownTimeDialog').show();"
+                >
+                    <f:param name="studentEmail" value="#{student.email}"/>
+                </p:commandButton>
+                <p:tooltip for="kill-btn" value="Kill" position="top"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <p:dialog header="Set Cooldown Time" widgetVar="cooldownTimeDialog" modal="true" resizable="false">
+        <h:form id="cooldownTime">
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup styleClass="input-group">
+                    <p:inputNumber id="cooldown-time" placeholder="Enter Time (minutes)" value="#{userBean.userState.cdTime}" required="true" requiredMessage="Time is required." style="width:100%" minValue="1" decimalPlaces="0" />
+                </h:panelGroup>
+
+                <h:panelGroup style="grid-column: span 2; text-align: center; margin-top: 15px;">
+                    <p:commandButton value="Kill"
+                                     action="#{userBean.killUserSession}"
+                                     validateClient="true"
+                                     update=":main-form:message :main-form:userTable"
+                                     oncomplete="PF('cooldownTimeDialog').hide();"
+                                     style="margin-top:10px; margin-left:10px; width:70px;"/>
+                    <p:commandButton value="Cancel" onclick="PF('cooldownTimeDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</h:body>
+</html>
