@@ -33,8 +33,10 @@ views/UserBean.class
 model/MonthlyFee.class
 model/LeaveRequest$Status.class
 service/CooldownService.class
+views/stateModel/WalletUserState.class
 views/UserDashboardBean.class
 model/UserType.class
+views/stateModel/WalletPaymentState.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
 views/stateModel/MonthlyFeeState.class

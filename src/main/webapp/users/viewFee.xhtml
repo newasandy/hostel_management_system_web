@@ -55,6 +55,10 @@
                                      validateClient="true"
                                      oncomplete="PF('confirmationDialog').show()"
                                      style="margin-top:10px; margin-left:10px; width:100px;"/>
+                    <p:commandButton value="NS Wallet"
+                                     validateClient="true"
+                                     oncomplete="PF('walletAuthDialog').show()"
+                                     style="margin-top:10px; margin-left:10px; width:100px;"/>
                     <p:commandButton value="Cancel" onclick="PF('payFeeDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
                 </h:panelGroup>
             </h:panelGrid>
@@ -78,6 +82,53 @@
                                      style="margin-top:10px; margin-left:10px; width:100px;"/>
                     <p:commandButton value="Cancel" onclick="PF('confirmationDialog').hide(); PF('payFeeDialog').hide();" style="margin-top:10px; width:100px; background-color:red; color:#FFFFFF;" />
                 </h:panelGroup>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog header="NS Wallet" widgetVar="walletAuthDialog" modal="true" resizable="false">
+        <h:form id="walletAuth">
+            <p:outputLabel for="username" value="Username:" /><br/>
+            <p:inputText styleClass="input-field" id="username" value="#{monthlyFeeBean.walletUserState.username}" required="true" requiredMessage="Username is requires." />
+            <h:message for="username" display="text"  style="color:red;"/>
+            <br/>
+
+            <p:outputLabel for="password" value="Password:" /><br/>
+            <p:password styleClass="input-field" id="password" value="#{monthlyFeeBean.walletUserState.password}" required="true" requiredMessage="Password is requires."/>
+            <h:message for="password" display="text"  style="color:red;"/>
+            <br/>
+            <p:commandButton value="Pay" action="#{monthlyFeeBean.walletUserConfirm}" validateClient="true"
+                             update=":main-form:message :payFeeForm :walletUserForm :main-form:monthlyFeeTable"
+                             oncomplete="PF('walletAuthConfirm').show();"
+            />
+        </h:form>
+    </p:dialog>
+    <p:dialog header="Wallet pay Confirm" widgetVar="walletAuthConfirm" modal="true"
+              rendered="#{monthlyFeeBean.walletUserState.username eq monthlyFeeBean.loginWalletUser.username}"
+              resizable="false">
+        <h:form id="walletUserForm">
+
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:outputLabel for="fullName" value="Full Name:" />
+                <h:outputText styleClass="input-field" id="fullName" value="#{monthlyFeeBean.loginWalletUser.fullName}"  />
+
+                <p:outputLabel for="username" value="Username:" />
+                <h:outputText styleClass="input-field" id="username" value="#{monthlyFeeBean.loginWalletUser.username}" />
+
+                <p:outputLabel for="email" value="Email:" />
+                <h:outputText styleClass="input-field" id="email" value="#{monthlyFeeBean.loginWalletUser.email}" />
+
+                <p:outputLabel for="contact" value="Contact:" />
+                <h:outputText styleClass="input-field" id="contact" value="#{monthlyFeeBean.loginWalletUser.contact}" required="true" requiredMessage="Password is requires."/>
+
+                <p:outputLabel for="amount" value="Paid Amount:" />
+                <h:outputText styleClass="input-field" id="amount" value="#{monthlyFeeBean.monthlyFeeState.paidAmount}" required="true" requiredMessage="Password is requires."/>
+
+                <p:commandButton value="Pay" action="#{monthlyFeeBean.payWithWallet}" validateClient="true"
+                                 update=":main-form:message :main-form:monthlyFeeTable"
+                                 oncomplete="PF('walletAuthDialog').hide(); PF('payFeeDialog').hide(); PF('walletAuthConfirm').hide();"
+                />
+
             </h:panelGrid>
         </h:form>
     </p:dialog>
