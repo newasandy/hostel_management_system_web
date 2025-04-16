@@ -4,8 +4,6 @@ import model.RoomAllocation;
 import model.Rooms;
 import model.Users;
 
-import java.util.List;
-
 public class RoomState {
 
     private int roomNumber;
@@ -16,12 +14,12 @@ public class RoomState {
 
     private Long updateRoomId;
 
-    private List<Rooms> orginalRoomsList;
-    private List<Rooms> viewRoomsList;
-    private List<RoomAllocation> roomAllocationList;
+    private GenericLazyDataModel<Rooms> orginalRoomsList;
+    private GenericLazyDataModel<Rooms> viewRoomsList;
+    private GenericLazyDataModel<RoomAllocation> roomAllocationList;
 
-    private List<Users> unallocatedUser;
-    private List<Rooms> availableRoom;
+    private GenericLazyDataModel<Users> unallocatedUser;
+    private GenericLazyDataModel<Rooms> availableRoom;
 
 
     public RoomState() {
@@ -59,43 +57,43 @@ public class RoomState {
         this.updatedCapacity = updatedCapacity;
     }
 
-    public List<Rooms> getOrginalRoomsList() {
+    public GenericLazyDataModel<Rooms> getOrginalRoomsList() {
         return orginalRoomsList;
     }
 
-    public void setOrginalRoomsList(List<Rooms> orginalRoomsList) {
+    public void setOrginalRoomsList(GenericLazyDataModel<Rooms> orginalRoomsList) {
         this.orginalRoomsList = orginalRoomsList;
     }
 
-    public List<Rooms> getViewRoomsList() {
+    public GenericLazyDataModel<Rooms> getViewRoomsList() {
         return viewRoomsList;
     }
 
-    public void setViewRoomsList(List<Rooms> viewRoomsList) {
+    public void setViewRoomsList(GenericLazyDataModel<Rooms> viewRoomsList) {
         this.viewRoomsList = viewRoomsList;
     }
 
-    public List<RoomAllocation> getRoomAllocationList() {
+    public GenericLazyDataModel<RoomAllocation> getRoomAllocationList() {
         return roomAllocationList;
     }
 
-    public void setRoomAllocationList(List<RoomAllocation> roomAllocationList) {
+    public void setRoomAllocationList(GenericLazyDataModel<RoomAllocation> roomAllocationList) {
         this.roomAllocationList = roomAllocationList;
     }
 
-    public List<Users> getUnallocatedUser() {
+    public GenericLazyDataModel<Users> getUnallocatedUser() {
         return unallocatedUser;
     }
 
-    public void setUnallocatedUser(List<Users> unallocatedUser) {
+    public void setUnallocatedUser(GenericLazyDataModel<Users> unallocatedUser) {
         this.unallocatedUser = unallocatedUser;
     }
 
-    public List<Rooms> getAvailableRoom() {
+    public GenericLazyDataModel<Rooms> getAvailableRoom() {
         return availableRoom;
     }
 
-    public void setAvailableRoom(List<Rooms> availableRoom) {
+    public void setAvailableRoom(GenericLazyDataModel<Rooms> availableRoom) {
         this.availableRoom = availableRoom;
     }
 

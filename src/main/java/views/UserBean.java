@@ -9,6 +9,7 @@ import service.CooldownService;
 import service.UserService;
 import utils.JwtUtils;
 import utils.SessionUtils;
+import views.stateModel.GenericLazyDataModel;
 import views.stateModel.StatusMessageModel;
 import views.stateModel.UserState;
 
@@ -21,7 +22,9 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Named
@@ -48,11 +51,13 @@ public class UserBean implements Serializable{
 
     private StatusMessageModel statusMessageModel;
     private UserState userState;
+    private Map<String, Object> matchFilter;
     private HttpServletRequest request;
 
     @PostConstruct
     public void init() {
         try{
+            matchFilter = new HashMap<>();
             statusMessageModel = new StatusMessageModel();
             userState = new UserState();
             request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -66,32 +71,22 @@ public class UserBean implements Serializable{
 
     }
 
+    public void refreshStudentList() {
+        matchFilter.put("roles.userTypes","USER");
+        userState.setOnlyStudent(new GenericLazyDataModel<>(usersDAO,matchFilter, false));
+    }
+
     public void getAllUserType(){
         userState.setUserTypes(userTypeDAOImp.getAll());
     }
 
     public void searchList(){
-        if (userState.getSearchItem() == null || userState.getSearchItem().isEmpty()){
-            refreshStudentList();
-        }else {
-            String lowerSearch = userState.getSearchItem().toLowerCase();
-            List<Users> originalStudentList = usersDAO.getOnlyStudent();
-            userState.setOnlyStudent(originalStudentList.stream().filter(users -> users.getFullName()
-                    .toLowerCase()
-                    .contains(lowerSearch) || (users.getEmail() != null && users.getEmail()
-                    .toLowerCase()
-                    .contains(lowerSearch)))
-                    .collect(Collectors.toList()));
-        }
-    }
-
-    public void refreshStudentList() {
-        userState.setOnlyStudent(usersDAO.getOnlyStudent());
 
     }
 
     public void refreshActiveUserList(){
-        userState.setActiveUserlist(userState.getOnlyStudent()
+        List<Users> usersList = usersDAO.getOnlyStudent();
+        userState.setActiveUserlist(usersList
                 .stream()
                 .filter(users -> activeUserService.containsUser(users.getEmail()))
                 .collect(Collectors.toList()));
@@ -189,6 +184,7 @@ public class UserBean implements Serializable{
     public UserState getUserState() {
         return userState;
     }
+
 
     public void cancelBtn(){
         userState.resetFields();

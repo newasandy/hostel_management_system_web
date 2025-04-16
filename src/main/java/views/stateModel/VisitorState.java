@@ -7,10 +7,9 @@ import java.util.List;
 
 public class VisitorState {
 
-    private List<Visitors> orginalVisitorList;
-    private List<Visitors> visitorList;
+    private GenericLazyDataModel<Visitors> visitorList;
     private String searchItem;
-    private List<Visitors> viewVisitorByEachStudent;
+    private GenericLazyDataModel<Visitors> viewVisitorByEachStudent;
 
     private String fullName;
     private String reason;
@@ -22,19 +21,11 @@ public class VisitorState {
     public VisitorState() {
     }
 
-    public List<Visitors> getOrginalVisitorList() {
-        return orginalVisitorList;
-    }
-
-    public void setOrginalVisitorList(List<Visitors> orginalVisitorList) {
-        this.orginalVisitorList = orginalVisitorList;
-    }
-
-    public List<Visitors> getVisitorList() {
+    public GenericLazyDataModel<Visitors> getVisitorList() {
         return visitorList;
     }
 
-    public void setVisitorList(List<Visitors> visitorList) {
+    public void setVisitorList(GenericLazyDataModel<Visitors> visitorList) {
         this.visitorList = visitorList;
     }
 
@@ -46,11 +37,11 @@ public class VisitorState {
         this.searchItem = searchItem;
     }
 
-    public List<Visitors> getViewVisitorByEachStudent() {
+    public GenericLazyDataModel<Visitors> getViewVisitorByEachStudent() {
         return viewVisitorByEachStudent;
     }
 
-    public void setViewVisitorByEachStudent(List<Visitors> viewVisitorByEachStudent) {
+    public void setViewVisitorByEachStudent(GenericLazyDataModel<Visitors> viewVisitorByEachStudent) {
         this.viewVisitorByEachStudent = viewVisitorByEachStudent;
     }
 

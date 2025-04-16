@@ -3,9 +3,9 @@ package views;
 import daoInterface.MonthlyFeeDAO;
 import daoInterface.TransactionStatementDAO;
 import daoInterface.UsersDAO;
-import model.MonthlyFee;
 import utils.JwtUtils;
 import utils.SessionUtils;
+import views.stateModel.GenericLazyDataModel;
 import views.stateModel.MonthlyFeeState;
 import views.stateModel.StatusMessageModel;
 import model.Users;
@@ -20,9 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -42,12 +40,15 @@ public class MonthlyFeeBean implements Serializable {
 
     private StatusMessageModel statusMessageModel;
     private MonthlyFeeState monthlyFeeState;
+    private Map<String, Object> matchFilter;
+    private Map<String, Object> matchFilterAll;
 
     @PostConstruct
     public void init(){
         try{
             statusMessageModel = new StatusMessageModel();
             monthlyFeeState = new MonthlyFeeState();
+
             refreshMonthlyFeeList();
         } catch (Exception e) {
             throw new RuntimeException("Failed ti init",e);
@@ -58,23 +59,23 @@ public class MonthlyFeeBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         monthlyFeeState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
         if ("USER".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-            monthlyFeeState.setMonthlyFeeList(monthlyFeeDAO.getUserFeeDetails(monthlyFeeState.getLoginUser().getId()));
+            matchFilter = new HashMap<>();
+            matchFilter.put("studentId",monthlyFeeState.getLoginUser());
+            monthlyFeeState.setMonthlyFeeList(new GenericLazyDataModel<>(monthlyFeeDAO,matchFilter, false));
             monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(monthlyFeeState.getLoginUser().getId()));
-            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getLoginUser().getId()));
+            monthlyFeeState.setStatementListEachStudent(new GenericLazyDataModel<>(transactionStatementDAOImp,matchFilter, false));
         }
         if ("ADMIN".equals(monthlyFeeState.getLoginUser().getRoles().getUserTypes())){
-            List<MonthlyFee> allMonthlyFee = monthlyFeeDAO.getAll();
-            Collections.sort(allMonthlyFee, new Comparator<MonthlyFee>() {
-                @Override
-                public int compare(MonthlyFee v1, MonthlyFee v2) {
-                    return v2.getIssueDate().compareTo(v1.getIssueDate());
-                }
-            });
-            monthlyFeeState.setMonthlyFeeList(allMonthlyFee);
-            monthlyFeeState.setPendingPaymentRequest(transactionStatementDAOImp.getPendingPaymentRequest());
+            matchFilterAll = new HashMap<>();
+            monthlyFeeState.setMonthlyFeeList(new GenericLazyDataModel<>(monthlyFeeDAO,matchFilter, false));
+            matchFilter = new HashMap<>();
+            matchFilter.put("status","PENDING");
+            monthlyFeeState.setPendingPaymentRequest(new GenericLazyDataModel<>(transactionStatementDAOImp,matchFilter, false));
         }
         if (monthlyFeeState.getSelectStudent() != null){
-            monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(monthlyFeeState.getSelectStudent().getId()));
+            matchFilter = new HashMap<>();
+            matchFilter.put("studentId", monthlyFeeState.getLoginUser());
+            monthlyFeeState.setStatementListEachStudent(new GenericLazyDataModel<>(transactionStatementDAOImp,matchFilter, false));
         }
     }
 
@@ -134,7 +135,9 @@ public class MonthlyFeeBean implements Serializable {
     public void viewStatementForStudent(Users student){
         this.monthlyFeeState.setSelectStudent(student);
         this.monthlyFeeState.setSelectStudentDueAmount(monthlyFeeDAO.getTotalDueAmount(student.getId()));
-        this.monthlyFeeState.setStatementListEachStudent(transactionStatementDAOImp.getStatementByEachUser(student.getId()));
+        matchFilter = new HashMap<>();
+        matchFilter.put("studentId",student);
+        this.monthlyFeeState.setStatementListEachStudent(new GenericLazyDataModel<>(transactionStatementDAOImp,matchFilter, false));
     }
 
     private void showMessage(FacesMessage.Severity severity, String summary, String detail) {

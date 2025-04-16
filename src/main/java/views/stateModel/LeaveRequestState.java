@@ -4,11 +4,10 @@ import model.LeaveRequest;
 import model.Users;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class LeaveRequestState {
 
-    private List<LeaveRequest> leaveRequestList;
+    private GenericLazyDataModel<LeaveRequest> leaveRequestsList;
     private LeaveRequest selectLeaveRequest;
 
     private String reason;
@@ -19,21 +18,13 @@ public class LeaveRequestState {
     public LeaveRequestState() {
     }
 
-    public LeaveRequestState(List<LeaveRequest> leaveRequestList, LeaveRequest selectLeaveRequest, String reason, LocalDate startDate, LocalDate endDate, Users loginUser) {
-        this.leaveRequestList = leaveRequestList;
-        this.selectLeaveRequest = selectLeaveRequest;
-        this.reason = reason;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.loginUser = loginUser;
+
+    public GenericLazyDataModel<LeaveRequest> getLeaveRequestsList() {
+        return leaveRequestsList;
     }
 
-    public List<LeaveRequest> getLeaveRequestList() {
-        return leaveRequestList;
-    }
-
-    public void setLeaveRequestList(List<LeaveRequest> leaveRequestList) {
-        this.leaveRequestList = leaveRequestList;
+    public void setLeaveRequestsList(GenericLazyDataModel<LeaveRequest> leaveRequestsList) {
+        this.leaveRequestsList = leaveRequestsList;
     }
 
     public LeaveRequest getSelectLeaveRequest() {

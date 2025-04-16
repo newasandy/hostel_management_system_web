@@ -2,6 +2,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/BaseEntity.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/MonthlyFeeDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/BaseDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/GenericLazyDataModel.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/UsersDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/BaseDAOImp.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/RoomAllocation.java

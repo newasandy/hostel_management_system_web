@@ -7,6 +7,7 @@ import model.*;
 import service.RoomsService;
 import utils.JwtUtils;
 import utils.SessionUtils;
+import views.stateModel.GenericLazyDataModel;
 import views.stateModel.RoomState;
 import views.stateModel.StatusMessageModel;
 
@@ -38,6 +39,11 @@ public class ViewRoomsBean implements Serializable {
 
     private RoomState roomState;
     private StatusMessageModel statusMessageModel;
+    private Map<String, Object> matchFilterAll;
+    private Map<String, Object> matchFilterUnAllocated;
+    private Map<String, Object> matchFilterAvailableRoom;
+    private Map<String, Object> matchFilterAllocateList;
+
 
     @PostConstruct
     public void init(){
@@ -52,14 +58,21 @@ public class ViewRoomsBean implements Serializable {
 
     public void refreshRoomList(){
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        roomState.setViewRoomsList(roomDAO.getAll());
-        roomState.setUnallocatedUser(usersDAO.getUnallocatedUsers());
-        roomState.setAvailableRoom(roomDAO.getAvailableRoom());
+
         if ("USER".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
             Users loginUser = usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request)));
-            roomState.setRoomAllocationList(roomAllocationDAO.getUserAllocated(loginUser.getId()));
+            matchFilterAllocateList = new HashMap<>();
+            matchFilterAllocateList.put("studentId",loginUser);
+            roomState.setRoomAllocationList(new GenericLazyDataModel<>(roomAllocationDAO,matchFilterAllocateList,false));
         }
         if ("ADMIN".equals(JwtUtils.getUserRole(SessionUtils.getToken(request)))){
+            matchFilterAll = new HashMap<>();
+            roomState.setViewRoomsList(new GenericLazyDataModel<>(roomDAO,matchFilterAll, false));
+            matchFilterUnAllocated = new HashMap<>();
+            roomState.setUnallocatedUser(new GenericLazyDataModel<>(usersDAO,matchFilterUnAllocated,true));
+            matchFilterAvailableRoom = new HashMap<>();
+            roomState.setAvailableRoom(new GenericLazyDataModel<>(roomDAO,matchFilterAvailableRoom,true));
+
             List<RoomAllocation> orginalRoomAllocationList = roomAllocationDAO.getAll();
             Collections.sort(orginalRoomAllocationList, new Comparator<RoomAllocation>() {
                 @Override
@@ -67,7 +80,8 @@ public class ViewRoomsBean implements Serializable {
                     return v2.getAllocationDate().compareTo(v1.getAllocationDate());
                 }
             });
-            roomState.setRoomAllocationList(orginalRoomAllocationList);
+            matchFilterAllocateList = new HashMap<>();
+            roomState.setRoomAllocationList(new GenericLazyDataModel<>(roomAllocationDAO,matchFilterAllocateList,false));
         }
     }
 

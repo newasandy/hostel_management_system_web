@@ -5,6 +5,7 @@ import daoInterface.UsersDAO;
 import model.LeaveRequest;
 import utils.JwtUtils;
 import utils.SessionUtils;
+import views.stateModel.GenericLazyDataModel;
 import views.stateModel.LeaveRequestState;
 import views.stateModel.StatusMessageModel;
 import service.LeaveRequestService;
@@ -18,9 +19,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -38,12 +37,15 @@ public class LeaveRequestBean implements Serializable {
     private StatusMessageModel statusMessageModel;
     private LeaveRequestState leaveRequestState;
 
+    private Map<String, Object> matchFilter;
+
     private HttpServletRequest request;
 
 
     @PostConstruct
     public void init(){
         try{
+            matchFilter = new HashMap<>();
             statusMessageModel = new StatusMessageModel();
             leaveRequestState = new LeaveRequestState();
             request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -60,17 +62,11 @@ public class LeaveRequestBean implements Serializable {
 
     public void refreshLeaveRequestList(){
         if ("USER".equals(leaveRequestState.getLoginUser().getRoles().getUserTypes())){
-            leaveRequestState.setLeaveRequestList(leaveRequestDAO.getUserLeaveRequestByUserId(leaveRequestState.getLoginUser().getId()));
+            matchFilter.put("studentId",leaveRequestState.getLoginUser());
+            leaveRequestState.setLeaveRequestsList(new GenericLazyDataModel<>(leaveRequestDAO,matchFilter, false));
         }
         if ("ADMIN".equals(leaveRequestState.getLoginUser().getRoles().getUserTypes())){
-            List<LeaveRequest> allLeaveRequest = leaveRequestDAO.getAll();
-            Collections.sort(allLeaveRequest, new Comparator<LeaveRequest>() {
-                @Override
-                public int compare(LeaveRequest v1, LeaveRequest v2) {
-                    return v2.getApplyDate().compareTo(v1.getApplyDate());
-                }
-            });
-            leaveRequestState.setLeaveRequestList(allLeaveRequest);
+            leaveRequestState.setLeaveRequestsList(new GenericLazyDataModel<>(leaveRequestDAO,matchFilter, false));
         }
     }
 

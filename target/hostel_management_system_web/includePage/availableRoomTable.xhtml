@@ -2,7 +2,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.availableRoom}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+    <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.availableRoom}"
+                 rowIndexVar="rowIndex"
+                 var="room"
+                 lazy="true"
+                 paginator="true" paginatorPosition="bottom" rows="10">
         <p:column headerText="Select Room" style="width: 50px;">
             <p:commandButton id="selectRoom-btn" icon="pi pi-check-circle" style="margin-right: 5px; background-color: #3498DB;"
                              rendered="#{viewRoomsBean.roomState.selectStudent != null}"

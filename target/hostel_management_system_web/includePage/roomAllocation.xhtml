@@ -3,7 +3,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="roomAllocatedTable" value="#{viewRoomsBean.roomState.roomAllocationList}" rowIndexVar="rowIndex" var="allocate" paginator="true" paginatorPosition="bottom" rows="10">
+    <p:dataTable id="roomAllocatedTable" value="#{viewRoomsBean.roomState.roomAllocationList}"
+                 rowIndexVar="rowIndex" var="allocate"
+                 lazy="true"
+                 paginator="true" paginatorPosition="bottom" rows="10">
 
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />

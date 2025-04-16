@@ -6,6 +6,7 @@
     <p:dataTable id="userTable" value="#{userBean.userState.onlyStudent}"
                  rowIndexVar="rowIndex"
                  var="student"
+                 lazy="true"
                  paginator="true"
                  paginatorPosition="bottom"
                  rowStyleClass="#{student.status ? 'active-row' : 'inactive-row'}"
@@ -14,7 +15,7 @@
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />
         </p:column>
-        <p:column headerText="Full Name" sortBy="#{student.fullName}">
+        <p:column headerText="Full Name" sortBy="#{student.fullName}" filterBy="#{student.fullName}">
             <h:outputText value="#{student.fullName}" />
         </p:column>
         <p:column headerText="Email" sortBy="#{student.email}">

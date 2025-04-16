@@ -30,7 +30,10 @@
                              oncomplete="PF('addVisitor').show()" />
         </div>
 
-        <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.visitorList}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.visitorList}"
+                     rowIndexVar="rowIndex" var="visitor"
+                     lazy="true"
+                     paginator="true" paginatorPosition="bottom" rows="10">
 
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />

@@ -4,7 +4,6 @@ import model.MonthlyFee;
 import model.TransactionStatement;
 import model.Users;
 
-import java.util.List;
 
 public class MonthlyFeeState {
 
@@ -15,9 +14,9 @@ public class MonthlyFeeState {
     private MonthlyFee selectForPayFee;
     private TransactionStatement selectTransaction;
     private String verifyPassword;
-    private List<MonthlyFee> monthlyFeeList;
-    private List<TransactionStatement> statementListEachStudent;
-    private List<TransactionStatement> pendingPaymentRequest;
+    private GenericLazyDataModel<MonthlyFee> monthlyFeeList;
+    private GenericLazyDataModel<TransactionStatement> statementListEachStudent;
+    private GenericLazyDataModel<TransactionStatement> pendingPaymentRequest;
     private double selectStudentDueAmount;
     private Users loginUser;
 
@@ -80,27 +79,27 @@ public class MonthlyFeeState {
         this.verifyPassword = verifyPassword;
     }
 
-    public List<MonthlyFee> getMonthlyFeeList() {
+    public GenericLazyDataModel<MonthlyFee> getMonthlyFeeList() {
         return monthlyFeeList;
     }
 
-    public void setMonthlyFeeList(List<MonthlyFee> monthlyFeeList) {
+    public void setMonthlyFeeList(GenericLazyDataModel<MonthlyFee> monthlyFeeList) {
         this.monthlyFeeList = monthlyFeeList;
     }
 
-    public List<TransactionStatement> getStatementListEachStudent() {
+    public GenericLazyDataModel<TransactionStatement> getStatementListEachStudent() {
         return statementListEachStudent;
     }
 
-    public void setStatementListEachStudent(List<TransactionStatement> statementListEachStudent) {
+    public void setStatementListEachStudent(GenericLazyDataModel<TransactionStatement> statementListEachStudent) {
         this.statementListEachStudent = statementListEachStudent;
     }
 
-    public List<TransactionStatement> getPendingPaymentRequest() {
+    public GenericLazyDataModel<TransactionStatement> getPendingPaymentRequest() {
         return pendingPaymentRequest;
     }
 
-    public void setPendingPaymentRequest(List<TransactionStatement> pendingPaymentRequest) {
+    public void setPendingPaymentRequest(GenericLazyDataModel<TransactionStatement> pendingPaymentRequest) {
         this.pendingPaymentRequest = pendingPaymentRequest;
     }
 

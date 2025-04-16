@@ -2,7 +2,10 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.viewVisitorByEachStudent}" rowIndexVar="rowIndex" var="visitor" paginator="true" paginatorPosition="bottom" rows="5">
+    <p:dataTable id="visitorTable" value="#{viewVisitorBean.visitorState.viewVisitorByEachStudent}"
+                 rowIndexVar="rowIndex" var="visitor"
+                 lazy="true"
+                 paginator="true" paginatorPosition="bottom" rows="5">
         <p:column headerText="SN" style="width: 30px;">
             <h:outputText value="#{rowIndex + 1}" />
         </p:column>

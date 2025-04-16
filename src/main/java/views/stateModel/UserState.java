@@ -29,7 +29,7 @@ public class UserState {
 
     private List<Users> activeUserlist;
 
-    private List<Users> onlyStudent;
+    private GenericLazyDataModel<Users> onlyStudent;
     private String searchItem;
 
     private int cdTime;
@@ -187,11 +187,11 @@ public class UserState {
         this.selectRoomForNewUser = selectRoomForNewUser;
     }
 
-    public List<Users> getOnlyStudent() {
+    public GenericLazyDataModel<Users> getOnlyStudent() {
         return onlyStudent;
     }
 
-    public void setOnlyStudent(List<Users> onlyStudent) {
+    public void setOnlyStudent(GenericLazyDataModel<Users> onlyStudent) {
         this.onlyStudent = onlyStudent;
     }
 

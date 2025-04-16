@@ -1,12 +1,12 @@
 package views;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 import daoInterface.UsersDAO;
 import daoInterface.VisitorsDAO;
 import utils.JwtUtils;
 import utils.SessionUtils;
+import views.stateModel.GenericLazyDataModel;
 import views.stateModel.StatusMessageModel;
 import model.Users;
 import model.Visitors;
@@ -21,8 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -40,6 +38,9 @@ public class ViewVisitorBean implements Serializable {
     private StatusMessageModel statusMessageModel;
     private VisitorState visitorState;
     private HttpServletRequest request;
+    private Map<String, Object> matchFilter;
+    private Map<String, Object> matchFilterEachStudent;
+
 
     @PostConstruct
     public void init(){
@@ -58,29 +59,25 @@ public class ViewVisitorBean implements Serializable {
         if (visitorState.getSearchItem() == null || visitorState.getSearchItem().isEmpty()){
             refreshVisitorList();
         }else {
-            List<Visitors> orginalVisitorList = visitorsDAO.getAll();
-            String lowerSearch = visitorState.getSearchItem().toLowerCase();
-            visitorState.setVisitorList(orginalVisitorList.stream().filter(visitors -> visitors.getFullName().toLowerCase().contains(lowerSearch)).collect(Collectors.toList()));
+            System.out.println("hero");
         }
     }
 
     public void refreshVisitorList(){
         visitorState.setLoginUser(usersDAO.getByEmail(JwtUtils.getUserEmail(SessionUtils.getToken(request))));
         if ("ADMIN".equals(visitorState.getLoginUser().getRoles().getUserTypes())){
-            List<Visitors> orginalVisitorList = visitorsDAO.getAll();
-            Collections.sort(orginalVisitorList, new Comparator<Visitors>() {
-                @Override
-                public int compare(Visitors v1, Visitors v2) {
-                    return v2.getEntryDatetime().compareTo(v1.getEntryDatetime());
-                }
-            });
-            visitorState.setVisitorList(orginalVisitorList);
+            matchFilter = new HashMap<>();
+            visitorState.setVisitorList(new GenericLazyDataModel<>(visitorsDAO,matchFilter,false));
         }
         if ("USER".equals(visitorState.getLoginUser().getRoles().getUserTypes())){
-            visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(visitorState.getLoginUser().getId()));
+            matchFilterEachStudent = new HashMap<>();
+            matchFilterEachStudent.put("studentId",visitorState.getLoginUser());
+            visitorState.setViewVisitorByEachStudent(new GenericLazyDataModel<>(visitorsDAO,matchFilterEachStudent,false));
         }
         if (visitorState.getSelectStudent() != null){
-            visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(visitorState.getSelectStudent().getId()));
+            matchFilterEachStudent = new HashMap<>();
+            matchFilterEachStudent.put("studentId",visitorState.getSelectStudent());
+            visitorState.setViewVisitorByEachStudent(new GenericLazyDataModel<>(visitorsDAO,matchFilterEachStudent,false));
         }
     }
 
@@ -108,8 +105,9 @@ public class ViewVisitorBean implements Serializable {
     }
 
     public void viewStudentVisitor(Users student){
-        visitorState.setSelectStudent(student);
-        visitorState.setViewVisitorByEachStudent(visitorsDAO.getUserVisitedBy(student.getId()));
+        matchFilterEachStudent = new HashMap<>();
+        matchFilterEachStudent.put("studentId",student);
+        visitorState.setViewVisitorByEachStudent(new GenericLazyDataModel<>(visitorsDAO,matchFilterEachStudent,false));
     }
 
     public VisitorState getVisitorState() {

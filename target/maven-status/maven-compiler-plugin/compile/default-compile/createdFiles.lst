@@ -1,7 +1,6 @@
 daoInterface/UsersDAO.class
 views/stateModel/LeaveRequestState.class
 daoImp/RoomDAOImp.class
-views/ViewVisitorBean$1.class
 daoImp/RoomAllocationDAOImp.class
 service/VisitorService.class
 service/LeaveRequestService.class
@@ -13,10 +12,10 @@ daoInterface/VisitorsDAO.class
 model/BaseEntity.class
 daoInterface/TransactionStatementDAO.class
 model/Rooms.class
+views/stateModel/GenericLazyDataModel.class
 daoImp/TransactionStatementDAOImp.class
 utils/JwtUtils.class
 service/AuthenticationService.class
-views/LeaveRequestBean$1.class
 utils/SessionUtils.class
 daoInterface/RoomDAO.class
 views/stateModel/RoomState.class
@@ -39,7 +38,6 @@ model/UserType.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
 views/stateModel/MonthlyFeeState.class
-views/MonthlyFeeBean$1.class
 views/MonthlyFeeBean.class
 service/MonthlyFeeService.class
 views/AuthBean.class

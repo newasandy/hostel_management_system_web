@@ -26,7 +26,10 @@
                              oncomplete="PF('addRoom').show()" />
         </div>
 
-        <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.viewRoomsList}" rowIndexVar="rowIndex" var="room" paginator="true" paginatorPosition="bottom" rows="10">
+        <p:dataTable id="roomTable" value="#{viewRoomsBean.roomState.viewRoomsList}" rowIndexVar="rowIndex"
+                     var="room"
+                     lazy="true"
+                     paginator="true" paginatorPosition="bottom" rows="10">
             <p:column headerText="SN" style="width: 30px;">
                 <h:outputText value="#{rowIndex + 1}" />
             </p:column>

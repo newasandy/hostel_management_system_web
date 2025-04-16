@@ -3,9 +3,12 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestState.leaveRequestList}"
+    <p:dataTable id="leaveTable" value="#{leaveRequestBean.leaveRequestState.leaveRequestsList}"
                  rowIndexVar="rowIndex"
                  var="leave"
+                 lazy="true"
+                 sortOrder="descending"
+                 sortField="applyDate"
                  rowStyleClass="#{leaveRequestBean.getRowStyleClass(leave)}"
                  paginator="true"
                  paginatorPosition="bottom" rows="10">
