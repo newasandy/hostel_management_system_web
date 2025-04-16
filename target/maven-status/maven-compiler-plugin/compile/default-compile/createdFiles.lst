@@ -16,7 +16,10 @@ views/stateModel/GenericLazyDataModel.class
 daoImp/TransactionStatementDAOImp.class
 utils/JwtUtils.class
 service/AuthenticationService.class
+dto/UserFee.class
+api/FeeAPI.class
 utils/SessionUtils.class
+configRest/RestApplication.class
 daoInterface/RoomDAO.class
 views/stateModel/RoomState.class
 views/stateModel/StatusMessageModel.class
@@ -46,6 +49,7 @@ views/AuthBean.class
 views/ViewRoomsBean$1.class
 daoImp/BaseDAOImp.class
 views/IndexImageBean.class
+dto/MonthlyFeeDTO.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
 service/ActiveUserService.class

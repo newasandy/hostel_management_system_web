@@ -11,6 +11,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/RoomsService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/AuthBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserDashboardBean.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/dto/UserFee.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/UserState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/WalletPaymentState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/MonthlyFee.java
@@ -19,6 +20,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/AdminDashboardBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/SessionUtils.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/MonthlyFeeDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/dto/MonthlyFeeDTO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/LeaveRequestService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/Cards.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/RoomDAOImp.java
@@ -52,6 +54,8 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/MonthlyFeeState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/RoomAllocationDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/UserService.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/configRest/RestApplication.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/api/FeeAPI.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/RoomDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/MonthlyFeeBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/VisitorService.java
