@@ -8,6 +8,7 @@ import model.MonthlyFee;
 import model.Users;
 
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,8 +28,9 @@ public class FeeAPI {
     private UsersDAO usersDAO;
 
     @GET
-    @Path("/user/{email}")
-    public Response getMonthlyFees(@PathParam("email") String email){
+    @Path("/user")
+    public Response getMonthlyFees(JsonObject json){
+        String email = json.getString("email");
         Users user = usersDAO.getByEmail(email);
         if (user != null && user.isStatus()){
             List<MonthlyFee> monthlyFeeList = monthlyFeeDAO.getUserFeeDetails(user.getId());

@@ -32,15 +32,15 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        if (!SessionUtils.isSessionValid(httpRequest) || !JwtUtils.isTokenValid(SessionUtils.getToken(httpRequest))) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.xhtml?faces-redirect=true");
-            return;
-        }
+//        if (!SessionUtils.isSessionValid(httpRequest) || !JwtUtils.isTokenValid(SessionUtils.getToken(httpRequest))) {
+//            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.xhtml?faces-redirect=true");
+//            return;
+//        }
 
 
-        String token = SessionUtils.getToken(httpRequest);
-        String userRole = JwtUtils.getUserRole(SessionUtils.getToken(httpRequest));
         if (uri.contains("/users/")) {
+            String token = SessionUtils.getToken(httpRequest);
+            String userRole = JwtUtils.getUserRole(SessionUtils.getToken(httpRequest));
             if (token == null || userRole == null){
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
                 return;
@@ -49,6 +49,8 @@ public class LoginFilter implements Filter {
                 return;
             }
         }else if (uri.contains("/admin/")) {
+            String token = SessionUtils.getToken(httpRequest);
+            String userRole = JwtUtils.getUserRole(SessionUtils.getToken(httpRequest));
             if (token == null || userRole == null){
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.xhtml");
                 return;

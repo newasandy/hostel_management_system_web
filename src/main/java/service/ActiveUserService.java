@@ -24,4 +24,6 @@ public class ActiveUserService {
     public HttpSession getuserSession(String user){
         return activeUsers.get(user);
     }
+
+    public ConcurrentHashMap<String, HttpSession> getAllUsers() { return activeUsers; }
 }

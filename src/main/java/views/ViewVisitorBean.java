@@ -108,6 +108,7 @@ public class ViewVisitorBean implements Serializable {
         matchFilterEachStudent = new HashMap<>();
         matchFilterEachStudent.put("studentId",student);
         visitorState.setViewVisitorByEachStudent(new GenericLazyDataModel<>(visitorsDAO,matchFilterEachStudent,false));
+        visitorState.setSelectStudent(student);
     }
 
     public VisitorState getVisitorState() {

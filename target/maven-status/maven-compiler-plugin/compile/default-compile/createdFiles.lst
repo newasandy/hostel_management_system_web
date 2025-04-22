@@ -1,6 +1,7 @@
 daoInterface/UsersDAO.class
 views/stateModel/LeaveRequestState.class
 daoImp/RoomDAOImp.class
+utils/SessionListener.class
 daoImp/RoomAllocationDAOImp.class
 service/VisitorService.class
 service/LeaveRequestService.class
@@ -9,8 +10,10 @@ model/Address.class
 model/LeaveRequest.class
 model/Visitors.class
 daoInterface/VisitorsDAO.class
+api/UsersAPI.class
 model/BaseEntity.class
 daoInterface/TransactionStatementDAO.class
+dto/dtoMapper/DTOMapper.class
 model/Rooms.class
 views/stateModel/GenericLazyDataModel.class
 daoImp/TransactionStatementDAOImp.class
@@ -28,6 +31,7 @@ views/LeaveRequestBean.class
 views/LoginFilter.class
 daoInterface/MonthlyFeeDAO.class
 views/stateModel/UserState.class
+cors/CORSFilter.class
 daoImp/AddressDAOImp.class
 views/ViewVisitorBean.class
 views/ViewRoomsBean.class
@@ -39,6 +43,7 @@ service/CooldownService.class
 views/stateModel/WalletUserState.class
 views/UserDashboardBean.class
 model/UserType.class
+dto/AddressDTO.class
 views/stateModel/WalletPaymentState.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
@@ -49,6 +54,7 @@ views/AuthBean.class
 views/ViewRoomsBean$1.class
 daoImp/BaseDAOImp.class
 views/IndexImageBean.class
+api/AuthAPI.class
 dto/MonthlyFeeDTO.class
 daoImp/UserDAOImpl.class
 daoImp/VisitorsDAOImp.class
@@ -63,5 +69,6 @@ daoImp/MonthlyFeeDAOImpl.class
 model/TransactionStatement.class
 views/stateModel/Cards.class
 service/UserService.class
+dto/UsersDTO.class
 model/Users.class
 model/RoomAllocation.class

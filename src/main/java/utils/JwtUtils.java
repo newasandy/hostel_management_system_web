@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class JwtUtils {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode("kTBbGeYc0sOz7qO/N4NFDYFvPZgI7o5T1Hr2zRnXghY="));
-    private static final long EXPIRATION_TIME = 3600000;
+    private static final long EXPIRATION_TIME = 604800000;
 
     public static String generateToken(String email, String role) {
         return Jwts.builder()
