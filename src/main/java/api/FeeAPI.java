@@ -6,6 +6,7 @@ import daoInterface.UsersDAO;
 import dto.UserFee;
 import model.MonthlyFee;
 import model.Users;
+import utils.JWTTokenNeeded;
 
 import javax.inject.Inject;
 import javax.json.JsonObject;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/monthlyFee")
+@JWTTokenNeeded
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class FeeAPI {

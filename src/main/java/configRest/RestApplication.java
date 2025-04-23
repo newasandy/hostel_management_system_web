@@ -2,6 +2,7 @@ package configRest;
 
 import api.*;
 import cors.CORSFilter;
+import utils.JwtFilter;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -14,6 +15,7 @@ public class RestApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> s = new HashSet<>();
+        s.add(JwtFilter.class);
         s.add(FeeAPI.class);
         s.add(AuthAPI.class);
         s.add(UsersAPI.class);

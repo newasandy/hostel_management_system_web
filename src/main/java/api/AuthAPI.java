@@ -12,8 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,11 +31,13 @@ public class AuthAPI {
             if (PasswordUtils.verifyPassword(loginUser.getPasswords(),user.getPasswords())){
                 UsersDTO loginUsers = DTOMapper.toUserDTO(user);
                 loginUsers.setPasswords(null);
-                Map<String , Object> response = new HashMap<>();
-                String jwtToken = JwtUtils.generateToken(user.getEmail(),user.getRoles().getUserTypes());
-                response.put("jwt_token", jwtToken);
-                response.put("user", loginUsers);
-                return Response.ok(response).build();
+                String accessToken = JwtUtils.generateToken(user.getEmail(),user.getRoles().getUserTypes());
+                String refreshToken = JwtUtils.generateRefreshToken(user.getEmail());
+                NewCookie refreshCookie = new NewCookie("refresh_token",refreshToken,"/",null,null,60*10,false,true);
+                NewCookie accessCookie = new NewCookie("access_token",accessToken,"/",null,null,60*60*24*7,false,true);
+                Map<String, Object> resp = new HashMap<>();
+                resp.put("user",loginUsers);
+                return Response.ok(resp).cookie(refreshCookie,accessCookie).build();
             }else {
                 return Response.status(Response.Status.UNAUTHORIZED)
                         .entity("{\"error\": \"Invalid Password\"}")
@@ -49,6 +50,31 @@ public class AuthAPI {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         }
+    }
+
+    @POST
+    @Path("/refresh")
+    public Response refreshToken(@Context HttpHeaders headers) {
+        Cookie refreshCookie = headers.getCookies().get("refresh_token");
+        if (refreshCookie == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\": \"Refresh token missing\"}").build();
+        }
+
+        String refreshToken = refreshCookie.getValue();
+        if (!JwtUtils.isTokenValid(refreshToken)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\": \"Invalid refresh token\"}").build();
+        }
+
+        String email = JwtUtils.getUserEmail(refreshToken);
+        Users user = usersDAO.getByEmail(email);
+
+        String newAccessToken = JwtUtils.generateToken(user.getEmail(), user.getRoles().getUserTypes());
+        NewCookie accessCookie = new NewCookie("access_token", newAccessToken, "/",
+                null, null, 60*60*24*7, false, true);
+
+        return Response.ok().cookie(accessCookie).build();
     }
 
 }

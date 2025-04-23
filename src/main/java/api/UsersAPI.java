@@ -3,6 +3,7 @@ package api;
 import daoInterface.UsersDAO;
 import dto.UsersDTO;
 import dto.dtoMapper.DTOMapper;
+import utils.JWTTokenNeeded;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/user")
+@JWTTokenNeeded
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersAPI {

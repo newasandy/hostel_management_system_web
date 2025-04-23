@@ -27,6 +27,7 @@ daoInterface/RoomDAO.class
 views/stateModel/RoomState.class
 views/stateModel/StatusMessageModel.class
 daoImp/LeaveRequestDAOImp.class
+utils/JWTTokenNeeded.class
 views/LeaveRequestBean.class
 views/LoginFilter.class
 daoInterface/MonthlyFeeDAO.class
@@ -62,6 +63,7 @@ service/ActiveUserService.class
 views/AdminDashboardBean.class
 daoInterface/BaseDAO.class
 views/stateModel/DashboardState.class
+utils/JwtFilter.class
 daoInterface/LeaveRequestDAO.class
 views/UserTypeConverter.class
 utils/PasswordUtils.class

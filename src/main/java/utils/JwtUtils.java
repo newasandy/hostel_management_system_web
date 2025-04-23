@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class JwtUtils {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode("kTBbGeYc0sOz7qO/N4NFDYFvPZgI7o5T1Hr2zRnXghY="));
-    private static final long EXPIRATION_TIME = 604800000;
+    private static final long EXPIRATION_TIME = 600000;
 
     public static String generateToken(String email, String role) {
         return Jwts.builder()
@@ -17,6 +17,15 @@ public class JwtUtils {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
+    public static String generateRefreshToken(String email){
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 604800000))
                 .signWith(SECRET_KEY)
                 .compact();
     }
