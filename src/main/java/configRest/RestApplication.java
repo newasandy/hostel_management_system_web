@@ -17,6 +17,7 @@ public class RestApplication extends Application {
         Set<Class<?>> s = new HashSet<>();
         s.add(JwtFilter.class);
         s.add(FeeAPI.class);
+        s.add(RoomsAPI.class);
         s.add(AuthAPI.class);
         s.add(UsersAPI.class);
         s.add(CORSFilter.class);

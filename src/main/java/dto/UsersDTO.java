@@ -11,6 +11,7 @@ public class UsersDTO {
     private Long roleId;
     private boolean status;
     private AddressDTO address;
+    private Long roomId;
 
     public UsersDTO() {}
 
@@ -88,6 +89,14 @@ public class UsersDTO {
 
     public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 }
 

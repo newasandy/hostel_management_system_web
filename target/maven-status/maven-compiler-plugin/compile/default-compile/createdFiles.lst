@@ -14,6 +14,7 @@ api/UsersAPI.class
 model/BaseEntity.class
 daoInterface/TransactionStatementDAO.class
 dto/dtoMapper/DTOMapper.class
+dto/RoomsDTO.class
 model/Rooms.class
 views/stateModel/GenericLazyDataModel.class
 daoImp/TransactionStatementDAOImp.class
@@ -25,9 +26,11 @@ utils/SessionUtils.class
 configRest/RestApplication.class
 daoInterface/RoomDAO.class
 views/stateModel/RoomState.class
+service/RefreshTokenStore.class
 views/stateModel/StatusMessageModel.class
 daoImp/LeaveRequestDAOImp.class
 utils/JWTTokenNeeded.class
+api/RoomsAPI.class
 views/LeaveRequestBean.class
 views/LoginFilter.class
 daoInterface/MonthlyFeeDAO.class
@@ -46,6 +49,7 @@ views/UserDashboardBean.class
 model/UserType.class
 dto/AddressDTO.class
 views/stateModel/WalletPaymentState.class
+utils/JwtFilter$1.class
 service/RoomsService.class
 daoImp/UserTypeDAOImp.class
 views/stateModel/MonthlyFeeState.class
@@ -68,6 +72,7 @@ daoInterface/LeaveRequestDAO.class
 views/UserTypeConverter.class
 utils/PasswordUtils.class
 daoImp/MonthlyFeeDAOImpl.class
+utils/Role.class
 model/TransactionStatement.class
 views/stateModel/Cards.class
 service/UserService.class

@@ -21,9 +21,10 @@ public class JwtUtils {
                 .compact();
     }
 
-    public static String generateRefreshToken(String email){
+    public static String generateRefreshToken(String email, String role){
         return Jwts.builder()
                 .setSubject(email)
+                .claim("role",role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 604800000))
                 .signWith(SECRET_KEY)

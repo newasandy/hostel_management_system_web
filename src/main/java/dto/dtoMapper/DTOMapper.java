@@ -1,8 +1,10 @@
 package dto.dtoMapper;
 
 import dto.AddressDTO;
+import dto.RoomsDTO;
 import dto.UsersDTO;
 import model.Address;
+import model.Rooms;
 import model.Users;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public class DTOMapper {
         usersDTOList = user.stream().map(UsersDTO::new).collect(Collectors.toList());
         return usersDTOList;
     }
-
-    // Add reverse mapping methods if needed
+    public static List<RoomsDTO> roomTableList(List<Rooms> rooms){
+        List<RoomsDTO> roomsDTOList;
+        roomsDTOList = rooms.stream().map(RoomsDTO::new).collect(Collectors.toList());
+        return roomsDTOList;
+    }
 }

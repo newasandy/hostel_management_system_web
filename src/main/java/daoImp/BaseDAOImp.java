@@ -1,6 +1,5 @@
 package daoImp;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import daoInterface.BaseDAO;
 import model.RoomAllocation;
 import model.Rooms;

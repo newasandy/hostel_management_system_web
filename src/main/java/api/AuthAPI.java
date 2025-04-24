@@ -1,17 +1,22 @@
 package api;
 
+import daoImp.UserTypeDAOImp;
+import daoInterface.RoomDAO;
 import daoInterface.UsersDAO;
 import dto.UsersDTO;
 import dto.dtoMapper.DTOMapper;
+import model.Rooms;
+import model.UserType;
 import model.Users;
+import service.UserService;
+import utils.JWTTokenNeeded;
 import utils.JwtUtils;
 import utils.PasswordUtils;
+import utils.Role;
+import views.stateModel.StatusMessageModel;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +28,15 @@ public class AuthAPI {
     @Inject
     private UsersDAO usersDAO;
 
+    @Inject
+    private UserTypeDAOImp userTypeDAOImp;
+
+    @Inject
+    private RoomDAO roomDAO;
+
+    @Inject
+    private UserService userService;
+
     @POST
     @Path("/login")
     public Response userLogin(UsersDTO loginUser){
@@ -32,9 +46,23 @@ public class AuthAPI {
                 UsersDTO loginUsers = DTOMapper.toUserDTO(user);
                 loginUsers.setPasswords(null);
                 String accessToken = JwtUtils.generateToken(user.getEmail(),user.getRoles().getUserTypes());
-                String refreshToken = JwtUtils.generateRefreshToken(user.getEmail());
-                NewCookie refreshCookie = new NewCookie("refresh_token",refreshToken,"/",null,null,60*10,false,true);
-                NewCookie accessCookie = new NewCookie("access_token",accessToken,"/",null,null,60*60*24*7,false,true);
+                String refreshToken = JwtUtils.generateRefreshToken(user.getEmail(), user.getRoles().getUserTypes());
+                NewCookie refreshCookie = new NewCookie("refresh_token",
+                        refreshToken,
+                        "/; SameSite=Strict",
+                        null,
+                        null,
+                        60*60*24*7,
+                        false,
+                        true);
+                NewCookie accessCookie = new NewCookie("access_token",
+                        accessToken,
+                        "/; SameSite=Strict",
+                        null,
+                        null,
+                        60*10,
+                        false,
+                        true);
                 Map<String, Object> resp = new HashMap<>();
                 resp.put("user",loginUsers);
                 return Response.ok(resp).cookie(refreshCookie,accessCookie).build();
@@ -49,6 +77,66 @@ public class AuthAPI {
                     .entity("{\"error\": \"Invalid Email\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build();
+        }
+    }
+
+    @POST
+    @Path("/logout")
+    @JWTTokenNeeded
+    public Response logout() {
+        NewCookie expiredRefreshToken = new NewCookie("refresh_token", "", "/", null, null, 0, false, true);
+        NewCookie expiredAccessToken = new NewCookie("access_token", "", "/", null, null, 0, false, true);
+
+        Map<String, String> resp = new HashMap<>();
+        resp.put("message", "Successfully logged out");
+
+        return Response.ok(resp)
+                .cookie(expiredAccessToken, expiredRefreshToken)
+                .build();
+    }
+
+    @POST
+    @Path("/me")
+    @JWTTokenNeeded
+    public Response isMe(@CookieParam("access_token") String accessToken){
+        if (accessToken != null){
+            String email = JwtUtils.getUserEmail(accessToken);
+            Users user = usersDAO.getByEmail(email);
+            UsersDTO loginUsers = DTOMapper.toUserDTO(user);
+            loginUsers.setPasswords(null);
+            Map<String, Object> yesYou = new HashMap<>();
+            yesYou.put("user", loginUsers);
+            return Response.ok(yesYou).build();
+        }else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\": \"Not You hehe\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("/register")
+    @JWTTokenNeeded(allowed = Role.ADMIN)
+    public Response registerNewUser(UsersDTO usersDTO){
+        StatusMessageModel statusMessageModel = new StatusMessageModel();
+        UserType userType = userTypeDAOImp.getById(usersDTO.getRoleId());
+        Rooms rooms = roomDAO.getById(usersDTO.getRoomId());
+        statusMessageModel = userService.registerNewStudent(usersDTO.getFullName(),usersDTO.getEmail(),
+                usersDTO.getPasswords(),
+                userType,usersDTO.getAddress().getCountry(), usersDTO.getAddress().getDistrict(),
+                usersDTO.getAddress().getRmcMc(),
+                usersDTO.getAddress().getWardNo(),rooms);
+
+        if (statusMessageModel.isStatus()){
+            Map<String, Object> registerRes = new HashMap<>();
+            registerRes.put("message",statusMessageModel.getMessage());
+            return Response.ok(registerRes).build();
+        }else {
+            Map<String, Object> registerRes = new HashMap<>();
+            registerRes.put("message",statusMessageModel.getMessage());
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(registerRes).build();
         }
     }
 
