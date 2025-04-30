@@ -14,8 +14,8 @@
         <p:column headerText="Student Name" sortBy="#{allocate.studentId.fullName}" filterBy="#{allocate.studentId.fullName}" rendered="#{authBean.authState.userRole == 'ADMIN'}">
             <h:outputText value="#{allocate.studentId.fullName}" />
         </p:column>
-        <p:column headerText="Room Number" sortBy="#{allocate.roomId.roomNumber}" filterBy="#{allocate.roomId.roomNumber}">
-            <h:outputText value="#{allocate.roomId.roomNumber}" />
+        <p:column headerText="Room Number" sortBy="#{allocate.room.roomNumber}" filterBy="#{allocate.room.roomNumber}">
+            <h:outputText value="#{allocate.room.roomNumber}" />
         </p:column>
         <p:column headerText="Allocated Date" sortBy="#{allocate.allocationDate}" >
             <h:outputText value="#{allocate.allocationDate}" />

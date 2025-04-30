@@ -8,29 +8,19 @@ public class UsersDTO {
     private String fullName;
     private String email;
     private String passwords;
-    private Long roleId;
+    private UserTypeDTO role;
     private boolean status;
     private AddressDTO address;
-    private Long roomId;
+    private RoomsDTO room;
 
     public UsersDTO() {}
-
-    public UsersDTO(Long id, String fullName, String email, String passwords, Long roleId, boolean status, AddressDTO address) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.passwords = passwords;
-        this.roleId = roleId;
-        this.status = status;
-        this.address = address;
-    }
 
     public UsersDTO(Users users) {
         this.id = users.getId();
         this.fullName = users.getFullName();
         this.email = users.getEmail();
         this.passwords = null;
-        this.roleId = users.getRoles().getId();
+        this.role = DTOMapper.toUserType(users.getRoles());
         this.status = users.isStatus();
         this.address = DTOMapper.toAddressDTO(users.getAddress());
     }
@@ -67,12 +57,12 @@ public class UsersDTO {
         this.passwords = passwords;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public UserTypeDTO getRole() {
+        return role;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setRole(UserTypeDTO role) {
+        this.role = role;
     }
 
     public boolean isStatus() {
@@ -91,12 +81,12 @@ public class UsersDTO {
         this.address = address;
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public RoomsDTO getRoom() {
+        return room;
     }
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
+    public void setRoom(RoomsDTO room) {
+        this.room = room;
     }
 }
 

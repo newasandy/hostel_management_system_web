@@ -4,6 +4,8 @@ daoImp/RoomDAOImp.class
 utils/SessionListener.class
 daoImp/RoomAllocationDAOImp.class
 service/VisitorService.class
+dto/LazyLoadRequest.class
+dto/UserTypeDTO.class
 service/LeaveRequestService.class
 views/stateModel/VisitorState.class
 model/Address.class
@@ -79,3 +81,4 @@ service/UserService.class
 dto/UsersDTO.class
 model/Users.class
 model/RoomAllocation.class
+dto/dtoMapper/FilterMateMapper.class

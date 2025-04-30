@@ -28,41 +28,42 @@ public class UserService {
     public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
         try{
             Users checkUser = usersDAO.getByEmail(email);
-            if (checkUser == null){
-                Users regUser = new Users();
-
-                regUser.setFullName(name);
-                regUser.setEmail(email);
-                regUser.setPasswords(PasswordUtils.getHashPassword(password));
-                regUser.setRoles(role);
-                regUser.setStatus(true);
-
-
-                Address regUserAddress = new Address();
-                regUserAddress.setCountry(country);
-                regUserAddress.setDistrict(district);
-                regUserAddress.setRmcMc(rmcMc);
-                regUserAddress.setWardNo(wardNo);
-                regUserAddress.setUser(regUser);
-
-                regUser.setAddress(regUserAddress);
-
-                if (usersDAO.add(regUser)){
-                    if (roomsService.allocateStudentInRoom(regUser,selectRoom).isStatus()){
-                        statusMessageModel.setStatus(true);
-                        statusMessageModel.setMessage("User Register Successfully");
-                    }else {
-                        statusMessageModel.setStatus(false);
-                        statusMessageModel.setMessage("User Register but not room allocated");
-                    }
-                }else {
-                    statusMessageModel.setStatus(false);
-                    statusMessageModel.setMessage("User Register Unsuccessful");
-                }
-            }else {
+            if(checkUser !=null){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("User Already Exist");
+                return statusMessageModel;
             }
+            Users regUser = new Users();
+
+            regUser.setFullName(name);
+            regUser.setEmail(email);
+            regUser.setPasswords(PasswordUtils.getHashPassword(password));
+            regUser.setRoles(role);
+            regUser.setStatus(true);
+
+            Address regUserAddress = new Address();
+            regUserAddress.setCountry(country);
+            regUserAddress.setDistrict(district);
+            regUserAddress.setRmcMc(rmcMc);
+            regUserAddress.setWardNo(wardNo);
+            regUserAddress.setUser(regUser);
+
+            regUser.setAddress(regUserAddress);
+
+            if (!usersDAO.add(regUser)){
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("User Register Unsuccessful");
+                return statusMessageModel;
+            }
+
+            if (!roomsService.allocateStudentInRoom(regUser,selectRoom).isStatus()){
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("User Register but not room allocated");
+                return statusMessageModel;
+            }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("User Register Successfully");
+
         } catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while register new student.");

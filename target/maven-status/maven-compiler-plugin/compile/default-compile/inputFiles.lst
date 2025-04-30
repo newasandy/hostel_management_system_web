@@ -39,11 +39,13 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/UserTypeConverter.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/model/UserType.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/TransactionStatementDAOImp.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/dto/LazyLoadRequest.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/RoomState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserDAOImpl.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/DashboardState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/IndexImageBean.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/VisitorsDAO.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/dto/dtoMapper/FilterMateMapper.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/SessionListener.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/TransactionStatementDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoImp/UserTypeDAOImp.java
@@ -51,6 +53,7 @@
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/api/AuthAPI.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/stateModel/LeaveRequestState.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/utils/JwtUtils.java
+/home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/dto/UserTypeDTO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/service/CooldownService.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/daoInterface/LeaveRequestDAO.java
 /home/newa/Documents/testWildFly/hostel_management_system_web/src/main/java/views/LoginFilter.java

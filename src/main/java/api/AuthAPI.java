@@ -49,7 +49,7 @@ public class AuthAPI {
                 String refreshToken = JwtUtils.generateRefreshToken(user.getEmail(), user.getRoles().getUserTypes());
                 NewCookie refreshCookie = new NewCookie("refresh_token",
                         refreshToken,
-                        "/; SameSite=Strict",
+                        "/",
                         null,
                         null,
                         60*60*24*7,
@@ -57,7 +57,7 @@ public class AuthAPI {
                         true);
                 NewCookie accessCookie = new NewCookie("access_token",
                         accessToken,
-                        "/; SameSite=Strict",
+                        "/",
                         null,
                         null,
                         60*10,
@@ -120,13 +120,14 @@ public class AuthAPI {
     @JWTTokenNeeded(allowed = Role.ADMIN)
     public Response registerNewUser(UsersDTO usersDTO){
         StatusMessageModel statusMessageModel = new StatusMessageModel();
-        UserType userType = userTypeDAOImp.getById(usersDTO.getRoleId());
-        Rooms rooms = roomDAO.getById(usersDTO.getRoomId());
         statusMessageModel = userService.registerNewStudent(usersDTO.getFullName(),usersDTO.getEmail(),
                 usersDTO.getPasswords(),
-                userType,usersDTO.getAddress().getCountry(), usersDTO.getAddress().getDistrict(),
+                DTOMapper.toUserTypeEntity(usersDTO.getRole()),
+                usersDTO.getAddress().getCountry(),
+                usersDTO.getAddress().getDistrict(),
                 usersDTO.getAddress().getRmcMc(),
-                usersDTO.getAddress().getWardNo(),rooms);
+                usersDTO.getAddress().getWardNo(),
+                DTOMapper.toRoomEntity(usersDTO.getRoom()));
 
         if (statusMessageModel.isStatus()){
             Map<String, Object> registerRes = new HashMap<>();
@@ -160,7 +161,7 @@ public class AuthAPI {
 
         String newAccessToken = JwtUtils.generateToken(user.getEmail(), user.getRoles().getUserTypes());
         NewCookie accessCookie = new NewCookie("access_token", newAccessToken, "/",
-                null, null, 60*60*24*7, false, true);
+                null, null, 60*10, false, true);
 
         return Response.ok().cookie(accessCookie).build();
     }
