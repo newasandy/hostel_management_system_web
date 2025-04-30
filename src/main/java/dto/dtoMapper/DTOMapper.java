@@ -8,6 +8,7 @@ import model.Address;
 import model.Rooms;
 import model.UserType;
 import model.Users;
+import utils.PasswordUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,18 @@ public class DTOMapper {
         if (usersDTO == null)return null;
         user.setFullName(usersDTO.getFullName());
         user.setEmail(usersDTO.getEmail());
+        user.setStatus(usersDTO.isStatus());
+        user.setAddress(toAddressEntity(usersDTO.getAddress(),user));
+        return user;
+    }
+
+    public static Users toRegisterUserEntity(UsersDTO usersDTO){
+        if (usersDTO == null) return null;
+        Users user = new Users();
+        user.setFullName(usersDTO.getFullName());
+        user.setEmail(usersDTO.getEmail());
+        user.setPasswords(PasswordUtils.getHashPassword(usersDTO.getPasswords()));
+        user.setRoles(toUserTypeEntity(usersDTO.getRole()));
         user.setStatus(usersDTO.isStatus());
         user.setAddress(toAddressEntity(usersDTO.getAddress(),user));
         return user;

@@ -120,13 +120,7 @@ public class AuthAPI {
     @JWTTokenNeeded(allowed = Role.ADMIN)
     public Response registerNewUser(UsersDTO usersDTO){
         StatusMessageModel statusMessageModel = new StatusMessageModel();
-        statusMessageModel = userService.registerNewStudent(usersDTO.getFullName(),usersDTO.getEmail(),
-                usersDTO.getPasswords(),
-                DTOMapper.toUserTypeEntity(usersDTO.getRole()),
-                usersDTO.getAddress().getCountry(),
-                usersDTO.getAddress().getDistrict(),
-                usersDTO.getAddress().getRmcMc(),
-                usersDTO.getAddress().getWardNo(),
+        statusMessageModel = userService.registerNewStudent(DTOMapper.toRegisterUserEntity(usersDTO),
                 DTOMapper.toRoomEntity(usersDTO.getRoom()));
 
         if (statusMessageModel.isStatus()){

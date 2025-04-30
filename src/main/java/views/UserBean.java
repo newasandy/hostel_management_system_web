@@ -8,6 +8,7 @@ import service.AuthenticationService;
 import service.CooldownService;
 import service.UserService;
 import utils.JwtUtils;
+import utils.PasswordUtils;
 import utils.SessionUtils;
 import views.stateModel.GenericLazyDataModel;
 import views.stateModel.StatusMessageModel;
@@ -93,7 +94,23 @@ public class UserBean implements Serializable{
     }
 
     public void registrationUser(){
-        statusMessageModel = userService.registerNewStudent(userState.getName(),userState.getEmail(),userState.getPassword(),userState.getSelectUserType(),userState.getCountry(),userState.getDistrict(),userState.getRmcMc(),userState.getWardNumber(), userState.getSelectRoom());
+        Users regUser = new Users();
+
+        regUser.setFullName(userState.getName());
+        regUser.setEmail(userState.getEmail());
+        regUser.setPasswords(PasswordUtils.getHashPassword(userState.getPassword()));
+        regUser.setRoles(userState.getSelectUserType());
+        regUser.setStatus(true);
+
+        Address regUserAddress = new Address();
+        regUserAddress.setCountry(userState.getCountry());
+        regUserAddress.setDistrict(userState.getDistrict());
+        regUserAddress.setRmcMc(userState.getRmcMc());
+        regUserAddress.setWardNo(userState.getWardNumber());
+        regUserAddress.setUser(regUser);
+
+        regUser.setAddress(regUserAddress);
+        statusMessageModel = userService.registerNewStudent(regUser, userState.getSelectRoom());
         userState.resetFields();
         try {
             if (statusMessageModel.isStatus()){

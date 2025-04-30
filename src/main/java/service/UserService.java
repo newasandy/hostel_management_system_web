@@ -25,30 +25,14 @@ public class UserService {
     @Inject
     private RoomsService roomsService;
 
-    public StatusMessageModel registerNewStudent(String name, String email , String password, UserType role, String country, String district, String rmcMc, int wardNo, Rooms selectRoom){
+    public StatusMessageModel registerNewStudent(Users regUser, Rooms selectRoom){
         try{
-            Users checkUser = usersDAO.getByEmail(email);
+            Users checkUser = usersDAO.getByEmail(regUser.getEmail());
             if(checkUser !=null){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("User Already Exist");
                 return statusMessageModel;
             }
-            Users regUser = new Users();
-
-            regUser.setFullName(name);
-            regUser.setEmail(email);
-            regUser.setPasswords(PasswordUtils.getHashPassword(password));
-            regUser.setRoles(role);
-            regUser.setStatus(true);
-
-            Address regUserAddress = new Address();
-            regUserAddress.setCountry(country);
-            regUserAddress.setDistrict(district);
-            regUserAddress.setRmcMc(rmcMc);
-            regUserAddress.setWardNo(wardNo);
-            regUserAddress.setUser(regUser);
-
-            regUser.setAddress(regUserAddress);
 
             if (!usersDAO.add(regUser)){
                 statusMessageModel.setStatus(false);
