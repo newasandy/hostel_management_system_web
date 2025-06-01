@@ -32,18 +32,18 @@ public class RoomsService {
             addRoom.setCapacity(capacity);
             addRoom.setStatus(true);
             Rooms checkRoom = roomDAO.findByRoomNumber(roomNumber);
-            if (checkRoom == null){
-                if (roomDAO.add(addRoom)){
-                    statusMessageModel.setStatus(true);
-                    statusMessageModel.setMessage("Room Added Successfully");
-                }else {
-                    statusMessageModel.setStatus(false);
-                    statusMessageModel.setMessage("!! Room Not Added");
-                }
-            }else {
+            if (checkRoom != null){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("!! Room Already Exist");
+                return statusMessageModel;
             }
+            if (!roomDAO.add(addRoom)){
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("!! Room Not Added");
+                return statusMessageModel;
+            }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("Room Added Successfully");
         }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while Create new Room.");
@@ -62,14 +62,13 @@ public class RoomsService {
             Date date = new Date();
             Timestamp allocatedDate = new Timestamp(date.getTime());
             roomAllocation.setAllocationDate(allocatedDate);
-            if (roomAllocationDAO.add(roomAllocation)){
-                statusMessageModel.setStatus(true);
-                statusMessageModel.setMessage("Allocated student Success");
-            }else {
-
+            if (!roomAllocationDAO.add(roomAllocation)){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("Allocation Unsuccessful");
+                return statusMessageModel;
             }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("Allocated student Success");
         }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while allocate student.");
@@ -94,18 +93,18 @@ public class RoomsService {
     public StatusMessageModel disableRoom(Rooms selectRoom){
         try{
             selectRoom.setStatus(false);
-            if (roomDAO.update(selectRoom)){
-                if (unallocatedStudentFromDisableRoom(selectRoom)){
-                    statusMessageModel.setStatus(true);
-                    statusMessageModel.setMessage("Room disable and Unallocated student from room.");
-                }else {
-                    statusMessageModel.setStatus(false);
-                    statusMessageModel.setMessage("Room disable and but Failed to unallocated student.");
-                }
-            }else {
+            if (!roomDAO.update(selectRoom)){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("Failed to disable room.");
+                return statusMessageModel;
             }
+            if (!unallocatedStudentFromDisableRoom(selectRoom)){
+                statusMessageModel.setStatus(false);
+                statusMessageModel.setMessage("Room disable and but Failed to unallocated student.");
+                return statusMessageModel;
+            }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("Room disable and Unallocated student from room.");
         }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while disabling the room.");

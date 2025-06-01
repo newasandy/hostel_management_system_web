@@ -87,18 +87,18 @@ public class ViewRoomsBean implements Serializable {
 
     public void addNewRoom(){
         try{
-            if (roomState.getRoomNumber() > 0 && roomState.getCapacity() > 0){
-                statusMessageModel = roomsService.addNewRoom(roomState.getRoomNumber(),roomState.getCapacity());
-                if (statusMessageModel.isStatus()){
-                    refreshRoomList();
-                    roomState.resetFields();
-                    showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
-                }else {
-                    showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
-                }
-            }else {
+            if (roomState.getRoomNumber() <= 0 && roomState.getCapacity() <= 0){
                 showMessage(FacesMessage.SEVERITY_ERROR,"Error","Invalid Room number and capacity");
+                return;
             }
+            statusMessageModel = roomsService.addNewRoom(roomState.getRoomNumber(),roomState.getCapacity());
+            if (!statusMessageModel.isStatus()){
+                showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
+                return;
+            }
+            refreshRoomList();
+            roomState.resetFields();
+            showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
         } catch (Exception e) {
             showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
         }

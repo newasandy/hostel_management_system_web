@@ -32,13 +32,13 @@ public class LeaveRequestService {
             Timestamp applyDate = new Timestamp(date.getTime());
             leaveRequest.setApplyDate(applyDate);
             leaveRequest.setStatus(LeaveRequest.Status.PENDING);
-            if (leaveRequestDAO.add(leaveRequest)){
-                statusMessageModel.setStatus(true);
-                statusMessageModel.setMessage("Leave Application is Submit Successfully");
-            }else {
+            if (!leaveRequestDAO.add(leaveRequest)){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("!! Leave Application is not Submit");
+                return statusMessageModel;
             }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("Leave Application is Submit Successfully");
         }catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while apply leave request.");

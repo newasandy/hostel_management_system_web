@@ -3,7 +3,6 @@ package service;
 import daoImp.AddressDAOImp;
 import daoInterface.UsersDAO;
 import model.*;
-import utils.PasswordUtils;
 import views.stateModel.StatusMessageModel;
 
 import javax.enterprise.context.RequestScoped;

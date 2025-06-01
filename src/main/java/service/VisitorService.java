@@ -33,13 +33,13 @@ public class VisitorService {
             Timestamp entryTime = new Timestamp(date.getTime());
 
             newVisitor.setEntryDatetime(entryTime);
-            if (visitorsDAO.add(newVisitor)){
-                statusMessageModel.setStatus(true);
-                statusMessageModel.setMessage("New Visitor Added Successfully");
-            }else {
+            if (!visitorsDAO.add(newVisitor)){
                 statusMessageModel.setStatus(false);
                 statusMessageModel.setMessage("Visitor Added Failed");
+                return statusMessageModel;
             }
+            statusMessageModel.setStatus(true);
+            statusMessageModel.setMessage("New Visitor Added Successfully");
         } catch (PersistenceException e){
             statusMessageModel.setStatus(false);
             statusMessageModel.setMessage("A database error occurred while add new visitor.");

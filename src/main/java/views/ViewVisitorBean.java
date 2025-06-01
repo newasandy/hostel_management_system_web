@@ -83,21 +83,21 @@ public class ViewVisitorBean implements Serializable {
 
     public void addVisitor(){
         statusMessageModel = visitorService.addVisitor(visitorState.getFullName(),visitorState.getReason(), visitorState.getSelectStudent(), visitorState.getRelation());
-        if (statusMessageModel.isStatus()){
-            refreshVisitorList();
-            visitorState.resetFields();
-            showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
-        }else {
+        if (!statusMessageModel.isStatus()){
             showMessage(FacesMessage.SEVERITY_ERROR, "Error", statusMessageModel.getMessage());
+            return;
         }
+        refreshVisitorList();
+        visitorState.resetFields();
+        showMessage(FacesMessage.SEVERITY_INFO, "Success", statusMessageModel.getMessage());
     }
 
     public void exitVisitor(Visitors exitVisitor){
-        if (visitorService.exitVisitor(exitVisitor)){
-            showMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit.");
-        }else {
+        if (!visitorService.exitVisitor(exitVisitor)){
             showMessage(FacesMessage.SEVERITY_ERROR, "Error", "Not Exit Visitor.");
+            return;
         }
+        showMessage(FacesMessage.SEVERITY_INFO, "Success", "Visitor Exit.");
     }
 
     private void showMessage(FacesMessage.Severity severity, String summary, String detail) {
